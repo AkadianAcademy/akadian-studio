@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  lessons   Lesson[]
+  curricula Curriculum[]
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  title       String
+  subject     String   @default("languages")
+  language    String   @default("English")
+  level       String   @default("A2")
+  unit        String   @default("")
+  goal        String   @default("")
+  slug        String   @unique
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  vocab       Vocab[]
+  sentences   ExampleSentence[]
+  exercise    Exercise?
+  story       Story?
+  canvas      Canvas?
+  curriculumLessons CurriculumLesson[]
+}
+
+model Vocab {
+  id          String   @id @default(uuid())
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+  word        String
+  translation String
+  createdAt   DateTime @default(now())
+}
+
+model ExampleSentence {
+  id          String   @id @default(uuid())
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+  source      String
+  translation String
+  createdAt   DateTime @default(now())
+}
+
+model Exercise {
+  id           String   @id @default(uuid())
+  lessonId     String   @unique
+  lesson       Lesson   @relation(fields: [lessonId], references: [id])
+  type         String
+  instructions String   @default("")
+  content      String   @default("")
+  createdAt    DateTime @default(now())
+}
+
+model Story {
+  id             String   @id @default(uuid())
+  lessonId       String   @unique
+  lesson         Lesson   @relation(fields: [lessonId], references: [id])
+  content        String   @default("")
+  imageUrl       String   @default("")
+  imageStyle     String   @default("")
+  debateStory    String   @default("")
+  debateMoral    String   @default("")
+  debatePersonal String   @default("")
+  createdAt      DateTime @default(now())
+}
+
+model Canvas {
+  id        String   @id @default(uuid())
+  lessonId  String   @unique
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  data      Json     @default("{}")
+  createdAt DateTime @default(now())
+}
+
+model Curriculum {
+  id          String             @id @default(uuid())
+  userId      String
+  user        User               @relation(fields: [userId], references: [id])
+  title       String
+  description String             @default("")
+  subject     String             @default("languages")
+  createdAt   DateTime           @default(now())
+  lessons     CurriculumLesson[]
+}
+
+model CurriculumLesson {
+  id           String     @id @default(uuid())
+  curriculumId String
+  curriculum   Curriculum @relation(fields: [curriculumId], references: [id])
+  lessonId     String
+  lesson       Lesson     @relation(fields: [lessonId], references: [id])
+  order        Int        @default(0)
+  createdAt    DateTime   @default(now())
+}
