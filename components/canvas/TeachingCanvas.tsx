@@ -45,7 +45,7 @@ export default function TeachingCanvas({ lessonId, mode, vocab = [] }: Props) {
 
   const canvasRef = useRef<HTMLDivElement>(null)
   const drawCanvasRef = useRef<HTMLCanvasElement>(null)
-  const autoSaveRef = useRef<NodeJS.Timeout>()
+  const autoSaveRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const tokenRef = useRef<string | null>(null)
   const lastActivityRef = useRef<number>(Date.now())
   const lastPointRef = useRef<{ x: number; y: number } | null>(null)
