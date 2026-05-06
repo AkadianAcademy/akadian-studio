@@ -33,6 +33,11 @@ export default function EditPanel({ lesson, onSaved }: Props) {
   const [exerciseInstructions, setExerciseInstructions] = useState(lesson.exercise?.instructions || '')
   const [exerciseContent, setExerciseContent] = useState(lesson.exercise?.content || '')
 
+  // Story questions
+  const [debateStory, setDebateStory] = useState(lesson.story?.debateStory || '')
+  const [debateMoral, setDebateMoral] = useState(lesson.story?.debateMoral || '')
+  const [debatePersonal, setDebatePersonal] = useState(lesson.story?.debatePersonal || '')
+
   // Debate
   const [debateTopic, setDebateTopic] = useState(lesson.debate?.topic || '')
   const [debateArticle, setDebateArticle] = useState(lesson.debate?.article || '')
@@ -93,19 +98,29 @@ export default function EditPanel({ lesson, onSaved }: Props) {
 
   async function saveStory() {
     await save('story', {
-      content: story, imageUrl: imagePrompt,
+      exerciseType: lesson.exercise?.type || 'roleplay',
+      instructions: lesson.exercise?.instructions || '',
+      content: lesson.exercise?.content || '',
+      story: story,
+      imagePrompt: imagePrompt,
       imageStyle: lesson.story?.imageStyle || 'photorealistic',
-      debateStory: lesson.story?.debateStory || '',
-      debateMoral: lesson.story?.debateMoral || '',
-      debatePersonal: lesson.story?.debatePersonal || ''
+      debateStory: debateStory,
+      debateMoral: debateMoral,
+      debatePersonal: debatePersonal,
     }, 'practice')
   }
 
   async function saveExercise() {
     await save('exercise', {
-      exerciseType, instructions: exerciseInstructions, content: exerciseContent,
-      story: lesson.story?.content || '', imagePrompt, imageStyle: lesson.story?.imageStyle || 'photorealistic',
-      debateStory: lesson.story?.debateStory || '', debateMoral: lesson.story?.debateMoral || '', debatePersonal: lesson.story?.debatePersonal || ''
+      exerciseType,
+      instructions: exerciseInstructions,
+      content: exerciseContent,
+      story: lesson.story?.content || '',
+      imagePrompt: lesson.story?.imageUrl || '',
+      imageStyle: lesson.story?.imageStyle || 'photorealistic',
+      debateStory: debateStory,
+      debateMoral: debateMoral,
+      debatePersonal: debatePersonal,
     }, 'practice')
   }
 
@@ -192,6 +207,26 @@ export default function EditPanel({ lesson, onSaved }: Props) {
       </div>
     ),
 
+    storyquestions: (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div>
+          <label style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '6px' }}>What happened in the story</label>
+          <textarea value={debateStory} onChange={e => setDebateStory(e.target.value)} rows={4} style={taStyle} />
+        </div>
+        <div>
+          <label style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '6px' }}>What we can learn from it</label>
+          <textarea value={debateMoral} onChange={e => setDebateMoral(e.target.value)} rows={4} style={taStyle} />
+        </div>
+        <div>
+          <label style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: '6px' }}>Personal connection</label>
+          <textarea value={debatePersonal} onChange={e => setDebatePersonal(e.target.value)} rows={4} style={taStyle} />
+        </div>
+        <button onClick={saveStory} disabled={saving} style={btnStyle(saving ? '#555' : '#ff4b55')}>
+          {saved ? '✓ Saved!' : saving ? 'Saving...' : 'Save story questions'}
+        </button>
+      </div>
+    ),
+
     story: (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         <div>
@@ -271,6 +306,7 @@ export default function EditPanel({ lesson, onSaved }: Props) {
             { id: 'setup', label: '⚙ Setup' },
             { id: 'vocab', label: '📚 Vocabulary' },
             { id: 'story', label: '📖 Story' },
+            { id: 'storyquestions', label: '💬 Story Questions' },
             { id: 'exercise', label: '✍️ Exercise' },
             { id: 'debate', label: '🗣 Debate' },
           ].map(s => (
