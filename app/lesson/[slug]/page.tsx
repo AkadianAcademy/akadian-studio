@@ -4,6 +4,8 @@ import { useParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase'
 
+const EditPanel = dynamic(() => import('@/components/lesson/EditPanel'), { ssr: false })
+
 const TeachingCanvas = dynamic(
   () => import('@/components/canvas/TeachingCanvas'),
   { ssr: false, loading: () => (
@@ -24,6 +26,7 @@ export default function PublicLessonPage() {
   const [copied, setCopied] = useState(false)
   const [activeTab, setActiveTab] = useState<'vocab'|'exercise'|'story'|'debate'|'canvas'|'debate2'>('vocab')
   const [canvasMode, setCanvasMode] = useState<'student'|'teacher'>('student')
+  const [editableLesson, setEditableLesson] = useState<any>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -550,6 +553,13 @@ export default function PublicLessonPage() {
             </div>
           </div>
         </div>
+        {/* Inline editor — teacher only */}
+        {canvasMode === 'teacher' && editableLesson && (
+          <EditPanel
+            lesson={editableLesson}
+            onSaved={(updated) => { setLesson(updated); setEditableLesson(updated) }}
+          />
+        )}
       </div>
     </>
   )
