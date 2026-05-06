@@ -17,6 +17,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
         sentences: true,
         exercise: true,
         story: true,
+        canvas: true,
+        debate: true,
       }
     })
 
