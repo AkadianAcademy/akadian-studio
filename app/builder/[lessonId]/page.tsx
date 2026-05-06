@@ -99,7 +99,8 @@ function LivePreviewCard() {
             { num: '1', label: 'Setup', desc: 'Lesson details', done: currentStep > 1 },
             { num: '2', label: 'Vocabulary', desc: 'Words & sentences', done: currentStep > 2, active: currentStep === 2 },
             { num: '3', label: 'Practice', desc: 'Exercises & story', done: currentStep > 3, active: currentStep === 3 },
-            { num: '4', label: 'Preview', desc: 'Review & publish', active: currentStep === 4 },
+            { num: '4', label: 'Debate', desc: 'Debate & discussion', active: currentStep === 4 },
+            { num: '5', label: 'Preview', desc: 'Review & publish', active: currentStep === 5 },
           ].map(s => (
             <div key={s.num} className="flow-step">
               <div className={`flow-num ${s.done ? 'flow-num-done' : s.active ? 'flow-num-active' : ''}`}>
