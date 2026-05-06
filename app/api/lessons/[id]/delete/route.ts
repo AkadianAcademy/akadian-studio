@@ -29,6 +29,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     if (lesson.userId !== user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     await prisma.curriculumLesson.deleteMany({ where: { lessonId: id } })
+    await prisma.debate.deleteMany({ where: { lessonId: id } })
     await prisma.vocab.deleteMany({ where: { lessonId: id } })
     await prisma.exampleSentence.deleteMany({ where: { lessonId: id } })
     await prisma.exercise.deleteMany({ where: { lessonId: id } })
