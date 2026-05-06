@@ -243,24 +243,24 @@ export default function PracticeStep({ onNext, onBack }: Props) {
       {/* Debate section */}
       <div style={{ marginBottom: '36px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-          {sLabel('Debate questions', '#00bc7c')}
-          <AiButton label="AI generate debate" loadingLabel="Generating..." loading={generateDebateAI.loading} onClick={handleGenerateDebate} variant="secondary" disabled={!story} />
+          {sLabel('Story questions for students', '#00bc7c')}
+          <AiButton label="AI generate story questions" loadingLabel="Generating..." loading={generateDebateAI.loading} onClick={handleGenerateDebate} variant="secondary" disabled={!story} />
         </div>
         <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '16px', lineHeight: 1.6 }}>
-          {!story ? '⚠ Generate or write a story first.' : `Questions calibrated to ${setup.level} level — 2 per category.`}
+          {!story ? '⚠ Generate or write a story first — questions will be based on it.' : `Questions calibrated to ${setup.level} level — 2 per category.`}
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div>
             <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255,75,85,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>About the story</p>
-            {tArea(debateStory, setDebateStory, 'Questions about what happened...', 3)}
+            {tArea(debateStory, setDebateStory, 'What happened in the story? (comprehension questions)', 3)}
           </div>
           <div>
             <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255,188,0,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>About the moral</p>
-            {tArea(debateMoral, setDebateMoral, 'Questions about the deeper meaning...', 3)}
+            {tArea(debateMoral, setDebateMoral, 'What can we learn from this story? (reflection questions)', 3)}
           </div>
           <div>
             <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(0,188,124,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>Personal opinions</p>
-            {tArea(debatePersonal, setDebatePersonal, 'Questions connecting to their own life...', 3)}
+            {tArea(debatePersonal, setDebatePersonal, 'Has something like this happened to you? (personal connection)', 3)}
           </div>
         </div>
         {generateDebateAI.error && <p style={{ fontSize: '12px', color: '#ff4b55', marginTop: '8px' }}>⚠ {generateDebateAI.error}</p>}

@@ -251,7 +251,7 @@ export default function PublicLessonPage() {
               { id: 'vocab', label: `📚 Vocabulary (${lesson.vocab?.length || 0})` },
               { id: 'story', label: '📖 Story' },
               { id: 'exercise', label: '✍️ Exercise' },
-              { id: 'debate', label: '💬 Debate' },
+              { id: 'debate', label: '💬 Story Questions' },
               { id: 'canvas', label: canvasMode === 'teacher' ? '📌 Canvas (edit)' : '📌 Canvas' },
             ].map(t => (
               <button key={t.id} className={`tab ${activeTab === t.id ? 'tab-on' : 'tab-off'}`}
@@ -328,24 +328,24 @@ export default function PublicLessonPage() {
           {activeTab === 'debate' && story && (
             <div>
               <div className="section-header">
-                <div className="section-title">Discussion & debate</div>
-                <div className="section-sub">Three rounds — facts, meaning, and your own opinion</div>
+                <div className="section-title">Story questions for students</div>
+                <div className="section-sub">Read the story carefully — then explore it together</div>
               </div>
               {story.debateStory && (
                 <div className="debate-section">
-                  <span className="debate-label" style={{ background: 'rgba(255,75,85,0.1)', color: '#ff4b55' }}>About the story</span>
+                  <span className="debate-label" style={{ background: 'rgba(255,75,85,0.1)', color: '#ff4b55' }}>What happened in the story</span>
                   <p className="debate-content">{story.debateStory}</p>
                 </div>
               )}
               {story.debateMoral && (
                 <div className="debate-section">
-                  <span className="debate-label" style={{ background: 'rgba(255,188,0,0.1)', color: 'rgba(255,188,0,0.9)' }}>About the moral</span>
+                  <span className="debate-label" style={{ background: 'rgba(255,188,0,0.1)', color: 'rgba(255,188,0,0.9)' }}>What we can learn from it</span>
                   <p className="debate-content">{story.debateMoral}</p>
                 </div>
               )}
               {story.debatePersonal && (
                 <div className="debate-section">
-                  <span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal opinions</span>
+                  <span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal connection</span>
                   <p className="debate-content">{story.debatePersonal}</p>
                 </div>
               )}
