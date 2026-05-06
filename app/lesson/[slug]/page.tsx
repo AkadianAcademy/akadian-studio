@@ -555,41 +555,7 @@ export default function PublicLessonPage() {
           </div>
         </div>
 
-        {/* Akadian brand block */}
-        {canvasMode === 'student' && (
-          <div style={{ maxWidth: '900px', margin: '0 auto 48px', padding: '0 clamp(20px,5vw,64px)', position: 'relative', zIndex: 1 }}>
-            <div style={{ background: 'linear-gradient(135deg, rgba(11,23,43,0.9), rgba(11,23,43,0.95))', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '20px', padding: 'clamp(24px,4vw,40px)', overflow: 'hidden', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: -60, right: -60, width: 300, height: 300, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,75,85,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-              <div style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
-                  <img src={LOGO} style={{ width: 44, height: 44, borderRadius: '50%', border: '2px solid rgba(255,75,85,0.3)' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
-                  <div>
-                    <p style={{ fontSize: '18px', fontWeight: 700, color: '#fff' }}>Akadian Academy</p>
-                    <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Orlando, FL 🇺🇸 · EdTech Platform</p>
-                  </div>
-                </div>
-                <p style={{ fontSize: 'clamp(18px,3vw,24px)', fontWeight: 700, color: '#fff', lineHeight: 1.3, marginBottom: '8px' }}>
-                  Real lessons. Real teachers.<br />
-                  <span style={{ color: '#ff4b55' }}>Real US certificates — coming soon.</span>
-                </p>
-                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, maxWidth: '500px', marginBottom: '20px' }}>
-                  Akadian Academy is building the EdTech platform that actually certifies what you know — starting with language, expanding to math, technology, sciences, and business.
-                </p>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                  <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 22px', background: '#ff4b55', borderRadius: '12px', color: '#fff', fontSize: '14px', fontWeight: 600, textDecoration: 'none', boxShadow: '0 4px 20px rgba(255,75,85,0.3)' }}>
-                    ✦ Are you a teacher? Build free
-                  </a>
-                  <a href="https://www.akadianacademy.com" target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '11px 22px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '12px', color: 'rgba(255,255,255,0.7)', fontSize: '14px', fontWeight: 500, textDecoration: 'none' }}>
-                    🌐 www.akadianacademy.com
-                  </a>
-                </div>
-                <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', marginTop: '16px' }}>
-                  Akadian Academy LLC · Orlando, Florida · United States of America · <a href="https://www.akadianacademy.com" target="_blank" style={{ color: 'rgba(255,255,255,0.35)', textDecoration: 'none' }}>www.akadianacademy.com</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+
 
         {/* ===== MOBILE VIEW ===== */}
         <div className="mobile-view">
