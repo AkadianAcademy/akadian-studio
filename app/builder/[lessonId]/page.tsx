@@ -135,6 +135,7 @@ export default function BuilderPage() {
         if (lessonId === 'new') {
           // Always reset when starting a new lesson
           reset()
+          localStorage.removeItem('akadian-lesson-store')
         } else {
           setLessonId(lessonId)
           fetch('/api/lessons/' + lessonId + '/by-id', {
