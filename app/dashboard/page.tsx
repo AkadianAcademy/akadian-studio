@@ -180,6 +180,53 @@ export default function DashboardPage() {
             ))}
           </div>
 
+          {/* Referral Card */}
+          <div style={{ marginBottom: '28px', background: 'linear-gradient(135deg, #0f2a1e 0%, #0b1f2e 50%, #1a0f1e 100%)', border: '1px solid rgba(0,188,124,0.25)', borderRadius: '20px', padding: 'clamp(20px,3vw,28px)', position: 'relative', overflow: 'hidden', opacity: 0, animation: 'fadeUp 0.6s ease 0.25s forwards' }}>
+            
+            {/* Background glows */}
+            <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,188,124,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: -30, left: 100, width: 150, height: 150, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,75,85,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+            <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+              <div style={{ flex: 1, minWidth: '200px' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(0,188,124,0.15)', border: '1px solid rgba(0,188,124,0.3)', borderRadius: '100px', padding: '4px 12px', fontSize: '11px', fontWeight: 600, color: '#00bc7c', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00bc7c', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' }} />
+                  Referral Program
+                </div>
+                <h3 style={{ fontSize: 'clamp(16px,2.5vw,20px)', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: '6px', lineHeight: 1.3 }}>
+                  Bring someone on board.<br />
+                  <span style={{ color: '#00bc7c' }}>Earn 10–20% monthly.</span>
+                </h3>
+                <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, maxWidth: '420px' }}>
+                  Invite a teacher or student to a live demo class with Akadian Academy. Every time they subscribe, you earn a recurring commission — month after month.
+                </p>
+              </div>
+
+              {/* Stats pills */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flexShrink: 0 }}>
+                {[
+                  { value: '10–20%', label: 'Monthly commission' },
+                  { value: 'Recurring', label: 'Every month they stay' },
+                  { value: 'Free demo', label: 'No pressure entry point' },
+                ].map((s, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '10px' }}>
+                    <span style={{ fontSize: '14px', fontWeight: 700, color: '#00bc7c', minWidth: '70px' }}>{s.value}</span>
+                    <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>{s.label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <a href="https://www.akadianacademy.com/sesiones-en-vivo" target="_blank"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 24px', background: '#00bc7c', borderRadius: '14px', color: '#fff', fontSize: '14px', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 24px rgba(0,188,124,0.35)', transition: 'all 0.2s', whiteSpace: 'nowrap', flexShrink: 0 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.9'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1'; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)' }}
+              >
+                🎓 Invite to a demo class →
+              </a>
+            </div>
+          </div>
+
           {/* Section toggle */}
           <div style={{ display: 'flex', gap: '6px', marginBottom: '28px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '4px', width: 'fit-content', opacity: 0, animation: 'fadeUp 0.6s ease 0.25s forwards' }}>
             <button onClick={() => setActiveSection('lessons')} style={{ padding: '8px 20px', borderRadius: '8px', border: 'none', background: activeSection === 'lessons' ? '#ff4b55' : 'transparent', color: activeSection === 'lessons' ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
