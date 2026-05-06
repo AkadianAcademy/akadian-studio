@@ -375,8 +375,7 @@ export default function PublicLessonPage() {
                     <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px' }}>
                       <p style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>Read before the debate</p>
                       <div style={{ fontSize: '15px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.9, whiteSpace: 'pre-line' }}>
-                        {lesson.debate.article.split('
-').map((line: string, i: number) => {
+                        {lesson.debate.article.split('\n').map((line: string, i: number) => {
                           const isHeader = ['INTRODUCTION:', 'IN FAVOUR:', 'AGAINST:', 'CONCLUSION:'].some(h => line.trim().startsWith(h))
                           return isHeader ? (
                             <p key={i} style={{ fontSize: '12px', fontWeight: 700, color: '#ff4b55', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '20px', marginBottom: '8px' }}>{line}</p>
@@ -415,8 +414,7 @@ export default function PublicLessonPage() {
                     <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px' }}>
                       <p style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>Debate questions</p>
                       <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.75)', lineHeight: 2, whiteSpace: 'pre-line' }}>
-                        {lesson.debate.questions.split('
-').map((line: string, i: number) => {
+                        {lesson.debate.questions.split('\n').map((line: string, i: number) => {
                           const isHeader = ['COMPREHENSION:', 'POSITION:', 'OPINIONS & VIEWPOINTS:'].some(h => line.trim().startsWith(h))
                           return isHeader ? (
                             <p key={i} style={{ fontSize: '12px', fontWeight: 700, color: '#00bc7c', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '16px', marginBottom: '8px' }}>{line}</p>

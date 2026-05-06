@@ -210,6 +210,7 @@ export default function BuilderPage() {
         @keyframes spin { to { transform: rotate(360deg) } }
       `}</style>
 
+      <div style={{background:'red',color:'white',padding:'4px',fontSize:'12px'}}>VERSION 2 — 5 STEPS</div>
       <BuilderStepper />
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
