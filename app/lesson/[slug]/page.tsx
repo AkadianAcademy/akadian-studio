@@ -667,15 +667,12 @@ export default function PublicLessonPage() {
 
               {/* Mobile footer */}
               <div className="mv-footer">
-                <img src={LOGO} style={{ width: 32, height: 32, borderRadius: '50%', marginBottom: '8px' }} onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
-                <p style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', marginBottom: '2px' }}>Akadian Academy</p>
-                <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', marginBottom: '14px' }}>Orlando, FL 🇺🇸 · www.akadianacademy.com</p>
-                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '12px' }}>
                   <button className="share-btn" onClick={copyLink} style={{ fontSize: '12px', padding: '7px 14px' }}>{copied ? '✓ Copied!' : '🔗 Copy link'}</button>
                   <button className="share-btn share-btn-primary" onClick={() => window.print()} style={{ fontSize: '12px', padding: '7px 14px' }}>↓ Save PDF</button>
                 </div>
                 {canvasMode === 'student' && (
-                  <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', background: '#ff4b55', borderRadius: '12px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', marginTop: '12px', boxShadow: '0 4px 16px rgba(255,75,85,0.3)' }}>
+                  <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', background: '#ff4b55', borderRadius: '12px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', boxShadow: '0 4px 16px rgba(255,75,85,0.3)' }}>
                     ✦ Are you a teacher? Build free
                   </a>
                 )}
