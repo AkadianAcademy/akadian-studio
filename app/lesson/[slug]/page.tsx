@@ -31,6 +31,8 @@ export default function PublicLessonPage() {
   const [editableLesson, setEditableLesson] = useState<any>(null)
   const [showInfo, setShowInfo] = useState(false)
   const [mobileSection, setMobileSection] = useState('vocab')
+  const [mobileView, setMobileView] = useState<'home' | string>('home')
+  const [showMoreInfo, setShowMoreInfo] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -266,9 +268,8 @@ export default function PublicLessonPage() {
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
         .fade-up { opacity:0; animation: fadeUp 0.5s ease forwards; }
 
-        /* Mobile bottom nav — hidden on desktop */
-        .mobile-bottom-nav { display: none; }
-        .mobile-scroll-view { display: none; }
+        /* Mobile view — hidden on desktop */
+        .mobile-view { display: none; }
 
         @media print {
           .bg-orb, .bg-grid { display: none !important; }
@@ -280,120 +281,106 @@ export default function PublicLessonPage() {
 
         /* ==================== MOBILE ONLY ==================== */
         @media (max-width: 768px) {
-          /* Hide ALL desktop-only elements */
-          .hero-breadcrumb { display: none !important; }
+          /* Hide desktop layout */
+          .hero { display: none !important; }
           .two-col { display: none !important; }
           .tabs { display: none !important; }
-          .content > div[key] { display: none !important; }
+          .content { display: none !important; }
           .lesson-footer { display: none !important; }
-          .hero { padding: 16px 16px 0 !important; }
-          .hero-title { font-size: 26px !important; margin-bottom: 10px !important; }
-          .hero-goal { font-size: 14px !important; margin-bottom: 16px !important; max-width: 100% !important; }
-          .impact-cards { grid-template-columns: repeat(3,1fr) !important; gap: 8px !important; margin-bottom: 16px !important; }
-          .impact-card { padding: 10px 8px !important; text-align: center; }
           .nav { padding: 10px 16px !important; }
           .nav-logo-text { display: none !important; }
+          .bg-orb { display: none !important; }
+          .bg-grid { display: none !important; }
 
-          /* Show mobile scroll view */
-          .mobile-scroll-view { display: block !important; }
+          /* Show mobile view */
+          .mobile-view { display: block !important; }
 
-          /* Mobile sticky section pills */
-          .mobile-pills {
-            position: sticky;
-            top: 52px;
-            z-index: 90;
-            background: rgba(11,23,43,0.95);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 10px 16px;
-            margin: 0 -16px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            overflow-x: auto;
-            scrollbar-width: none;
-            display: flex;
-            gap: 6px;
-            white-space: nowrap;
-          }
-          .mobile-pills::-webkit-scrollbar { display: none; }
-          .mobile-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 14px;
-            border-radius: 100px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: transparent;
-            color: rgba(255,255,255,0.4);
-            font-size: 12px;
-            font-weight: 600;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex-shrink: 0;
-            text-decoration: none;
-          }
-          .mobile-pill.active {
-            background: #ff4b55;
-            border-color: #ff4b55;
-            color: #fff;
-          }
+          /* Mobile base */
+          .mv-wrap { padding: 0 16px; font-family: 'DM Sans', sans-serif; }
 
-          /* Mobile sections */
-          .mobile-section {
-            padding: 28px 16px 0;
-            scroll-margin-top: 110px;
+          /* Compact hero */
+          .mv-hero {
+            padding: 20px 16px 0;
           }
-          .mobile-section-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
-          }
-          .mobile-section-icon {
-            width: 32px; height: 32px;
-            border-radius: 9px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px;
-            flex-shrink: 0;
-          }
-          .mobile-next-btn {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            margin-top: 24px;
-            padding: 14px 18px;
+          .mv-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+          .mv-tag { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+          .mv-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 24px; line-height: 1.15; letter-spacing: -0.02em; color: #fff; margin-bottom: 8px; }
+          .mv-title em { color: #ff4b55; font-style: italic; }
+          .mv-goal { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 14px; }
+          .mv-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+          .mv-pill { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 100px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); }
+          .mv-more-btn { background: none; border: none; color: rgba(255,255,255,0.3); font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer; padding: 4px 0; text-decoration: underline; margin-bottom: 8px; }
+          .mv-more-info { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+          .mv-flow-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+          .mv-flow-item:last-child { border: none; }
+          .mv-flow-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,75,85,0.15); color: #ff4b55; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+          .mv-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 16px 0; }
+
+          /* Section cards */
+          .mv-cards { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+          .mv-card {
+            display: flex; align-items: center; gap: 14px;
+            padding: 16px 18px;
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            color: rgba(255,255,255,0.6);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.2s;
-            text-decoration: none;
+            text-align: left;
+            width: 100%;
+            font-family: 'DM Sans', sans-serif;
           }
-          .mobile-next-btn:active {
-            background: rgba(255,75,85,0.1);
-            border-color: rgba(255,75,85,0.3);
-          }
-          .mobile-footer {
-            padding: 32px 16px 48px;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            margin-top: 32px;
-          }
+          .mv-card:active { transform: scale(0.98); }
+          .mv-card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+          .mv-card-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+          .mv-card-sub { font-size: 12px; color: rgba(255,255,255,0.4); }
+          .mv-card-arrow { margin-left: auto; font-size: 16px; color: rgba(255,255,255,0.25); flex-shrink: 0; }
 
-          /* Content tweaks for mobile */
+          /* Section view */
+          .mv-section-view { min-height: 100vh; }
+          .mv-section-header {
+            position: sticky; top: 52px; z-index: 80;
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 16px;
+            background: rgba(11,23,43,0.97);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+          }
+          .mv-back-btn {
+            display: flex; align-items: center; gap: 5px;
+            padding: 6px 12px; border-radius: 8px;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500;
+            cursor: pointer; font-family: 'DM Sans', sans-serif;
+          }
+          .mv-section-name { font-size: 14px; font-weight: 600; color: #fff; }
+          .mv-section-content { padding: 20px 16px 60px; }
+          .mv-next-card {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 18px; margin-top: 28px;
+            background: rgba(255,75,85,0.08); border: 1px solid rgba(255,75,85,0.2);
+            border-radius: 14px; cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            width: 100%;
+          }
+          .mv-next-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 2px; text-align: left; }
+          .mv-next-name { font-size: 15px; font-weight: 600; color: #fff; text-align: left; }
+
+          /* Content fixes for mobile */
           .vocab-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
           .vocab-card { padding: 12px !important; }
           .vocab-word { font-size: 14px !important; }
           .vocab-translation { font-size: 12px !important; }
           .story-body { font-size: 15px !important; line-height: 1.85 !important; }
           .section-title { font-size: 17px !important; }
+          .exercise-content { font-size: 14px !important; }
+          .debate-content { font-size: 14px !important; }
+
+          /* Mobile footer */
+          .mv-footer {
+            padding: 24px 16px 40px; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.06);
+          }
         }
       `}</style>
 
@@ -585,206 +572,232 @@ export default function PublicLessonPage() {
           </div>
         )}
 
-        {/* ===== MOBILE SCROLL VIEW ===== */}
-        <div className="mobile-scroll-view">
+        {/* ===== MOBILE VIEW ===== */}
+        <div className="mobile-view">
 
-          {/* Sticky section pills */}
-          <div className="mobile-pills" id="mobile-pills">
-            {[
-              { id: 'm-vocab', icon: '📚', label: 'Vocab' },
-              { id: 'm-story', icon: '📖', label: 'Story' },
-              { id: 'm-exercise', icon: '✍️', label: 'Exercise' },
-              { id: 'm-questions', icon: '💬', label: 'Questions' },
-              { id: 'm-debate', icon: '🗣', label: 'Debate' },
-              { id: 'm-canvas', icon: '📌', label: 'Canvas' },
-            ].map(p => (
-              <a key={p.id} href={`#${p.id}`} className={`mobile-pill ${mobileSection === p.id ? 'active' : ''}`}
-                onClick={() => setMobileSection(p.id)}>
-                {p.icon} {p.label}
-              </a>
-            ))}
-          </div>
-
-          {/* VOCAB */}
-          <div id="m-vocab" className="mobile-section">
-            <div className="mobile-section-label">
-              <div className="mobile-section-icon" style={{ background: 'rgba(255,75,85,0.12)' }}>📚</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Vocabulary</div>
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>{lesson.vocab?.length || 0} words to learn</div>
-              </div>
-            </div>
-            <div className="vocab-grid">
-              {lesson.vocab?.map((v: any) => (
-                <div key={v.id} className="vocab-card">
-                  <div className="vocab-word">{v.word}</div>
-                  <div className="vocab-translation">{v.translation}</div>
+          {mobileView === 'home' ? (
+            <>
+              {/* Compact Hero */}
+              <div className="mv-hero">
+                <div className="mv-tags">
+                  <span className="mv-tag" style={{ background: 'rgba(255,75,85,0.12)', color: '#ff4b55', border: '1px solid rgba(255,75,85,0.2)' }}>{lesson.language}</span>
+                  <span className="mv-tag" style={{ background: 'rgba(59,130,246,0.12)', color: '#3b82f6', border: '1px solid rgba(59,130,246,0.2)' }}>{lesson.level}</span>
+                  {lesson.unit && <span className="mv-tag" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.08)' }}>{lesson.unit}</span>}
+                  <span className="mv-tag" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c', border: '1px solid rgba(0,188,124,0.2)' }}>Free lesson</span>
                 </div>
-              ))}
-            </div>
-            {lesson.sentences?.length > 0 && (
-              <>
-                <div style={{ margin: '24px 0 12px', fontSize: '15px', fontWeight: 600 }}>Example sentences</div>
-                <div className="sentence-list">
-                  {lesson.sentences.map((s: any) => (
-                    <div key={s.id} className="sentence-card">
-                      <div className="sentence-en">{s.source}</div>
-                      <div className="sentence-tr">{s.translation}</div>
+                <h1 className="mv-title">
+                  {lesson.title.split(' ').map((word: string, i: number, arr: string[]) =>
+                    i === arr.length - 1 ? <em key={i}>{word}</em> : <span key={i}>{word} </span>
+                  )}
+                </h1>
+                <p className="mv-goal">{lesson.goal}</p>
+                <div className="mv-pills">
+                  <div className="mv-pill">📚 {lesson.vocab?.length || 0} words</div>
+                  <div className="mv-pill">✍️ {exercise?.type?.replace(/-/g,' ') || 'Exercise'}</div>
+                  <div className="mv-pill">💬 Discussion</div>
+                </div>
+                <button className="mv-more-btn" onClick={() => setShowMoreInfo(v => !v)}>
+                  {showMoreInfo ? '▲ Show less' : '▼ View lesson flow'}
+                </button>
+                {showMoreInfo && (
+                  <div className="mv-more-info">
+                    <p style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>Lesson flow</p>
+                    {[
+                      { num: '1', label: 'Vocabulary', desc: 'Learn the key words' },
+                      { num: '2', label: 'Story', desc: 'See them in context' },
+                      { num: '3', label: 'Exercise', desc: 'Practice under pressure' },
+                      { num: '4', label: 'Questions', desc: 'Think and discuss' },
+                      { num: '5', label: 'Debate', desc: 'Go deeper' },
+                      { num: '6', label: 'Canvas', desc: 'Teacher annotations' },
+                    ].map(s => (
+                      <div key={s.num} className="mv-flow-item">
+                        <div className="mv-flow-num">{s.num}</div>
+                        <div>
+                          <div style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>{s.label}</div>
+                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)' }}>{s.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="mv-divider" />
+              </div>
+
+              {/* Section cards */}
+              <div className="mv-cards">
+                {[
+                  { id: 'vocab', icon: '📚', bg: 'rgba(255,75,85,0.12)', title: 'Vocabulary', sub: `${lesson.vocab?.length || 0} words to learn` },
+                  { id: 'story', icon: '📖', bg: 'rgba(59,130,246,0.12)', title: 'Story', sub: 'Read and find the words' },
+                  { id: 'exercise', icon: '✍️', bg: 'rgba(0,188,124,0.12)', title: 'Exercise', sub: exercise?.type?.replace(/-/g,' ') || 'Practice activity' },
+                  { id: 'questions', icon: '💬', bg: 'rgba(245,158,11,0.12)', title: 'Story Questions', sub: 'Discuss with your class' },
+                  { id: 'debate', icon: '🗣', bg: 'rgba(139,92,246,0.12)', title: 'Debate', sub: lesson.debate?.topic ? lesson.debate.topic.slice(0,50) + '...' : 'Deep discussion topic' },
+                  { id: 'canvas', icon: '📌', bg: 'rgba(0,188,124,0.12)', title: canvasMode === 'teacher' ? 'Canvas (edit)' : "Teacher's Canvas", sub: canvasMode === 'teacher' ? 'Add notes for students' : 'Notes from your teacher' },
+                ].map((card, i) => (
+                  <button key={card.id} className="mv-card"
+                    onClick={() => setMobileView(card.id)}
+                    style={{ animationDelay: `${i * 0.05}s` }}>
+                    <div className="mv-card-icon" style={{ background: card.bg }}>{card.icon}</div>
+                    <div style={{ flex: 1 }}>
+                      <div className="mv-card-title">{card.title}</div>
+                      <div className="mv-card-sub">{card.sub}</div>
                     </div>
-                  ))}
+                    <div className="mv-card-arrow">›</div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Mobile footer */}
+              <div className="mv-footer">
+                <img src={LOGO} style={{ width: 32, height: 32, borderRadius: '50%', marginBottom: '8px' }} onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', marginBottom: '2px' }}>Akadian Academy</p>
+                <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', marginBottom: '14px' }}>Orlando, FL 🇺🇸 · www.akadianacademy.com</p>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                  <button className="share-btn" onClick={copyLink} style={{ fontSize: '12px', padding: '7px 14px' }}>{copied ? '✓ Copied!' : '🔗 Copy link'}</button>
+                  <button className="share-btn share-btn-primary" onClick={() => window.print()} style={{ fontSize: '12px', padding: '7px 14px' }}>↓ Save PDF</button>
                 </div>
-              </>
-            )}
-            <a href="#m-story" className="mobile-next-btn" onClick={() => setMobileSection('m-story')}>
-              <span>Next: Read the story</span>
-              <span style={{ color: '#ff4b55' }}>📖 →</span>
-            </a>
-          </div>
-
-          {/* STORY */}
-          <div id="m-story" className="mobile-section">
-            <div className="mobile-section-label">
-              <div className="mobile-section-icon" style={{ background: 'rgba(59,130,246,0.12)' }}>📖</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Context story</div>
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Find the vocabulary words hidden inside</div>
-              </div>
-            </div>
-            {story ? (
-              <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} />
-            ) : (
-              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No story yet.</p>
-            )}
-            <a href="#m-exercise" className="mobile-next-btn" onClick={() => setMobileSection('m-exercise')}>
-              <span>Next: Do the exercise</span>
-              <span style={{ color: '#ff4b55' }}>✍️ →</span>
-            </a>
-          </div>
-
-          {/* EXERCISE */}
-          <div id="m-exercise" className="mobile-section">
-            <div className="mobile-section-label">
-              <div className="mobile-section-icon" style={{ background: 'rgba(0,188,124,0.12)' }}>✍️</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>{exercise?.type?.replace(/-/g, ' ').replace(/\w/g, (l: string) => l.toUpperCase()) || 'Exercise'}</div>
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Practice time</div>
-              </div>
-            </div>
-            {exercise ? (
-              <div>
-                {exercise.instructions && (
-                  <div className="exercise-instructions">📋 {exercise.instructions}</div>
+                {canvasMode === 'student' && (
+                  <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', background: '#ff4b55', borderRadius: '12px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', marginTop: '12px', boxShadow: '0 4px 16px rgba(255,75,85,0.3)' }}>
+                    ✦ Are you a teacher? Build free
+                  </a>
                 )}
-                <div className="exercise-content">{exercise.content}</div>
               </div>
-            ) : (
-              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No exercise yet.</p>
-            )}
-            <a href="#m-questions" className="mobile-next-btn" onClick={() => setMobileSection('m-questions')}>
-              <span>Next: Story questions</span>
-              <span style={{ color: '#ff4b55' }}>💬 →</span>
-            </a>
-          </div>
+            </>
+          ) : (
+            /* Section detail view */
+            <div className="mv-section-view">
 
-          {/* STORY QUESTIONS */}
-          <div id="m-questions" className="mobile-section">
-            <div className="mobile-section-label">
-              <div className="mobile-section-icon" style={{ background: 'rgba(245,158,11,0.12)' }}>💬</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Story questions</div>
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Discuss together</div>
+              {/* Sticky back header */}
+              <div className="mv-section-header">
+                <button className="mv-back-btn" onClick={() => setMobileView('home')}>
+                  ← Back
+                </button>
+                <span className="mv-section-name">
+                  {mobileView === 'vocab' && '📚 Vocabulary'}
+                  {mobileView === 'story' && '📖 Story'}
+                  {mobileView === 'exercise' && '✍️ Exercise'}
+                  {mobileView === 'questions' && '💬 Story Questions'}
+                  {mobileView === 'debate' && '🗣 Debate'}
+                  {mobileView === 'canvas' && '📌 Canvas'}
+                </span>
+                <button className="share-btn" onClick={copyLink} style={{ marginLeft: 'auto', fontSize: '11px', padding: '5px 10px' }}>
+                  {copied ? '✓' : '🔗'}
+                </button>
               </div>
-            </div>
-            {story ? (
-              <div>
-                {story.debateStory && (
-                  <div className="debate-section">
-                    <span className="debate-label" style={{ background: 'rgba(255,75,85,0.1)', color: '#ff4b55' }}>What happened in the story</span>
-                    <p className="debate-content">{story.debateStory}</p>
+
+              {/* Section content */}
+              <div className="mv-section-content">
+
+                {mobileView === 'vocab' && (
+                  <div>
+                    <div className="vocab-grid">
+                      {lesson.vocab?.map((v: any) => (
+                        <div key={v.id} className="vocab-card">
+                          <div className="vocab-word">{v.word}</div>
+                          <div className="vocab-translation">{v.translation}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {lesson.sentences?.length > 0 && (
+                      <>
+                        <div style={{ margin: '24px 0 12px', fontSize: '15px', fontWeight: 600 }}>Example sentences</div>
+                        <div className="sentence-list">
+                          {lesson.sentences.map((s: any) => (
+                            <div key={s.id} className="sentence-card">
+                              <div className="sentence-en">{s.source}</div>
+                              <div className="sentence-tr">{s.translation}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    <button className="mv-next-card" onClick={() => setMobileView('story')}>
+                      <div><div className="mv-next-label">Next up</div><div className="mv-next-name">📖 Read the story</div></div>
+                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                    </button>
                   </div>
                 )}
-                {story.debateMoral && (
-                  <div className="debate-section">
-                    <span className="debate-label" style={{ background: 'rgba(255,188,0,0.1)', color: 'rgba(255,188,0,0.9)' }}>What we can learn</span>
-                    <p className="debate-content">{story.debateMoral}</p>
+
+                {mobileView === 'story' && (
+                  <div>
+                    {story ? (
+                      <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} />
+                    ) : (
+                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No story yet.</p>
+                    )}
+                    <button className="mv-next-card" onClick={() => setMobileView('exercise')}>
+                      <div><div className="mv-next-label">Next up</div><div className="mv-next-name">✍️ Do the exercise</div></div>
+                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                    </button>
                   </div>
                 )}
-                {story.debatePersonal && (
-                  <div className="debate-section">
-                    <span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal connection</span>
-                    <p className="debate-content">{story.debatePersonal}</p>
+
+                {mobileView === 'exercise' && (
+                  <div>
+                    {exercise ? (
+                      <>
+                        {exercise.instructions && <div className="exercise-instructions">📋 {exercise.instructions}</div>}
+                        <div className="exercise-content">{exercise.content}</div>
+                      </>
+                    ) : (
+                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No exercise yet.</p>
+                    )}
+                    <button className="mv-next-card" onClick={() => setMobileView('questions')}>
+                      <div><div className="mv-next-label">Next up</div><div className="mv-next-name">💬 Story questions</div></div>
+                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                    </button>
                   </div>
                 )}
-              </div>
-            ) : (
-              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No questions yet.</p>
-            )}
-            <a href="#m-debate" className="mobile-next-btn" onClick={() => setMobileSection('m-debate')}>
-              <span>Next: Full debate</span>
-              <span style={{ color: '#ff4b55' }}>🗣 →</span>
-            </a>
-          </div>
 
-          {/* DEBATE */}
-          <div id="m-debate" className="mobile-section">
-            <div className="mobile-section-label">
-              <div className="mobile-section-icon" style={{ background: 'rgba(139,92,246,0.12)' }}>🗣</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Debate</div>
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Go deeper into the topic</div>
+                {mobileView === 'questions' && (
+                  <div>
+                    {story ? (
+                      <>
+                        {story.debateStory && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(255,75,85,0.1)', color: '#ff4b55' }}>What happened</span><p className="debate-content">{story.debateStory}</p></div>}
+                        {story.debateMoral && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(255,188,0,0.1)', color: 'rgba(255,188,0,0.9)' }}>What we learn</span><p className="debate-content">{story.debateMoral}</p></div>}
+                        {story.debatePersonal && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal connection</span><p className="debate-content">{story.debatePersonal}</p></div>}
+                      </>
+                    ) : (
+                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No questions yet.</p>
+                    )}
+                    <button className="mv-next-card" onClick={() => setMobileView('debate')}>
+                      <div><div className="mv-next-label">Next up</div><div className="mv-next-name">🗣 Full debate</div></div>
+                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                    </button>
+                  </div>
+                )}
+
+                {mobileView === 'debate' && (
+                  <div>
+                    {lesson.debate ? (
+                      <RichDebateDisplay topic={lesson.debate.topic} article={lesson.debate.article} keyTerms={lesson.debate.keyTerms || []} questions={lesson.debate.questions || ''} />
+                    ) : (
+                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No debate content yet.</p>
+                    )}
+                    <button className="mv-next-card" onClick={() => setMobileView('canvas')}>
+                      <div><div className="mv-next-label">Next up</div><div className="mv-next-name">📌 Teacher's canvas</div></div>
+                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                    </button>
+                  </div>
+                )}
+
+                {mobileView === 'canvas' && (
+                  <div>
+                    {canvasMode === 'teacher' && (
+                      <div style={{ background: 'rgba(0,188,124,0.08)', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '12px', padding: '10px 14px', marginBottom: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
+                        ✦ You are in <strong style={{ color: '#00bc7c' }}>teacher edit mode</strong>
+                      </div>
+                    )}
+                    <TeachingCanvas lessonId={lesson.id} mode={canvasMode} vocab={lesson.vocab || []} />
+                    <button className="mv-next-card" onClick={() => setMobileView('home')} style={{ marginTop: '24px' }}>
+                      <div><div className="mv-next-label">All done!</div><div className="mv-next-name">← Back to lesson menu</div></div>
+                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>🏠</span>
+                    </button>
+                  </div>
+                )}
+
               </div>
             </div>
-            {lesson.debate ? (
-              <RichDebateDisplay
-                topic={lesson.debate.topic}
-                article={lesson.debate.article}
-                keyTerms={lesson.debate.keyTerms || []}
-                questions={lesson.debate.questions || ''}
-              />
-            ) : (
-              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No debate content yet.</p>
-            )}
-            <a href="#m-canvas" className="mobile-next-btn" onClick={() => setMobileSection('m-canvas')}>
-              <span>Next: Teacher's canvas</span>
-              <span style={{ color: '#ff4b55' }}>📌 →</span>
-            </a>
-          </div>
-
-          {/* CANVAS */}
-          <div id="m-canvas" className="mobile-section">
-            <div className="mobile-section-label">
-              <div className="mobile-section-icon" style={{ background: 'rgba(0,188,124,0.12)' }}>📌</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
-                  {canvasMode === 'teacher' ? 'Canvas (edit)' : "Teacher's canvas"}
-                </div>
-                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>
-                  {canvasMode === 'teacher' ? 'Add notes for students' : 'Notes from your teacher'}
-                </div>
-              </div>
-            </div>
-            {canvasMode === 'teacher' && (
-              <div style={{ background: 'rgba(0,188,124,0.08)', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '12px', padding: '10px 14px', marginBottom: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
-                ✦ You are in <strong style={{ color: '#00bc7c' }}>teacher edit mode</strong>
-              </div>
-            )}
-            <TeachingCanvas lessonId={lesson.id} mode={canvasMode} vocab={lesson.vocab || []} />
-          </div>
-
-          {/* Mobile footer */}
-          <div className="mobile-footer">
-            <img src={LOGO} style={{ width: 36, height: 36, borderRadius: '50%', marginBottom: '10px' }} onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
-            <p style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}>Akadian Academy</p>
-            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)', marginBottom: '16px' }}>Orlando, FL 🇺🇸 · Real US certificates coming soon</p>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button className="share-btn" onClick={copyLink} style={{ fontSize: '13px' }}>{copied ? '✓ Copied!' : '🔗 Share'}</button>
-              {canvasMode === 'student' && (
-                <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#ff4b55', borderRadius: '10px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-                  ✦ I'm a teacher
-                </a>
-              )}
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Inline editor — teacher only */}
