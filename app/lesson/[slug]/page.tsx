@@ -30,6 +30,7 @@ export default function PublicLessonPage() {
   const [canvasMode, setCanvasMode] = useState<'student' | 'teacher'>('student')
   const [editableLesson, setEditableLesson] = useState<any>(null)
   const [showInfo, setShowInfo] = useState(false)
+  const [mobileSection, setMobileSection] = useState('vocab')
   const supabase = createClient()
 
   useEffect(() => {
@@ -267,115 +268,132 @@ export default function PublicLessonPage() {
 
         /* Mobile bottom nav — hidden on desktop */
         .mobile-bottom-nav { display: none; }
+        .mobile-scroll-view { display: none; }
 
         @media print {
           .bg-orb, .bg-grid { display: none !important; }
           .nav { position: relative !important; background: #0b172b !important; }
           .share-btn { display: none !important; }
           .tabs { display: none !important; }
-          .mobile-bottom-nav { display: none !important; }
           body { background: #0b172b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
-        /* ==================== MOBILE ==================== */
+        /* ==================== MOBILE ONLY ==================== */
         @media (max-width: 768px) {
-          /* Hide desktop elements */
-          .hero-breadcrumb { display: none; }
-          .two-col { display: none; }
-          .tabs { display: none; }
-          .impact-cards { grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-          .impact-card { padding: 12px; }
-          .hero { padding: 20px 16px 0; margin-bottom: 0; }
-          .hero-goal { font-size: 14px; margin-bottom: 20px; }
-          .content { padding: 0 16px 100px; }
-          .nav { padding: 10px 16px; }
-          .nav-logo-text { display: none; }
-          .teacher-badge span:last-child { display: none; }
-          .section-title { font-size: 18px; }
-          .vocab-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-          .vocab-card { padding: 12px; }
-          .vocab-word { font-size: 14px; }
-          .vocab-translation { font-size: 12px; }
-          .story-body { font-size: 15px; line-height: 1.8; }
+          /* Hide ALL desktop-only elements */
+          .hero-breadcrumb { display: none !important; }
+          .two-col { display: none !important; }
+          .tabs { display: none !important; }
+          .content > div[key] { display: none !important; }
+          .lesson-footer { display: none !important; }
+          .hero { padding: 16px 16px 0 !important; }
+          .hero-title { font-size: 26px !important; margin-bottom: 10px !important; }
+          .hero-goal { font-size: 14px !important; margin-bottom: 16px !important; max-width: 100% !important; }
+          .impact-cards { grid-template-columns: repeat(3,1fr) !important; gap: 8px !important; margin-bottom: 16px !important; }
+          .impact-card { padding: 10px 8px !important; text-align: center; }
+          .nav { padding: 10px 16px !important; }
+          .nav-logo-text { display: none !important; }
 
-          /* Mobile bottom nav */
-          .mobile-bottom-nav {
-            display: block;
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            z-index: 500;
-            background: rgba(8,16,32,0.98);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-top: 1px solid rgba(255,255,255,0.08);
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-          }
-          .mobile-nav-row {
+          /* Show mobile scroll view */
+          .mobile-scroll-view { display: block !important; }
+
+          /* Mobile sticky section pills */
+          .mobile-pills {
+            position: sticky;
+            top: 52px;
+            z-index: 90;
+            background: rgba(11,23,43,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 10px 16px;
+            margin: 0 -16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            overflow-x: auto;
+            scrollbar-width: none;
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 8px 0 4px;
+            gap: 6px;
+            white-space: nowrap;
           }
-          .mobile-nav-btn {
-            display: flex;
-            flex-direction: column;
+          .mobile-pills::-webkit-scrollbar { display: none; }
+          .mobile-pill {
+            display: inline-flex;
             align-items: center;
-            gap: 3px;
-            padding: 6px 8px;
-            border: none;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            border: 1px solid rgba(255,255,255,0.1);
             background: transparent;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-            min-width: 48px;
-            border-radius: 12px;
-            transition: all 0.2s;
-            position: relative;
-          }
-          .mobile-nav-btn.active {
-            background: rgba(255,75,85,0.12);
-          }
-          .mobile-nav-icon {
-            font-size: 22px;
-            line-height: 1;
-            transition: transform 0.2s;
-          }
-          .mobile-nav-btn.active .mobile-nav-icon {
-            transform: scale(1.1);
-          }
-          .mobile-nav-label {
-            font-size: 9px;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            transition: color 0.2s;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            text-decoration: none;
           }
-          .mobile-nav-btn.active .mobile-nav-label { color: #ff4b55; }
-          .mobile-nav-btn:not(.active) .mobile-nav-label { color: rgba(255,255,255,0.3); }
-          .mobile-nav-dot {
-            position: absolute;
-            top: 4px; right: 8px;
-            width: 6px; height: 6px;
-            border-radius: 50%;
+          .mobile-pill.active {
             background: #ff4b55;
+            border-color: #ff4b55;
+            color: #fff;
           }
 
-          /* Mobile section header with back feel */
-          .mobile-section-header {
+          /* Mobile sections */
+          .mobile-section {
+            padding: 28px 16px 0;
+            scroll-margin-top: 110px;
+          }
+          .mobile-section-label {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 16px 0 8px;
             margin-bottom: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
           }
           .mobile-section-icon {
-            width: 36px; height: 36px;
-            border-radius: 10px;
+            width: 32px; height: 32px;
+            border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
-            background: rgba(255,75,85,0.12);
+            font-size: 16px;
             flex-shrink: 0;
           }
+          .mobile-next-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            color: rgba(255,255,255,0.6);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+          }
+          .mobile-next-btn:active {
+            background: rgba(255,75,85,0.1);
+            border-color: rgba(255,75,85,0.3);
+          }
+          .mobile-footer {
+            padding: 32px 16px 48px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 32px;
+          }
+
+          /* Content tweaks for mobile */
+          .vocab-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+          .vocab-card { padding: 12px !important; }
+          .vocab-word { font-size: 14px !important; }
+          .vocab-translation { font-size: 12px !important; }
+          .story-body { font-size: 15px !important; line-height: 1.85 !important; }
+          .section-title { font-size: 17px !important; }
         }
       `}</style>
 
@@ -567,20 +585,205 @@ export default function PublicLessonPage() {
           </div>
         )}
 
-        {/* Mobile bottom navigation */}
-        <div className="mobile-bottom-nav">
-          <div className="mobile-nav-row">
-            {TABS.map(t => (
-              <button
-                key={t.id}
-                className={`mobile-nav-btn ${activeTab === t.id ? 'active' : ''}`}
-                onClick={() => { setActiveTab(t.id); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-              >
-                {activeTab === t.id && <div className="mobile-nav-dot" />}
-                <span className="mobile-nav-icon">{t.icon}</span>
-                <span className="mobile-nav-label">{t.short}</span>
-              </button>
+        {/* ===== MOBILE SCROLL VIEW ===== */}
+        <div className="mobile-scroll-view">
+
+          {/* Sticky section pills */}
+          <div className="mobile-pills" id="mobile-pills">
+            {[
+              { id: 'm-vocab', icon: '📚', label: 'Vocab' },
+              { id: 'm-story', icon: '📖', label: 'Story' },
+              { id: 'm-exercise', icon: '✍️', label: 'Exercise' },
+              { id: 'm-questions', icon: '💬', label: 'Questions' },
+              { id: 'm-debate', icon: '🗣', label: 'Debate' },
+              { id: 'm-canvas', icon: '📌', label: 'Canvas' },
+            ].map(p => (
+              <a key={p.id} href={`#${p.id}`} className={`mobile-pill ${mobileSection === p.id ? 'active' : ''}`}
+                onClick={() => setMobileSection(p.id)}>
+                {p.icon} {p.label}
+              </a>
             ))}
+          </div>
+
+          {/* VOCAB */}
+          <div id="m-vocab" className="mobile-section">
+            <div className="mobile-section-label">
+              <div className="mobile-section-icon" style={{ background: 'rgba(255,75,85,0.12)' }}>📚</div>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Vocabulary</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>{lesson.vocab?.length || 0} words to learn</div>
+              </div>
+            </div>
+            <div className="vocab-grid">
+              {lesson.vocab?.map((v: any) => (
+                <div key={v.id} className="vocab-card">
+                  <div className="vocab-word">{v.word}</div>
+                  <div className="vocab-translation">{v.translation}</div>
+                </div>
+              ))}
+            </div>
+            {lesson.sentences?.length > 0 && (
+              <>
+                <div style={{ margin: '24px 0 12px', fontSize: '15px', fontWeight: 600 }}>Example sentences</div>
+                <div className="sentence-list">
+                  {lesson.sentences.map((s: any) => (
+                    <div key={s.id} className="sentence-card">
+                      <div className="sentence-en">{s.source}</div>
+                      <div className="sentence-tr">{s.translation}</div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+            <a href="#m-story" className="mobile-next-btn" onClick={() => setMobileSection('m-story')}>
+              <span>Next: Read the story</span>
+              <span style={{ color: '#ff4b55' }}>📖 →</span>
+            </a>
+          </div>
+
+          {/* STORY */}
+          <div id="m-story" className="mobile-section">
+            <div className="mobile-section-label">
+              <div className="mobile-section-icon" style={{ background: 'rgba(59,130,246,0.12)' }}>📖</div>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Context story</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Find the vocabulary words hidden inside</div>
+              </div>
+            </div>
+            {story ? (
+              <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} />
+            ) : (
+              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No story yet.</p>
+            )}
+            <a href="#m-exercise" className="mobile-next-btn" onClick={() => setMobileSection('m-exercise')}>
+              <span>Next: Do the exercise</span>
+              <span style={{ color: '#ff4b55' }}>✍️ →</span>
+            </a>
+          </div>
+
+          {/* EXERCISE */}
+          <div id="m-exercise" className="mobile-section">
+            <div className="mobile-section-label">
+              <div className="mobile-section-icon" style={{ background: 'rgba(0,188,124,0.12)' }}>✍️</div>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>{exercise?.type?.replace(/-/g, ' ').replace(/\w/g, (l: string) => l.toUpperCase()) || 'Exercise'}</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Practice time</div>
+              </div>
+            </div>
+            {exercise ? (
+              <div>
+                {exercise.instructions && (
+                  <div className="exercise-instructions">📋 {exercise.instructions}</div>
+                )}
+                <div className="exercise-content">{exercise.content}</div>
+              </div>
+            ) : (
+              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No exercise yet.</p>
+            )}
+            <a href="#m-questions" className="mobile-next-btn" onClick={() => setMobileSection('m-questions')}>
+              <span>Next: Story questions</span>
+              <span style={{ color: '#ff4b55' }}>💬 →</span>
+            </a>
+          </div>
+
+          {/* STORY QUESTIONS */}
+          <div id="m-questions" className="mobile-section">
+            <div className="mobile-section-label">
+              <div className="mobile-section-icon" style={{ background: 'rgba(245,158,11,0.12)' }}>💬</div>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Story questions</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Discuss together</div>
+              </div>
+            </div>
+            {story ? (
+              <div>
+                {story.debateStory && (
+                  <div className="debate-section">
+                    <span className="debate-label" style={{ background: 'rgba(255,75,85,0.1)', color: '#ff4b55' }}>What happened in the story</span>
+                    <p className="debate-content">{story.debateStory}</p>
+                  </div>
+                )}
+                {story.debateMoral && (
+                  <div className="debate-section">
+                    <span className="debate-label" style={{ background: 'rgba(255,188,0,0.1)', color: 'rgba(255,188,0,0.9)' }}>What we can learn</span>
+                    <p className="debate-content">{story.debateMoral}</p>
+                  </div>
+                )}
+                {story.debatePersonal && (
+                  <div className="debate-section">
+                    <span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal connection</span>
+                    <p className="debate-content">{story.debatePersonal}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No questions yet.</p>
+            )}
+            <a href="#m-debate" className="mobile-next-btn" onClick={() => setMobileSection('m-debate')}>
+              <span>Next: Full debate</span>
+              <span style={{ color: '#ff4b55' }}>🗣 →</span>
+            </a>
+          </div>
+
+          {/* DEBATE */}
+          <div id="m-debate" className="mobile-section">
+            <div className="mobile-section-label">
+              <div className="mobile-section-icon" style={{ background: 'rgba(139,92,246,0.12)' }}>🗣</div>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>Debate</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>Go deeper into the topic</div>
+              </div>
+            </div>
+            {lesson.debate ? (
+              <RichDebateDisplay
+                topic={lesson.debate.topic}
+                article={lesson.debate.article}
+                keyTerms={lesson.debate.keyTerms || []}
+                questions={lesson.debate.questions || ''}
+              />
+            ) : (
+              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', padding: '32px 0', textAlign: 'center' }}>No debate content yet.</p>
+            )}
+            <a href="#m-canvas" className="mobile-next-btn" onClick={() => setMobileSection('m-canvas')}>
+              <span>Next: Teacher's canvas</span>
+              <span style={{ color: '#ff4b55' }}>📌 →</span>
+            </a>
+          </div>
+
+          {/* CANVAS */}
+          <div id="m-canvas" className="mobile-section">
+            <div className="mobile-section-label">
+              <div className="mobile-section-icon" style={{ background: 'rgba(0,188,124,0.12)' }}>📌</div>
+              <div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+                  {canvasMode === 'teacher' ? 'Canvas (edit)' : "Teacher's canvas"}
+                </div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>
+                  {canvasMode === 'teacher' ? 'Add notes for students' : 'Notes from your teacher'}
+                </div>
+              </div>
+            </div>
+            {canvasMode === 'teacher' && (
+              <div style={{ background: 'rgba(0,188,124,0.08)', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '12px', padding: '10px 14px', marginBottom: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
+                ✦ You are in <strong style={{ color: '#00bc7c' }}>teacher edit mode</strong>
+              </div>
+            )}
+            <TeachingCanvas lessonId={lesson.id} mode={canvasMode} vocab={lesson.vocab || []} />
+          </div>
+
+          {/* Mobile footer */}
+          <div className="mobile-footer">
+            <img src={LOGO} style={{ width: 36, height: 36, borderRadius: '50%', marginBottom: '10px' }} onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(255,255,255,0.5)', marginBottom: '4px' }}>Akadian Academy</p>
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)', marginBottom: '16px' }}>Orlando, FL 🇺🇸 · Real US certificates coming soon</p>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button className="share-btn" onClick={copyLink} style={{ fontSize: '13px' }}>{copied ? '✓ Copied!' : '🔗 Share'}</button>
+              {canvasMode === 'student' && (
+                <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '8px 16px', background: '#ff4b55', borderRadius: '10px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+                  ✦ I'm a teacher
+                </a>
+              )}
+            </div>
           </div>
         </div>
 
