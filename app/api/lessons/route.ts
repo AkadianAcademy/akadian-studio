@@ -45,9 +45,26 @@ export async function POST(req: Request) {
     await ensureUserExists(user.id, user.email!, user.user_metadata?.name)
 
     const body = await req.json()
-    const { subject, language, level, unit, title, goal } = body
-    const slug = generateSlug(title || 'untitled-lesson')
+    const { subject, language, level, unit, title, goal, lessonId } = body
 
+    // If lessonId provided — UPDATE existing lesson
+    if (lessonId) {
+      const lesson = await prisma.lesson.update({
+        where: { id: lessonId },
+        data: {
+          subject: subject || 'languages',
+          language: language || 'English',
+          level: level || 'A2',
+          unit: unit || '',
+          title: title || 'Untitled Lesson',
+          goal: goal || '',
+        }
+      })
+      return NextResponse.json({ lesson })
+    }
+
+    // Otherwise CREATE new lesson
+    const slug = generateSlug(title || 'untitled-lesson')
     const lesson = await prisma.lesson.create({
       data: {
         userId: user.id,

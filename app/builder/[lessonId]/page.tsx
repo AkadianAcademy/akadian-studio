@@ -122,7 +122,7 @@ export default function BuilderPage() {
   const params = useParams()
   const router = useRouter()
   const lessonId = params.lessonId as string
-  const { currentStep, setCurrentStep, setup, setLessonId, setSaving, setSlug, vocab, reset, setSetup, setVocab, setSentences } = useLessonStore()
+  const { currentStep, setCurrentStep, setup, setLessonId, setSaving, setSlug, vocab, reset, setSetup, setVocab, setSentences, lessonId: storeLessonId } = useLessonStore()
   const [authChecked, setAuthChecked] = useState(false)
   const tokenRef = useRef<string | null>(null)
   const supabase = createClient()
