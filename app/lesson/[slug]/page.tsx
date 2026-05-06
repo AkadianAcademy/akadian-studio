@@ -112,18 +112,31 @@ export default function PublicLessonPage() {
         .impact-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 18px; transition: border-color 0.2s; }
         .impact-card:hover { border-color: rgba(255,75,85,0.2); }
         .impact-icon { font-size: 22px; margin-bottom: 8px; }
-        .two-col { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px,5vw,64px); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; position: relative; z-index: 1; }
+        .two-col { max-width: 900px; margin: 0 auto; padding: 0 clamp(16px,5vw,64px); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; position: relative; z-index: 1; }
         .info-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 22px; }
         .info-card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
         .flow-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .flow-item:last-child { border-bottom: none; }
         .flow-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
         .content { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px,5vw,64px); position: relative; z-index: 1; }
-        .tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 4px; margin-bottom: 28px; overflow-x: auto; }
-        .tab { flex: 1; padding: 10px 12px; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; min-width: 80px; text-align: center; }
+        /* Desktop tabs */
+        .tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 4px; margin-bottom: 28px; overflow-x: auto; scrollbar-width: none; }
+        .tabs::-webkit-scrollbar { display: none; }
+        .tab { flex: 1; padding: 10px 12px; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; min-width: 70px; text-align: center; }
         .tab-on { background: #ff4b55; color: #fff; }
         .tab-off { background: transparent; color: rgba(255,255,255,0.4); }
         .tab-off:hover { color: rgba(255,255,255,0.7); }
+        /* Mobile bottom nav */
+        .mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: rgba(11,23,43,0.97); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); padding: 8px 0 env(safe-area-inset-bottom, 8px); }
+        .mobile-nav-inner { display: flex; justify-content: space-around; align-items: center; }
+        .mobile-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 12px; border: none; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; border-radius: 10px; transition: all 0.2s; min-width: 52px; }
+        .mobile-tab-icon { font-size: 20px; line-height: 1; }
+        .mobile-tab-label { font-size: 9px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
+        .mobile-tab-on .mobile-tab-label { color: #ff4b55; }
+        .mobile-tab-off .mobile-tab-label { color: rgba(255,255,255,0.35); }
+        .mobile-tab-on .mobile-tab-icon { filter: none; }
+        .mobile-tab-off { opacity: 0.7; }
+        .mobile-content-pad { padding-bottom: 80px; }
         .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 10px; }
         .vocab-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 16px; transition: all 0.2s; }
         .vocab-card:hover { border-color: rgba(255,75,85,0.3); transform: translateY(-1px); }
@@ -153,10 +166,19 @@ export default function PublicLessonPage() {
           .fade-up { opacity: 1 !important; animation: none !important; }
           body { background: #0b172b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .two-col { grid-template-columns: 1fr; }
-          .impact-cards { grid-template-columns: 1fr; }
+          .impact-cards { grid-template-columns: 1fr 1fr; gap: 8px; }
           .vocab-grid { grid-template-columns: 1fr 1fr; }
+          .tabs { display: none !important; }
+          .mobile-nav { display: block !important; }
+          .mobile-content-pad { display: block !important; }
+          .nav { padding: 12px 16px; }
+          .hero { padding: clamp(24px,4vw,48px) 16px 0; }
+          .content { padding: 0 16px; }
+          .two-col { padding: 0 16px; }
+          .nav-logo-text { font-size: 13px; }
+          .share-btn span { display: none; }
         }
       `}</style>
 
@@ -178,8 +200,8 @@ export default function PublicLessonPage() {
                 Teacher view
               </div>
             )}
-            <button className="share-btn" onClick={copyLink}>{copied ? '✓ Copied!' : '🔗 Copy link'}</button>
-            <button className="share-btn share-btn-primary" onClick={() => window.print()}>↓ Save PDF</button>
+            <button className="share-btn" onClick={copyLink}>{copied ? '✓' : '🔗'}<span> {copied ? 'Copied!' : 'Copy link'}</span></button>
+            <button className="share-btn share-btn-primary" onClick={() => window.print()}>↓<span> Save PDF</span></button>
           </div>
         </nav>
 
@@ -249,7 +271,7 @@ export default function PublicLessonPage() {
         </div>
 
         {/* Tabs */}
-        <div className="content fade-up" style={{ animationDelay: '0.25s' }}>
+        <div className="content mobile-content-pad fade-up" style={{ animationDelay: '0.25s' }}>
           <div className="tabs">
             {[
               { id: 'vocab', label: `📚 Vocabulary (${lesson.vocab?.length || 0})` },
@@ -264,6 +286,26 @@ export default function PublicLessonPage() {
                 {t.label}
               </button>
             ))}
+          </div>
+
+          {/* Mobile bottom nav */}
+          <div className="mobile-nav">
+            <div className="mobile-nav-inner">
+              {[
+                { id: 'vocab', icon: '📚', label: 'Vocab' },
+                { id: 'story', icon: '📖', label: 'Story' },
+                { id: 'exercise', icon: '✍️', label: 'Exercise' },
+                { id: 'debate2', icon: '🗣', label: 'Debate' },
+                { id: 'canvas', icon: '📌', label: 'Canvas' },
+              ].map(t => (
+                <button key={t.id}
+                  className={`mobile-tab ${activeTab === t.id ? 'mobile-tab-on' : 'mobile-tab-off'}`}
+                  onClick={() => setActiveTab(t.id as any)}>
+                  <span className="mobile-tab-icon">{t.icon}</span>
+                  <span className="mobile-tab-label">{t.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Vocab */}
@@ -476,8 +518,8 @@ export default function PublicLessonPage() {
             <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: 'rgba(255,255,255,0.5)', fontSize: '13px', fontWeight: 500, textDecoration: 'none' }}>
               ← Back to Akadian
             </a>
-            <button className="share-btn" onClick={copyLink}>{copied ? '✓ Copied!' : '🔗 Copy link'}</button>
-            <button className="share-btn share-btn-primary" onClick={() => window.print()}>↓ Save PDF</button>
+            <button className="share-btn" onClick={copyLink}>{copied ? '✓' : '🔗'}<span> {copied ? 'Copied!' : 'Copy link'}</span></button>
+            <button className="share-btn share-btn-primary" onClick={() => window.print()}>↓<span> Save PDF</span></button>
           </div>
         </div>
 
