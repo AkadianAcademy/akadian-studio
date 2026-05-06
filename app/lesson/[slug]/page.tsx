@@ -36,6 +36,7 @@ export default function PublicLessonPage() {
       const d = await res.json()
       if (d.lesson) {
         setLesson(d.lesson)
+          setEditableLesson(d.lesson)
         // Check if current user owns this lesson
         const { data: { user } } = await supabase.auth.getUser()
         if (user && d.lesson.userId === user.id) {
