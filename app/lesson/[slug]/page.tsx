@@ -518,6 +518,25 @@ export default function PublicLessonPage() {
           </div>
         </div>
 
+        {/* Referral ad — desktop + mobile */}
+        <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 clamp(20px,5vw,64px) 0', position: 'relative', zIndex: 1 }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(0,188,124,0.08), rgba(255,75,85,0.05))', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '14px', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '22px' }}>🎁</span>
+              <div>
+                <p style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '3px' }}>¿Conoces a alguien que quiera aprender?</p>
+                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>
+                  Refiere a una persona y obtén <strong style={{ color: '#00bc7c' }}>hasta 30% de descuento</strong> en tu siguiente mensualidad.
+                </p>
+              </div>
+            </div>
+            <a href="https://www.akadianacademy.com/sesiones-en-vivo" target="_blank"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', background: '#00bc7c', borderRadius: '10px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 14px rgba(0,188,124,0.3)' }}>
+              Referir ahora →
+            </a>
+          </div>
+        </div>
+
         {/* Desktop footer */}
         <div className="lesson-footer fade-up" style={{ animationDelay: '0.35s' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
