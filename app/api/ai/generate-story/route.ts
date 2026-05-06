@@ -19,11 +19,16 @@ async function getUserFromRequest(req: Request) {
 
 const STORY_SPECS: Record<string, { paragraphs: number, style: string }> = {
   'A1': {
-    paragraphs: 2,
-    style: `Very simple sentences only. Subject-verb-object structure. Present tense. 
-    Maximum 8 words per sentence. Common everyday vocabulary only. 
-    No idioms, no complex grammar. Like reading to a child learning to read.
-    Each paragraph is 2-3 short sentences.`
+    paragraphs: 5,
+    style: `Very simple sentences only. Subject-verb-object structure. Present tense and simple past.
+    Maximum 10 words per sentence. Common everyday vocabulary only.
+    No idioms, no complex grammar. Like a children's storybook — simple but warm and engaging.
+    Each paragraph is 3-4 short sentences.
+    The story must have a clear beginning (who, where, what), a middle (what happens, a small problem or situation), 
+    and an end (how it resolves, how the character feels).
+    Even though the language is simple, the story must feel COMPLETE and give the student real context.
+    Think of it like a Peppa Pig episode — short words, but a full satisfying story with a beginning, middle and end.
+    Make it at least 150 words total. Simple does NOT mean thin — it means accessible.`
   },
   'A2': {
     paragraphs: 4,
