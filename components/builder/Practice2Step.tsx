@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLessonStore } from '@/store/lessonStore'
 import { createClient } from '@/lib/supabase'
 
@@ -29,6 +29,22 @@ export default function Practice2Step({ onNext, onBack }: Props) {
   const [loadingQuestions, setLoadingQuestions] = useState(false)
 
   const supabase = createClient()
+
+  // Load existing debate data when editing
+  useEffect(() => {
+    if (!lessonId || lessonId === 'new') return
+    fetch(`/api/lessons/${lessonId}/debate`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.debate) {
+          setTopic(d.debate.topic || '')
+          setArticle(d.debate.article || '')
+          setKeyTerms(d.debate.keyTerms || [])
+          setQuestions(d.debate.questions || '')
+        }
+      })
+      .catch(console.error)
+  }, [lessonId])
 
   async function getToken() {
     const { data: { session } } = await supabase.auth.getSession()

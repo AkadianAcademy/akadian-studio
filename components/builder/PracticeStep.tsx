@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useLessonStore } from '@/store/lessonStore'
 import { createClient } from '@/lib/supabase'
 import { useAI } from '@/hooks/useAI'
@@ -41,6 +41,31 @@ export default function PracticeStep({ onNext, onBack }: Props) {
   const [debatePersonal, setDebatePersonal] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+
+  // Load existing data when editing
+  useEffect(() => {
+    if (!lessonId || lessonId === 'new') return
+    fetch(`/api/lessons/${lessonId}`)
+      .then(r => r.json())
+      .then(d => {
+        const l = d.lesson
+        if (!l) return
+        if (l.exercise) {
+          setExerciseType(l.exercise.type || 'roleplay')
+          setInstructions(l.exercise.instructions || '')
+          setContent(l.exercise.content || '')
+        }
+        if (l.story) {
+          setStory(l.story.content || '')
+          setImagePrompt(l.story.imageUrl || '')
+          setImageStyle(l.story.imageStyle || 'photorealistic')
+          setDebateStory(l.story.debateStory || '')
+          setDebateMoral(l.story.debateMoral || '')
+          setDebatePersonal(l.story.debatePersonal || '')
+        }
+      })
+      .catch(console.error)
+  }, [lessonId])
   const [copied, setCopied] = useState(false)
   const tokenRef = useRef<string | null>(null)
   const supabase = createClient()
