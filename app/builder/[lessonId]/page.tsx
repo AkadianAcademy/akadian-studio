@@ -9,6 +9,7 @@ import SetupStep from '@/components/builder/SetupStep'
 import VocabStep from '@/components/builder/VocabStep'
 import PracticeStep from '@/components/builder/PracticeStep'
 import PreviewStep from '@/components/builder/PreviewStep'
+import Practice2Step from '@/components/builder/Practice2Step'
 
 function LivePreviewCard() {
   const { setup, vocab, sentences, currentStep } = useLessonStore()
@@ -225,7 +226,13 @@ export default function BuilderPage() {
               onBack={() => setCurrentStep(2)}
             />
           )}
-          {currentStep === 4 && <PreviewStep />}
+          {currentStep === 4 && (
+            <Practice2Step
+              onNext={() => setCurrentStep(5)}
+              onBack={() => setCurrentStep(3)}
+            />
+          )}
+          {currentStep === 5 && <PreviewStep />}
         </div>
         <LivePreviewCard />
       </div>

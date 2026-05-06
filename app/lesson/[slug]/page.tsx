@@ -22,7 +22,7 @@ export default function PublicLessonPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
-  const [activeTab, setActiveTab] = useState<'vocab'|'exercise'|'story'|'debate'|'canvas'>('vocab')
+  const [activeTab, setActiveTab] = useState<'vocab'|'exercise'|'story'|'debate'|'canvas'|'debate2'>('vocab')
   const [canvasMode, setCanvasMode] = useState<'student'|'teacher'>('student')
   const supabase = createClient()
 
@@ -252,6 +252,7 @@ export default function PublicLessonPage() {
               { id: 'story', label: '📖 Story' },
               { id: 'exercise', label: '✍️ Exercise' },
               { id: 'debate', label: '💬 Story Questions' },
+              { id: 'debate2', label: '🗣 Debate' },
               { id: 'canvas', label: canvasMode === 'teacher' ? '📌 Canvas (edit)' : '📌 Canvas' },
             ].map(t => (
               <button key={t.id} className={`tab ${activeTab === t.id ? 'tab-on' : 'tab-off'}`}
@@ -347,6 +348,86 @@ export default function PublicLessonPage() {
                 <div className="debate-section">
                   <span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal connection</span>
                   <p className="debate-content">{story.debatePersonal}</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Debate 2 */}
+          {activeTab === 'debate2' && (
+            <div>
+              {!lesson.debate ? (
+                <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+                  <div style={{ fontSize: '40px', marginBottom: '16px', opacity: 0.3 }}>🗣</div>
+                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>No debate content yet — the teacher hasn't added it.</p>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+                  {/* Topic */}
+                  <div style={{ background: 'linear-gradient(135deg, rgba(255,75,85,0.08), rgba(0,188,124,0.05))', border: '1px solid rgba(255,75,85,0.2)', borderRadius: '16px', padding: '20px 24px' }}>
+                    <p style={{ fontSize: '11px', fontWeight: 700, color: '#ff4b55', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Today we are debating</p>
+                    <p style={{ fontSize: 'clamp(18px,3vw,24px)', fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>{lesson.debate.topic}</p>
+                  </div>
+
+                  {/* Article */}
+                  {lesson.debate.article && (
+                    <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px' }}>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>Read before the debate</p>
+                      <div style={{ fontSize: '15px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.9, whiteSpace: 'pre-line' }}>
+                        {lesson.debate.article.split('
+').map((line: string, i: number) => {
+                          const isHeader = ['INTRODUCTION:', 'IN FAVOUR:', 'AGAINST:', 'CONCLUSION:'].some(h => line.trim().startsWith(h))
+                          return isHeader ? (
+                            <p key={i} style={{ fontSize: '12px', fontWeight: 700, color: '#ff4b55', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '20px', marginBottom: '8px' }}>{line}</p>
+                          ) : (
+                            <p key={i} style={{ marginBottom: '6px' }}>{line}</p>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Key Terms */}
+                  {lesson.debate.keyTerms && Array.isArray(lesson.debate.keyTerms) && lesson.debate.keyTerms.length > 0 && (
+                    <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px' }}>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>Key terms & phrases</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {(lesson.debate.keyTerms as any[]).map((term: any, i: number) => (
+                          <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 2fr', gap: '12px', padding: '12px 16px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '10px', alignItems: 'start' }}>
+                            <div>
+                              <p style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '2px' }}>{term.term}</p>
+                              <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Term</p>
+                            </div>
+                            <div>
+                              <p style={{ fontSize: '14px', fontWeight: 600, color: '#ff4b55', marginBottom: '2px' }}>{term.translation}</p>
+                              <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Español</p>
+                            </div>
+                            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, paddingTop: '2px' }}>{term.meaning}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Questions */}
+                  {lesson.debate.questions && (
+                    <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px' }}>
+                      <p style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>Debate questions</p>
+                      <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.75)', lineHeight: 2, whiteSpace: 'pre-line' }}>
+                        {lesson.debate.questions.split('
+').map((line: string, i: number) => {
+                          const isHeader = ['COMPREHENSION:', 'POSITION:', 'OPINIONS & VIEWPOINTS:'].some(h => line.trim().startsWith(h))
+                          return isHeader ? (
+                            <p key={i} style={{ fontSize: '12px', fontWeight: 700, color: '#00bc7c', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '16px', marginBottom: '8px' }}>{line}</p>
+                          ) : (
+                            <p key={i}>{line}</p>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+
                 </div>
               )}
             </div>

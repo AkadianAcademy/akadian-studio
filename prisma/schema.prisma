@@ -37,6 +37,7 @@ model Lesson {
   story       Story?
   canvas      Canvas?
   curriculumLessons CurriculumLesson[]
+  debate            Debate?
 }
 
 model Vocab {
@@ -107,4 +108,15 @@ model CurriculumLesson {
   lesson       Lesson     @relation(fields: [lessonId], references: [id])
   order        Int        @default(0)
   createdAt    DateTime   @default(now())
+}
+
+model Debate {
+  id             String   @id @default(uuid())
+  lessonId       String   @unique
+  lesson         Lesson   @relation(fields: [lessonId], references: [id])
+  topic          String   @default("")
+  article        String   @default("")
+  keyTerms       Json     @default("[]")
+  questions      String   @default("")
+  createdAt      DateTime @default(now())
 }

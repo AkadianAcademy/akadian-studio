@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation'
 const STEPS = [
   { number: 1, label: 'Setup' },
   { number: 2, label: 'Vocab' },
-  { number: 3, label: 'Practice' },
-  { number: 4, label: 'Preview' },
+  { number: 3, label: 'Practice 1' },
+  { number: 4, label: 'Practice 2' },
+  { number: 5, label: 'Preview' },
 ]
 
 export default function BuilderStepper() {
