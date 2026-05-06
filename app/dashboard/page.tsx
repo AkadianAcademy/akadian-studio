@@ -273,10 +273,10 @@ export default function DashboardPage() {
                         <span className="lesson-tag">{lesson.level}</span>
                         {lesson.published && <span className="lesson-tag lesson-tag-live">Live</span>}
                       </div>
-                      <div className="lesson-title" onClick={() => { reset(); router.push(`/builder/${lesson.id}`) }}>{lesson.title}</div>
+                      <div className="lesson-title" onClick={() => router.push(`/builder/${lesson.id}`)}>{lesson.title}</div>
                       <div className="lesson-goal">{lesson.goal}</div>
                       <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                        <button onClick={() => { reset(); router.push(`/builder/${lesson.id}`) }} style={{ flex: 1, padding: '7px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', color: 'rgba(255,255,255,0.5)', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
+                        <button onClick={() => router.push(`/builder/${lesson.id}`)} style={{ flex: 1, padding: '7px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', color: 'rgba(255,255,255,0.5)', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
                           ✏️ Edit
                         </button>
                         <button onClick={() => router.push(`/lesson/${lesson.slug}`)} style={{ flex: 1, padding: '7px', background: 'rgba(255,75,85,0.08)', border: '1px solid rgba(255,75,85,0.15)', borderRadius: '8px', color: '#ff4b55', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>

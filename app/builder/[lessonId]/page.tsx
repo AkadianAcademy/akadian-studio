@@ -122,7 +122,7 @@ export default function BuilderPage() {
   const params = useParams()
   const router = useRouter()
   const lessonId = params.lessonId as string
-  const { currentStep, setCurrentStep, setup, setLessonId, setSaving, setSlug, vocab, reset } = useLessonStore()
+  const { currentStep, setCurrentStep, setup, setLessonId, setSaving, setSlug, vocab, reset, setSetup, setVocab, setSentences } = useLessonStore()
   const [authChecked, setAuthChecked] = useState(false)
   const tokenRef = useRef<string | null>(null)
   const supabase = createClient()
@@ -133,15 +133,35 @@ export default function BuilderPage() {
       if (session?.access_token) {
         tokenRef.current = session.access_token
         if (lessonId === 'new') {
-          // Always reset when starting a new lesson
           reset()
           localStorage.removeItem('akadian-lesson-store')
         } else {
-          setLessonId(lessonId)
-          fetch('/api/lessons/' + lessonId + '/by-id', {
+          // Load existing lesson data into store
+          fetch('/api/lessons/' + lessonId, {
             headers: { 'Authorization': 'Bearer ' + session.access_token }
           }).then(r => r.json()).then(d => {
-            if (d.lesson?.slug) setSlug(d.lesson.slug)
+            if (d.lesson) {
+              const l = d.lesson
+              setLessonId(l.id)
+              setSlug(l.slug)
+              // Load setup data
+              setSetup({
+                subject: l.subject || 'languages',
+                language: l.language || 'English',
+                level: l.level || 'A2',
+                unit: l.unit || '',
+                title: l.title || '',
+                goal: l.goal || '',
+              })
+              // Load vocab
+              if (l.vocab?.length) {
+                setVocab(l.vocab.map((v: any) => ({ id: v.id, word: v.word, translation: v.translation, examples: [] })))
+              }
+              // Load sentences
+              if (l.sentences?.length) {
+                setSentences(l.sentences.map((s: any) => ({ id: s.id, source: s.source, translation: s.translation })))
+              }
+            }
           }).catch(() => {})
         }
         setAuthChecked(true)
