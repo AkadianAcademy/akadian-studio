@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const { topic, article, level, language } = await req.json()
 
     const completion = await openai.chat.completions.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'gpt-4o',
       max_tokens: 800,
       messages: [{
         role: 'user',

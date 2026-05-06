@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const guidance = LEVEL_GUIDANCE[level] || LEVEL_GUIDANCE['B1']
 
     const completion = await openai.chat.completions.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'gpt-4o',
       max_tokens: 200,
       messages: [{
         role: 'user',
