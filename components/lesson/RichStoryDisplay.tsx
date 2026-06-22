@@ -62,12 +62,24 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
     let remaining = text
     let key = 0
 
+    // Guard: ignore blank/whitespace-only vocab words — an empty word
+    // matches at index 0 of any string and previously caused an infinite loop.
+    const safeVocab = vocab.filter(v => v.word && v.word.trim().length > 0)
+
+    let safety = 0
     while (remaining.length > 0) {
+      safety++
+      if (safety > 5000) {
+        // Extra safety net — never let this hang the browser again
+        parts.push(<span key={key++}>{remaining}</span>)
+        break
+      }
+
       let matchStart = -1
       let matchWord = ''
       let matchVocab: VocabItem | null = null
 
-      for (const v of vocab) {
+      for (const v of safeVocab) {
         const idx = remaining.toLowerCase().indexOf(v.word.toLowerCase())
         if (idx !== -1 && (matchStart === -1 || idx < matchStart)) {
           matchStart = idx
@@ -76,7 +88,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
         }
       }
 
-      if (matchStart === -1 || !matchVocab) {
+      if (matchStart === -1 || !matchVocab || matchWord.length === 0) {
         parts.push(<span key={key++}>{remaining}</span>)
         break
       }
