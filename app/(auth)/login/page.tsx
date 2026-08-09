@@ -115,7 +115,7 @@ export default function AuthPage() {
         <div className="orb orb-a" />
         <div className="orb orb-b" />
         <div className="bg-grid" />
-        <div className={`card \${mounted ? 'visible' : ''}`}>
+        <div className={`card ${mounted ? 'visible' : ''}`}>
           <div className="logo-area">
             <div className="logo-ring">
               <img src={LOGO} alt="Akadian" onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
@@ -135,8 +135,8 @@ export default function AuthPage() {
             {tab === 'signin' ? "Build complete lesson presentations with AI — vocabulary, stories, exercises and live canvases." : "Create presentations, stories, exercises and live canvases in minutes. We're just getting started."}
           </p>
           <div className="tabs">
-            <button className={`tab-btn \${tab === 'signin' ? 'tab-on' : 'tab-off'}`} onClick={() => { setTab('signin'); setError(''); setSuccess('') }}>Sign in</button>
-            <button className={`tab-btn \${tab === 'signup' ? 'tab-on' : 'tab-off'}`} onClick={() => { setTab('signup'); setError(''); setSuccess('') }}>Create account</button>
+            <button className={`tab-btn ${tab === 'signin' ? 'tab-on' : 'tab-off'}`} onClick={() => { setTab('signin'); setError(''); setSuccess('') }}>Sign in</button>
+            <button className={`tab-btn ${tab === 'signup' ? 'tab-on' : 'tab-off'}`} onClick={() => { setTab('signup'); setError(''); setSuccess('') }}>Create account</button>
           </div>
           <button className="google-btn" onClick={handleGoogle} disabled={googleLoading}>
             {googleLoading ? <span style={{ opacity: 0.7 }}>Redirecting to Google...</span> : (

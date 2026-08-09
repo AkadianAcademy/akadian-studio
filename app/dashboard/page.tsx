@@ -34,8 +34,8 @@ export default function DashboardPage() {
       setUser(session.user)
       setToken(session.access_token)
       Promise.all([
-        fetch('/api/lessons', { headers: { 'Authorization': \`Bearer \${session.access_token}\` } }).then(r => r.json()),
-        fetch('/api/curriculum', { headers: { 'Authorization': \`Bearer \${session.access_token}\` } }).then(r => r.json()),
+        fetch('/api/lessons', { headers: { 'Authorization': `Bearer ${session.access_token}` } }).then(r => r.json()),
+        fetch('/api/curriculum', { headers: { 'Authorization': `Bearer ${session.access_token}` } }).then(r => r.json()),
       ]).then(([lessonsData, curriculaData]) => {
         setLessons(lessonsData.lessons || [])
         setCurricula(curriculaData.curricula || [])
@@ -48,7 +48,7 @@ export default function DashboardPage() {
     if (!token) return
     setDeletingId(lessonId)
     try {
-      const res = await fetch(\`/api/lessons/\${lessonId}/delete\`, { method: 'DELETE', headers: { 'Authorization': \`Bearer \${token}\` } })
+      const res = await fetch(`/api/lessons/${lessonId}/delete`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })
       const data = await res.json()
       if (res.ok) { setLessons(prev => prev.filter((l: any) => l.id !== lessonId)) }
       else { alert('Delete failed: ' + data.error) }
@@ -58,7 +58,7 @@ export default function DashboardPage() {
 
   async function handleDeleteCurriculum(id: string) {
     if (!token) return
-    await fetch(\`/api/curriculum/\${id}\`, { method: 'DELETE', headers: { 'Authorization': \`Bearer \${token}\` } })
+    await fetch(`/api/curriculum/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } })
     setCurricula(prev => prev.filter((c: any) => c.id !== id))
   }
 
@@ -208,10 +208,10 @@ export default function DashboardPage() {
           {/* Section toggle */}
           <div style={{ display: 'flex', gap: '4px', marginBottom: '28px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(123,92,255,0.1)', borderRadius: '999px', padding: '4px', width: 'fit-content', opacity: 0, animation: 'fadeUp 0.6s cubic-bezier(.16,1,.3,1) 0.25s forwards' }}>
             <button onClick={() => setActiveSection('lessons')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'lessons' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'lessons' ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'lessons' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
-              📚 My Lessons {lessons.length > 0 && \`(\${lessons.length})`}
+              📚 My Lessons {lessons.length > 0 && `(${lessons.length})`}
             </button>
             <button onClick={() => setActiveSection('curricula')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'curricula' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'curricula' ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'curricula' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
-              🗺 My Curricula {curricula.length > 0 && \`(\${curricula.length})`}
+              🗺 My Curricula {curricula.length > 0 && `(${curricula.length})`}
             </button>
           </div>
 
@@ -221,7 +221,7 @@ export default function DashboardPage() {
               <div className="section-header">
                 <div>
                   <div className="section-title">Your lessons</div>
-                  <div className="section-sub">{lessons.length === 0 ? 'Nothing here yet — your first lesson awaits' : \`\${lessons.length} lesson\${lessons.length > 1 ? 's' : ''} built`}</div>
+                  <div className="section-sub">{lessons.length === 0 ? 'Nothing here yet — your first lesson awaits' : `${lessons.length} lesson${lessons.length > 1 ? 's' : ''} built`}</div>
                 </div>
                 <button className="new-btn" onClick={() => { reset(); setTimeout(() => router.push('/builder/new'), 50) }}>+ New lesson</button>
               </div>
@@ -248,10 +248,10 @@ export default function DashboardPage() {
                         <span className="lesson-tag">{lesson.level}</span>
                         {lesson.published && <span className="lesson-tag lesson-tag-live">Live</span>}
                       </div>
-                      <div className="lesson-title" onClick={() => router.push(\`/lesson/\${lesson.slug}\`)}>{lesson.title}</div>
+                      <div className="lesson-title" onClick={() => router.push(`/lesson/${lesson.slug}`)}>{lesson.title}</div>
                       <div className="lesson-goal">{lesson.goal}</div>
                       <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                        <button className="preview-btn" onClick={() => router.push(\`/lesson/\${lesson.slug}\`)}>👁 Preview</button>
+                        <button className="preview-btn" onClick={() => router.push(`/lesson/${lesson.slug}`)}>👁 Preview</button>
                         {confirmId === lesson.id ? (
                           <div style={{ display: 'flex', gap: '4px', flex: 1 }}>
                             <button onClick={() => handleDelete(lesson.id)} disabled={deletingId === lesson.id}
@@ -280,7 +280,7 @@ export default function DashboardPage() {
               <div className="section-header">
                 <div>
                   <div className="section-title">Your curricula</div>
-                  <div className="section-sub">{curricula.length === 0 ? 'No curricula yet — build your first teaching roadmap' : \`\${curricula.length} curriculum\${curricula.length > 1 ? 's' : ''} created`}</div>
+                  <div className="section-sub">{curricula.length === 0 ? 'No curricula yet — build your first teaching roadmap' : `${curricula.length} curriculum${curricula.length > 1 ? 's' : ''} created`}</div>
                 </div>
                 <button className="new-btn" onClick={() => setShowCurriculumBuilder(true)}>+ Build curriculum</button>
               </div>
@@ -318,8 +318,8 @@ export default function DashboardPage() {
                         {(c.lessons?.length || 0) > 3 && <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', paddingLeft: '22px' }}>+{c.lessons.length - 3} more lessons</div>}
                       </div>
                       <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                        <button className="preview-btn" onClick={() => router.push(\`/curriculum/\${c.id}\`)}>👁 View</button>
-                        <button onClick={() => { router.push(\`/curriculum/\${c.id}\`); setTimeout(() => window.print(), 1000) }}
+                        <button className="preview-btn" onClick={() => router.push(`/curriculum/${c.id}`)}>👁 View</button>
+                        <button onClick={() => { router.push(`/curriculum/${c.id}`); setTimeout(() => window.print(), 1000) }}
                           style={{ flex: 1, padding: '8px 7px', background: 'rgba(200,255,61,0.07)', border: '1px solid rgba(200,255,61,0.15)', borderRadius: '999px', color: '#C8FF3D', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, minHeight: '36px' }}>
                           ↓ PDF
                         </button>
