@@ -28,7 +28,7 @@ export default function BuilderSidebar() {
   }
 
   const s = {
-    wrap: { background: '#0D1117', height: '100vh', overflowY: 'auto' as const, padding: '24px 20px', fontFamily: "'Hanken Grotesk', sans-serif", display: 'flex', flexDirection: 'column' as const, gap: '16px', scrollbarWidth: 'none' as const },
+    wrap: { background: '#0D1117', width: '300px', flexShrink: 0, height: '100vh', overflowY: 'auto' as const, padding: '24px 20px', fontFamily: "'Hanken Grotesk', sans-serif", display: 'flex', flexDirection: 'column' as const, gap: '16px', scrollbarWidth: 'none' as const },
     tag: { display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '4px 10px', borderRadius: '999px', background: 'rgba(123,92,255,0.15)', border: '1px solid rgba(123,92,255,0.25)', fontSize: '10px', fontWeight: 700, color: '#A98BFF', letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: '10px' },
     dot: { width: '5px', height: '5px', borderRadius: '50%', background: '#C8FF3D', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' },
     greeting: { fontFamily: "'Newsreader', Georgia, serif", fontSize: '16px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.4, fontStyle: 'italic' as const },
