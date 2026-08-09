@@ -66,7 +66,7 @@ export default function DashboardPage() {
 
   if (!mounted || loading) return (
     <div style={{ minHeight: '100vh', background: '#0B0F1E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Hanken Grotesk', sans-serif" }}>
-      <style>{\`@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap'); @keyframes spin { to { transform: rotate(360deg) } }\`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap'); @keyframes spin { to { transform: rotate(360deg) } }`}</style>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
         <div style={{ width: 40, height: 40, borderRadius: '50%', border: '2px solid rgba(123,92,255,0.2)', borderTopColor: '#7B5CFF', animation: 'spin 0.8s linear infinite' }} />
         <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>Loading your studio...</p>
@@ -76,7 +76,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <style>{\`
+      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: #0B0F1E; overflow-x: hidden; }
@@ -139,7 +139,7 @@ export default function DashboardPage() {
         .delete-btn { padding: 8px 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 999px; color: rgba(255,255,255,0.25); font-size: 12px; cursor: pointer; font-family: 'Hanken Grotesk', sans-serif; transition: all 0.2s; min-height: 36px; }
         .delete-btn:hover { border-color: rgba(255,100,100,0.3); color: rgba(255,100,100,0.6); }
         @media (max-width: 640px) { .stats { grid-template-columns: 1fr; } .nav { padding: 14px 20px; } .nav-badge { display: none; } }
-      \`}</style>
+      `}</style>
 
       <div className="dash">
         <div className="orb orb-a" />
@@ -208,10 +208,10 @@ export default function DashboardPage() {
           {/* Section toggle */}
           <div style={{ display: 'flex', gap: '4px', marginBottom: '28px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(123,92,255,0.1)', borderRadius: '999px', padding: '4px', width: 'fit-content', opacity: 0, animation: 'fadeUp 0.6s cubic-bezier(.16,1,.3,1) 0.25s forwards' }}>
             <button onClick={() => setActiveSection('lessons')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'lessons' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'lessons' ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'lessons' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
-              📚 My Lessons {lessons.length > 0 && \`(\${lessons.length})\`}
+              📚 My Lessons {lessons.length > 0 && \`(\${lessons.length})`}
             </button>
             <button onClick={() => setActiveSection('curricula')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'curricula' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'curricula' ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'curricula' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
-              🗺 My Curricula {curricula.length > 0 && \`(\${curricula.length})\`}
+              🗺 My Curricula {curricula.length > 0 && \`(\${curricula.length})`}
             </button>
           </div>
 
@@ -221,7 +221,7 @@ export default function DashboardPage() {
               <div className="section-header">
                 <div>
                   <div className="section-title">Your lessons</div>
-                  <div className="section-sub">{lessons.length === 0 ? 'Nothing here yet — your first lesson awaits' : \`\${lessons.length} lesson\${lessons.length > 1 ? 's' : ''} built\`}</div>
+                  <div className="section-sub">{lessons.length === 0 ? 'Nothing here yet — your first lesson awaits' : \`\${lessons.length} lesson\${lessons.length > 1 ? 's' : ''} built`}</div>
                 </div>
                 <button className="new-btn" onClick={() => { reset(); setTimeout(() => router.push('/builder/new'), 50) }}>+ New lesson</button>
               </div>
@@ -280,7 +280,7 @@ export default function DashboardPage() {
               <div className="section-header">
                 <div>
                   <div className="section-title">Your curricula</div>
-                  <div className="section-sub">{curricula.length === 0 ? 'No curricula yet — build your first teaching roadmap' : \`\${curricula.length} curriculum\${curricula.length > 1 ? 's' : ''} created\`}</div>
+                  <div className="section-sub">{curricula.length === 0 ? 'No curricula yet — build your first teaching roadmap' : \`\${curricula.length} curriculum\${curricula.length > 1 ? 's' : ''} created`}</div>
                 </div>
                 <button className="new-btn" onClick={() => setShowCurriculumBuilder(true)}>+ Build curriculum</button>
               </div>

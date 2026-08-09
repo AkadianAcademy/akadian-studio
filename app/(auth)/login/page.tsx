@@ -52,7 +52,7 @@ export default function AuthPage() {
 
   return (
     <>
-      <style>{\`
+      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500;1,6..72,600&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { background: #0B0F1E; overflow-x: hidden; }
@@ -109,13 +109,13 @@ export default function AuthPage() {
         .form-enter { animation: formIn 0.3s cubic-bezier(.16,1,.3,1) both; }
         @keyframes formIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
         @media (max-width: 480px) { .page { align-items: flex-start; padding-top: 40px; } }
-      \`}</style>
+      `}</style>
 
       <div className="page">
         <div className="orb orb-a" />
         <div className="orb orb-b" />
         <div className="bg-grid" />
-        <div className={\`card \${mounted ? 'visible' : ''}\`}>
+        <div className={`card \${mounted ? 'visible' : ''}`}>
           <div className="logo-area">
             <div className="logo-ring">
               <img src={LOGO} alt="Akadian" onError={e => { (e.target as HTMLImageElement).style.display='none' }} />
@@ -135,8 +135,8 @@ export default function AuthPage() {
             {tab === 'signin' ? "Build complete lesson presentations with AI — vocabulary, stories, exercises and live canvases." : "Create presentations, stories, exercises and live canvases in minutes. We're just getting started."}
           </p>
           <div className="tabs">
-            <button className={\`tab-btn \${tab === 'signin' ? 'tab-on' : 'tab-off'}\`} onClick={() => { setTab('signin'); setError(''); setSuccess('') }}>Sign in</button>
-            <button className={\`tab-btn \${tab === 'signup' ? 'tab-on' : 'tab-off'}\`} onClick={() => { setTab('signup'); setError(''); setSuccess('') }}>Create account</button>
+            <button className={`tab-btn \${tab === 'signin' ? 'tab-on' : 'tab-off'}`} onClick={() => { setTab('signin'); setError(''); setSuccess('') }}>Sign in</button>
+            <button className={`tab-btn \${tab === 'signup' ? 'tab-on' : 'tab-off'}`} onClick={() => { setTab('signup'); setError(''); setSuccess('') }}>Create account</button>
           </div>
           <button className="google-btn" onClick={handleGoogle} disabled={googleLoading}>
             {googleLoading ? <span style={{ opacity: 0.7 }}>Redirecting to Google...</span> : (
