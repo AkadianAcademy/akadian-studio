@@ -128,7 +128,7 @@ export default function SetupStep({ onNext }: Props) {
           <div className="ss-levels">
             {LEVELS.map(lv => (
               <button key={lv} className={`ss-level ${setup.level === lv ? 'selected' : ''}`}
-                onClick={() => setSetup({ level: lv })}
+                onClick={() => setSetup({ level: lv as any })}
                 style={setup.level === lv ? { background: LEVEL_COLORS[lv] || '#7B5CFF' } : {}}>
                 {lv}
               </button>
