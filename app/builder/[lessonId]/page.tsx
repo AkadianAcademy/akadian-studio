@@ -9,6 +9,7 @@ import SetupStep from '@/components/builder/SetupStep'
 import VocabStep from '@/components/builder/VocabStep'
 import PracticeStep from '@/components/builder/PracticeStep'
 import PreviewStep from '@/components/builder/PreviewStep'
+import BuilderLivePreview from '@/components/builder/BuilderLivePreview'
 import Practice2Step from '@/components/builder/Practice2Step'
 
 function LivePreviewCard() {
