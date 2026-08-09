@@ -44,64 +44,7 @@ function LivePreviewCard() {
       <div className="preview-panel">
         <div className="preview-label"><span className="preview-dot" />Live preview</div>
         <div className="preview-card">
-          <div className="preview-card-header">
-            <div className="preview-badge">✦ Public lesson page</div>
-            <div className="preview-title">{setup.title || <span style={{ color: '#B0A8C0', fontStyle: 'italic', fontWeight: 400 }}>Lesson title...</span>}</div>
-            {setup.goal && <div style={{ fontSize: '11px', color: '#9090A0', lineHeight: 1.5 }}>{setup.goal}</div>}
-            <div className="preview-meta">
-              {setup.language && <span className="preview-meta-pill">{setup.language}</span>}
-              {setup.level && <span className="preview-meta-pill">{setup.level}</span>}
-            </div>
-          </div>
-          <div className="preview-card-body">
-            <div className="preview-section">
-              <div className="preview-section-label">Vocabulary {vocab.length > 0 && `(${vocab.length})`}</div>
-              {vocab.length > 0 ? (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px' }}>
-                  {vocab.slice(0, 6).map(v => (
-                    <div key={v.id} className="vocab-pill">
-                      <span className="vocab-pill-word">{v.word}</span>
-                      <span>—</span>
-                      <span>{v.translation}</span>
-                    </div>
-                  ))}
-                  {vocab.length > 6 && <div className="vocab-pill">+{vocab.length - 6} more</div>}
-                </div>
-              ) : (
-                <><div className="preview-placeholder" style={{ width: '80%' }} /><div className="preview-placeholder" style={{ width: '60%' }} /></>
-              )}
-            </div>
-            <div className="preview-section">
-              <div className="preview-section-label">Example sentences {sentences.length > 0 && `(${sentences.length})`}</div>
-              {sentences.length > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {sentences.slice(0, 2).map(s => (
-                    <div key={s.id} style={{ fontSize: '11px', color: '#6B6575', lineHeight: 1.5 }}>
-                      <div style={{ color: '#1A1219', fontWeight: 500 }}>{s.source}</div>
-                      <div>{s.translation}</div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <><div className="preview-placeholder" style={{ width: '100%' }} /><div className="preview-placeholder" style={{ width: '85%' }} /></>
-              )}
-            </div>
-            <div className="preview-section">
-              <div className="preview-section-label">Story & exercise</div>
-              <div className="preview-placeholder" style={{ width: '100%' }} />
-              <div className="preview-placeholder" style={{ width: '75%' }} />
-            </div>
-          </div>
-        </div>
-
-        <div className="flow-card">
-          <div style={{ fontSize: '10px', fontWeight: 600, color: '#B0A8C0', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '10px' }}>Lesson flow</div>
-          {[
-            { num: '1', label: 'Setup', desc: 'Lesson details', done: currentStep > 1 },
-            { num: '2', label: 'Vocabulary', desc: 'Words & sentences', done: currentStep > 2, active: currentStep === 2 },
-            { num: '3', label: 'Practice', desc: 'Exercises & story', done: currentStep > 3, active: currentStep === 3 },
-            { num: '4', label: 'Debate', desc: 'Debate & discussion', active: currentStep === 4 },
-            { num: '5', label: 'Preview', desc: 'Review & publish', active: currentStep === 5 },
+          <BuilderLivePreview />w & publish', active: currentStep === 5 },
           ].map(s => (
             <div key={s.num} className="flow-step">
               <div className={`flow-num ${s.done ? 'flow-num-done' : s.active ? 'flow-num-active' : ''}`}>
