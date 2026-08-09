@@ -90,7 +90,7 @@ export default function SetupStep({ onNext }: Props) {
             {SUBJECTS.map(s => (
               <div key={s.id}
                 className={`ss-subject ${setup.subject === s.id ? 'selected' : ''} ${!s.active ? 'inactive' : ''}`}
-                onClick={() => s.active && setSetup({ subject: s.id })}
+                onClick={() => s.active && setSetup({ subject: s.id as any })}
               >
                 <div className="ss-subject-icon">{s.icon}</div>
                 <div style={{ flex: 1 }}>
