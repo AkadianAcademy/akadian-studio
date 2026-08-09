@@ -43,10 +43,10 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
   const sections = parseArticle(article)
 
   const SECTION_CONFIG = {
-    intro: { label: 'Introduction', icon: '📋', color: '#3b82f6', bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)' },
-    favour: { label: 'In Favour', icon: '✅', color: '#00bc7c', bg: 'rgba(0,188,124,0.08)', border: 'rgba(0,188,124,0.25)' },
-    against: { label: 'Against', icon: '⚠️', color: '#ff4b55', bg: 'rgba(255,75,85,0.08)', border: 'rgba(255,75,85,0.25)' },
-    conclusion: { label: 'Conclusion', icon: '💡', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.25)' },
+    intro: { label: 'Introduction', icon: '📋', color: '#2563EB', bg: 'rgba(37,99,235,0.07)', border: 'rgba(37,99,235,0.22)' },
+    favour: { label: 'In Favour', icon: '✅', color: '#0E9F6E', bg: 'rgba(14,159,110,0.08)', border: 'rgba(14,159,110,0.25)' },
+    against: { label: 'Against', icon: '⚠️', color: '#E11D48', bg: 'rgba(225,29,72,0.07)', border: 'rgba(225,29,72,0.22)' },
+    conclusion: { label: 'Conclusion', icon: '💡', color: '#B45309', bg: 'rgba(180,83,9,0.08)', border: 'rgba(180,83,9,0.22)' },
   }
 
   return (
@@ -58,28 +58,28 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
       `}</style>
 
       {/* Topic hero */}
-      <div style={{ background: 'linear-gradient(135deg, rgba(255,75,85,0.1), rgba(0,188,124,0.06))', border: '1px solid rgba(255,75,85,0.2)', borderRadius: '20px', padding: 'clamp(20px,4vw,36px)', marginBottom: '24px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -30, right: -30, width: 150, height: 150, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,75,85,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ background: 'linear-gradient(135deg, rgba(123,92,255,0.10), rgba(200,255,61,0.08))', border: '1px solid rgba(123,92,255,0.20)', borderRadius: '20px', padding: 'clamp(20px,4vw,36px)', marginBottom: '24px', position: 'relative', overflow: 'hidden', boxShadow: '0 4px 20px rgba(91,60,224,0.06)' }}>
+        <div style={{ position: 'absolute', top: -30, right: -30, width: 150, height: 150, borderRadius: '50%', background: 'radial-gradient(circle, rgba(123,92,255,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff4b55', display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
-          <span style={{ fontSize: '11px', fontWeight: 700, color: '#ff4b55', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Today's debate</span>
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#7B5CFF', display: 'inline-block', animation: 'pulse 2s ease-in-out infinite' }} />
+          <span style={{ fontSize: '11px', fontWeight: 700, color: '#7B5CFF', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Today's debate</span>
         </div>
-        <p style={{ fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: '#fff', lineHeight: 1.2, letterSpacing: '-0.02em', position: 'relative', zIndex: 1 }}>
+        <p style={{ fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 700, color: '#1A1219', lineHeight: 1.2, letterSpacing: '-0.02em', position: 'relative', zIndex: 1 }}>
           {topic}
         </p>
         <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'rgba(0,188,124,0.1)', border: '1px solid rgba(0,188,124,0.2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'rgba(14,159,110,0.10)', border: '1px solid rgba(14,159,110,0.22)' }}>
             <span style={{ fontSize: '12px' }}>✅</span>
-            <span style={{ fontSize: '12px', color: '#00bc7c', fontWeight: 600 }}>In Favour</span>
+            <span style={{ fontSize: '12px', color: '#0E9F6E', fontWeight: 600 }}>In Favour</span>
           </div>
-          <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', alignSelf: 'center' }}>vs</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'rgba(255,75,85,0.1)', border: '1px solid rgba(255,75,85,0.2)' }}>
+          <span style={{ fontSize: '12px', color: '#9090A0', alignSelf: 'center' }}>vs</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'rgba(225,29,72,0.10)', border: '1px solid rgba(225,29,72,0.22)' }}>
             <span style={{ fontSize: '12px' }}>⚠️</span>
-            <span style={{ fontSize: '12px', color: '#ff4b55', fontWeight: 600 }}>Against</span>
+            <span style={{ fontSize: '12px', color: '#E11D48', fontWeight: 600 }}>Against</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '100px', background: '#FFFFFF', border: '1px solid rgba(91,60,224,0.10)' }}>
             <span style={{ fontSize: '12px' }}>⏱</span>
-            <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)' }}>{readTime} min read</span>
+            <span style={{ fontSize: '12px', color: '#9090A0' }}>{readTime} min read</span>
           </div>
         </div>
       </div>
@@ -110,15 +110,15 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 20px', borderBottom: `1px solid ${cfg.border}` }}>
                 <span style={{ fontSize: '18px' }}>{cfg.icon}</span>
                 <span style={{ fontSize: '13px', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{cfg.label}</span>
-                {s.type === 'favour' && <span style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(0,188,124,0.15)', color: '#00bc7c', fontWeight: 600 }}>PRO</span>}
-                {s.type === 'against' && <span style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(255,75,85,0.15)', color: '#ff4b55', fontWeight: 600 }}>CON</span>}
+                {s.type === 'favour' && <span style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(14,159,110,0.15)', color: '#0E9F6E', fontWeight: 600 }}>PRO</span>}
+                {s.type === 'against' && <span style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(225,29,72,0.15)', color: '#E11D48', fontWeight: 600 }}>CON</span>}
               </div>
               {/* Section content */}
               <div style={{ padding: '20px' }}>
                 {paragraphs.map((para, j) => (
-                  <p key={j} style={{ fontSize: 'clamp(14px,2vw,16px)', color: 'rgba(255,255,255,0.8)', lineHeight: 1.85, marginBottom: j < paragraphs.length - 1 ? '14px' : 0 }}>
-                    {s.type === 'favour' && j === 0 && <span style={{ color: '#00bc7c', fontWeight: 700, marginRight: '6px' }}>↑</span>}
-                    {s.type === 'against' && j === 0 && <span style={{ color: '#ff4b55', fontWeight: 700, marginRight: '6px' }}>↓</span>}
+                  <p key={j} style={{ fontSize: 'clamp(14px,2vw,16px)', color: '#1A1219', lineHeight: 1.85, marginBottom: j < paragraphs.length - 1 ? '14px' : 0 }}>
+                    {s.type === 'favour' && j === 0 && <span style={{ color: '#0E9F6E', fontWeight: 700, marginRight: '6px' }}>↑</span>}
+                    {s.type === 'against' && j === 0 && <span style={{ color: '#E11D48', fontWeight: 700, marginRight: '6px' }}>↓</span>}
                     {para}
                   </p>
                 ))}
@@ -130,19 +130,19 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
 
       {/* Key terms */}
       {keyTerms && keyTerms.length > 0 && (
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
+        <div style={{ background: '#F5F4F0', border: '1px solid rgba(91,60,224,0.10)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
             <span style={{ fontSize: '16px' }}>🔑</span>
-            <p style={{ fontSize: '13px', fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Key terms to know</p>
+            <p style={{ fontSize: '13px', fontWeight: 700, color: '#6B6575', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Key terms to know</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px,1fr))', gap: '10px' }}>
             {keyTerms.map((term: any, i: number) => (
-              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '12px', padding: '14px 16px', transition: 'all 0.2s' }}>
+              <div key={i} style={{ background: '#FFFFFF', border: '1px solid rgba(91,60,224,0.10)', borderRadius: '12px', padding: '14px 16px', transition: 'all 0.2s' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
-                  <p style={{ fontSize: '14px', fontWeight: 700, color: '#fff' }}>{term.term}</p>
-                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#ff4b55', marginLeft: '8px', flexShrink: 0 }}>{term.translation}</p>
+                  <p style={{ fontSize: '14px', fontWeight: 700, color: '#1A1219' }}>{term.term}</p>
+                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#7B5CFF', marginLeft: '8px', flexShrink: 0 }}>{term.translation}</p>
                 </div>
-                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>{term.meaning}</p>
+                <p style={{ fontSize: '12px', color: '#9090A0', lineHeight: 1.5 }}>{term.meaning}</p>
               </div>
             ))}
           </div>
@@ -151,29 +151,29 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
 
       {/* Questions */}
       {questions && (
-        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px', padding: '24px' }}>
+        <div style={{ background: '#F5F4F0', border: '1px solid rgba(91,60,224,0.10)', borderRadius: '16px', padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
             <span style={{ fontSize: '16px' }}>💬</span>
-            <p style={{ fontSize: '13px', fontWeight: 700, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Debate questions</p>
+            <p style={{ fontSize: '13px', fontWeight: 700, color: '#6B6575', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Debate questions</p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {questions.split('\n').map((line: string, i: number) => {
               const isHeader = ['COMPREHENSION:', 'POSITION:', 'OPINIONS & VIEWPOINTS:'].some(h => line.trim().startsWith(h))
               const isQuestion = line.trim().match(/^\d+\./)
               if (isHeader) return (
-                <p key={i} style={{ fontSize: '11px', fontWeight: 700, color: '#00bc7c', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '20px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ display: 'inline-block', width: 20, height: 1, background: 'rgba(0,188,124,0.4)' }} />
+                <p key={i} style={{ fontSize: '11px', fontWeight: 700, color: '#5B3CE0', letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '20px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ display: 'inline-block', width: 20, height: 1, background: 'rgba(123,92,255,0.4)' }} />
                   {line}
-                  <span style={{ display: 'inline-block', flex: 1, height: 1, background: 'rgba(0,188,124,0.15)' }} />
+                  <span style={{ display: 'inline-block', flex: 1, height: 1, background: 'rgba(123,92,255,0.15)' }} />
                 </p>
               )
               if (isQuestion) return (
-                <div key={i} style={{ display: 'flex', gap: '12px', padding: '12px 14px', borderRadius: '10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '4px' }}>
-                  <span style={{ color: '#ff4b55', fontWeight: 700, fontSize: '13px', flexShrink: 0 }}>{line.match(/^\d+/)?.[0]}.</span>
-                  <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>{line.replace(/^\d+\./, '').trim()}</p>
+                <div key={i} style={{ display: 'flex', gap: '12px', padding: '12px 14px', borderRadius: '10px', background: '#F5F4F0', border: '1px solid #FFFFFF', marginBottom: '4px' }}>
+                  <span style={{ color: '#7B5CFF', fontWeight: 700, fontSize: '13px', flexShrink: 0 }}>{line.match(/^\d+/)?.[0]}.</span>
+                  <p style={{ fontSize: '14px', color: '#4A4460', lineHeight: 1.6 }}>{line.replace(/^\d+\./, '').trim()}</p>
                 </div>
               )
-              return line.trim() ? <p key={i} style={{ fontSize: '14px', color: 'rgba(255,255,255,0.65)', lineHeight: 2 }}>{line}</p> : null
+              return line.trim() ? <p key={i} style={{ fontSize: '14px', color: '#55505F', lineHeight: 2 }}>{line}</p> : null
             })}
           </div>
         </div>

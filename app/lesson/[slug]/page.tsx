@@ -5,12 +5,12 @@ import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase'
 
 const EditPanel = dynamic(() => import('@/components/lesson/EditPanel'), { ssr: false })
-const RichStoryDisplay = dynamic(() => import('@/components/lesson/RichStoryDisplay'), { ssr: false, loading: () => <div style={{padding:'40px',textAlign:'center',color:'rgba(255,255,255,0.3)'}}>Loading story...</div> })
-const RichDebateDisplay = dynamic(() => import('@/components/lesson/RichDebateDisplay'), { ssr: false, loading: () => <div style={{padding:'40px',textAlign:'center',color:'rgba(255,255,255,0.3)'}}>Loading debate...</div> })
+const RichStoryDisplay = dynamic(() => import('@/components/lesson/RichStoryDisplay'), { ssr: false, loading: () => <div style={{padding:'40px',textAlign:'center',color:'#9090A0'}}>Loading story...</div> })
+const RichDebateDisplay = dynamic(() => import('@/components/lesson/RichDebateDisplay'), { ssr: false, loading: () => <div style={{padding:'40px',textAlign:'center',color:'#9090A0'}}>Loading debate...</div> })
 const TeachingCanvas = dynamic(() => import('@/components/canvas/TeachingCanvas'), {
   ssr: false,
   loading: () => (
-    <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>
+    <div style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9090A0', fontSize: '14px' }}>
       Loading canvas...
     </div>
   )
@@ -68,31 +68,31 @@ export default function PublicLessonPage() {
   ]
 
   const LEVEL_COLORS: Record<string, string> = {
-    A1: '#00bc7c', A2: '#34d399', B1: '#3b82f6', B2: '#8b5cf6', C1: '#f59e0b', Conversation: '#ff4b55'
+    A1: '#0E9F6E', A2: '#14B8A6', B1: '#3b82f6', B2: '#8b5cf6', C1: '#F59E0B', Conversation: '#7B5CFF'
   }
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', background: '#0b172b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#FAFAF8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap'); @keyframes spin { to { transform: rotate(360deg) } }`}</style>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
-        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid rgba(255,75,85,0.2)', borderTopColor: '#ff4b55', animation: 'spin 0.8s linear infinite' }} />
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>Loading lesson...</p>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid rgba(123,92,255,0.2)', borderTopColor: '#7B5CFF', animation: 'spin 0.8s linear infinite' }} />
+        <p style={{ color: '#9090A0', fontSize: '13px' }}>Loading lesson...</p>
       </div>
     </div>
   )
 
   if (error) return (
-    <div style={{ minHeight: '100vh', background: '#0b172b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#FAFAF8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" }}>
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>📭</div>
-        <p style={{ color: '#fff', fontSize: '20px', fontWeight: 600 }}>Lesson not found</p>
+        <p style={{ color: '#1A1219', fontSize: '20px', fontWeight: 600 }}>Lesson not found</p>
       </div>
     </div>
   )
 
   const exercise = lesson.exercise
   const story = lesson.story
-  const levelColor = LEVEL_COLORS[lesson.level] || '#ff4b55'
+  const levelColor = LEVEL_COLORS[lesson.level] || '#7B5CFF'
 
   const tabContent: Record<Tab, React.ReactNode> = {
     vocab: (
@@ -132,7 +132,7 @@ export default function PublicLessonPage() {
         </div>
         <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} />
       </div>
-    ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255,255,255,0.3)' }}>No story yet.</div>,
+    ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: '#9090A0' }}>No story yet.</div>,
     exercise: exercise ? (
       <div>
         <div className="section-header">
@@ -142,7 +142,7 @@ export default function PublicLessonPage() {
         {exercise.instructions && <div className="exercise-instructions">📋 {exercise.instructions}</div>}
         <div className="exercise-content">{exercise.content}</div>
       </div>
-    ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255,255,255,0.3)' }}>No exercise yet.</div>,
+    ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: '#9090A0' }}>No exercise yet.</div>,
     debate: story ? (
       <div>
         <div className="section-header">
@@ -151,30 +151,30 @@ export default function PublicLessonPage() {
         </div>
         {story.debateStory && (
           <div className="debate-section">
-            <span className="debate-label" style={{ background: 'rgba(255,75,85,0.1)', color: '#ff4b55' }}>What happened in the story</span>
+            <span className="debate-label" style={{ background: 'rgba(123,92,255,0.1)', color: '#7B5CFF' }}>What happened in the story</span>
             <p className="debate-content">{story.debateStory}</p>
           </div>
         )}
         {story.debateMoral && (
           <div className="debate-section">
-            <span className="debate-label" style={{ background: 'rgba(255,188,0,0.1)', color: 'rgba(255,188,0,0.9)' }}>What we can learn from it</span>
+            <span className="debate-label" style={{ background: 'rgba(180,83,9,0.12)', color: '#B45309' }}>What we can learn from it</span>
             <p className="debate-content">{story.debateMoral}</p>
           </div>
         )}
         {story.debatePersonal && (
           <div className="debate-section">
-            <span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal connection</span>
+            <span className="debate-label" style={{ background: 'rgba(14,159,110,0.14)', color: '#0E9F6E' }}>Personal connection</span>
             <p className="debate-content">{story.debatePersonal}</p>
           </div>
         )}
       </div>
-    ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: 'rgba(255,255,255,0.3)' }}>No story questions yet.</div>,
+    ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: '#9090A0' }}>No story questions yet.</div>,
     debate2: (
       <div>
         {!lesson.debate ? (
           <div style={{ textAlign: 'center', padding: '60px 20px' }}>
             <div style={{ fontSize: '40px', marginBottom: '16px', opacity: 0.3 }}>🗣</div>
-            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>No debate content yet.</p>
+            <p style={{ color: '#9090A0', fontSize: '14px' }}>No debate content yet.</p>
           </div>
         ) : (
           <RichDebateDisplay
@@ -193,9 +193,9 @@ export default function PublicLessonPage() {
           <div className="section-sub">{canvasMode === 'teacher' ? 'Add sticky notes, drag them around, and save.' : 'Vocabulary notes and annotations placed by your teacher during class'}</div>
         </div>
         {canvasMode === 'teacher' && (
-          <div style={{ background: 'rgba(0,188,124,0.08)', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '12px', padding: '12px 16px', marginBottom: '16px', fontSize: '13px', color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ color: '#00bc7c' }}>✦</span>
-            You are in <strong style={{ color: '#00bc7c' }}>teacher edit mode</strong>.
+          <div style={{ background: 'rgba(123,92,255,0.08)', border: '1px solid rgba(123,92,255,0.2)', borderRadius: '12px', padding: '12px 16px', marginBottom: '16px', fontSize: '13px', color: '#6B6575', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ color: '#5B3CE0' }}>✦</span>
+            You are in <strong style={{ color: '#5B3CE0' }}>teacher edit mode</strong>.
           </div>
         )}
         <TeachingCanvas lessonId={lesson.id} mode={canvasMode} vocab={lesson.vocab || []} />
@@ -208,75 +208,78 @@ export default function PublicLessonPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { background: #0b172b; overflow-x: hidden; }
-        .page { min-height: 100vh; background: #0b172b; font-family: 'DM Sans', sans-serif; color: #fff; }
+        html, body { background: #FAFAF8; overflow-x: hidden; }
+        .page { min-height: 100vh; background: #FAFAF8; font-family: 'DM Sans', sans-serif; color: #1A1219; }
         .bg-orb { position: fixed; border-radius: 50%; pointer-events: none; }
-        .orb-a { width: min(700px,100vw); height: min(700px,100vw); background: radial-gradient(circle, rgba(255,75,85,0.08) 0%, transparent 65%); top: -20vh; left: -15vw; }
-        .orb-b { width: min(500px,80vw); height: min(500px,80vw); background: radial-gradient(circle, rgba(0,188,124,0.06) 0%, transparent 65%); bottom: -15vh; right: -10vw; }
-        .bg-grid { position: fixed; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px); background-size: 40px 40px; }
-        .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px clamp(20px,5vw,64px); border-bottom: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(12px); background: rgba(11,23,43,0.85); position: sticky; top: 0; z-index: 100; }
+        .orb-a { width: min(700px,100vw); height: min(700px,100vw); background: radial-gradient(circle, rgba(123,92,255,0.08) 0%, transparent 65%); top: -20vh; left: -15vw; }
+        .orb-b { width: min(500px,80vw); height: min(500px,80vw); background: radial-gradient(circle, rgba(200,255,61,0.05) 0%, transparent 65%); bottom: -15vh; right: -10vw; }
+        .bg-grid { position: fixed; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(26,18,25,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(26,18,25,0.02) 1px, transparent 1px); background-size: 40px 40px; }
+        .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px clamp(20px,5vw,64px); border-bottom: 1px solid rgba(26,18,25,0.07); backdrop-filter: blur(12px); background: rgba(250,250,248,0.85); position: sticky; top: 0; z-index: 100; }
         .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
         .nav-logo img { width: 30px; height: 30px; border-radius: 50%; }
-        .nav-logo-text { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); }
+        .nav-logo-text { font-size: 14px; font-weight: 600; color: #4A4460; }
         .nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .share-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: transparent; color: rgba(255,255,255,0.6); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-        .share-btn:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
-        .share-btn-primary { background: #ff4b55; border-color: #ff4b55; color: #fff; }
-        .teacher-badge { display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 100px; background: rgba(0,188,124,0.1); border: 1px solid rgba(0,188,124,0.25); font-size: 11px; font-weight: 600; color: #00bc7c; letter-spacing: 0.06em; }
+        .share-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(26,18,25,0.12); background: transparent; color: #6B6575; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .share-btn:hover { border-color: #B0A8C0; color: #1A1219; }
+        .share-btn-primary { background: #7B5CFF; border-color: #7B5CFF; color: #FFFFFF; }
+        .teacher-badge { display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 100px; background: rgba(123,92,255,0.1); border: 1px solid rgba(123,92,255,0.25); font-size: 11px; font-weight: 600; color: #5B3CE0; letter-spacing: 0.06em; }
         .hero { max-width: 900px; margin: 0 auto; padding: clamp(40px,6vw,80px) clamp(20px,5vw,64px) 0; position: relative; z-index: 1; }
-        .hero-breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 12px; color: rgba(255,255,255,0.3); }
+        .hero-breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 12px; color: #9090A0; }
         .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-        .hero-tag { padding: 4px 12px; border-radius: 100px; background: rgba(255,75,85,0.1); border: 1px solid rgba(255,75,85,0.2); font-size: 12px; font-weight: 600; }
+        .hero-tag { padding: 4px 12px; border-radius: 100px; background: rgba(123,92,255,0.1); border: 1px solid rgba(123,92,255,0.2); font-size: 12px; font-weight: 600; }
         .hero-title { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(32px,5vw,56px); line-height: 1.1; letter-spacing: -0.025em; margin-bottom: 16px; }
-        .hero-title em { color: #ff4b55; font-style: italic; }
-        .hero-goal { font-size: clamp(15px,2vw,17px); color: rgba(255,255,255,0.5); line-height: 1.7; max-width: 600px; margin-bottom: 32px; }
+        .hero-title em { color: #7B5CFF; font-style: italic; }
+        .hero-goal { font-size: clamp(15px,2vw,17px); color: #6B6575; line-height: 1.7; max-width: 600px; margin-bottom: 32px; }
         .impact-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 40px; }
-        .impact-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 18px; }
+        .impact-card { background: #FFFFFF; border: 1px solid rgba(91,60,224,0.10); border-radius: 14px; padding: 18px; }
         .two-col { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px,5vw,64px); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; position: relative; z-index: 1; }
-        .info-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 22px; }
-        .flow-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .info-card { background: #FFFFFF; border: 1px solid rgba(91,60,224,0.10); border-radius: 16px; padding: 22px; }
+        .flow-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(26,18,25,0.06); }
         .flow-item:last-child { border-bottom: none; }
         .flow-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
         .content { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px,5vw,64px); position: relative; z-index: 1; }
         /* Desktop tabs */
-        .tabs { display: flex; gap: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 4px; margin-bottom: 28px; overflow-x: auto; scrollbar-width: none; }
+        .tabs { display: flex; gap: 4px; background: #FFFFFF; border: 1px solid rgba(91,60,224,0.10); border-radius: 14px; padding: 4px; margin-bottom: 28px; overflow-x: auto; scrollbar-width: none; }
         .tabs::-webkit-scrollbar { display: none; }
         .tab { flex: 1; padding: 10px 12px; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; min-width: 80px; text-align: center; }
-        .tab-on { background: #ff4b55; color: #fff; }
-        .tab-off { background: transparent; color: rgba(255,255,255,0.4); }
-        .tab-off:hover { color: rgba(255,255,255,0.7); }
+        .tab-on { background: #7B5CFF; color: #FFFFFF; }
+        .tab-off { background: transparent; color: #9090A0; }
+        .tab-off:hover { color: #4A4460; }
         .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 10px; }
-        .vocab-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 16px; transition: all 0.2s; }
-        .vocab-card:hover { border-color: rgba(255,75,85,0.3); transform: translateY(-1px); }
-        .vocab-word { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-        .vocab-translation { font-size: 13px; color: #ff4b55; }
+        .vocab-card { background: #FFFFFF; border: 1px solid rgba(91,60,224,0.10); border-radius: 12px; padding: 14px 16px; transition: all 0.2s; }
+        .vocab-card:hover { border-color: rgba(123,92,255,0.3); transform: translateY(-1px); }
+        .vocab-word { font-size: 16px; font-weight: 600; color: #1A1219; margin-bottom: 4px; }
+        .vocab-translation { font-size: 13px; color: #7B5CFF; }
         .sentence-list { display: flex; flex-direction: column; gap: 12px; }
-        .sentence-card { background: rgba(255,255,255,0.02); border-left: 2px solid rgba(255,75,85,0.3); padding: 12px 16px; border-radius: 0 10px 10px 0; }
-        .sentence-en { font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 4px; }
-        .sentence-tr { font-size: 13px; color: rgba(255,255,255,0.4); }
-        .story-body { font-size: clamp(14px,2vw,16px); color: rgba(255,255,255,0.75); line-height: 1.9; white-space: pre-line; }
-        .exercise-instructions { background: rgba(255,75,85,0.07); border: 1px solid rgba(255,75,85,0.15); border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
-        .exercise-content { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 2; white-space: pre-line; }
+        .sentence-card { background: #F5F4F0; border-left: 2px solid rgba(123,92,255,0.3); padding: 12px 16px; border-radius: 0 10px 10px 0; }
+        .sentence-en { font-size: 14px; font-weight: 500; color: #1A1219; margin-bottom: 4px; }
+        .sentence-tr { font-size: 13px; color: #9090A0; }
+        .story-body { font-size: clamp(14px,2vw,16px); color: #4A4460; line-height: 1.9; white-space: pre-line; }
+        .exercise-instructions { background: rgba(123,92,255,0.07); border: 1px solid rgba(123,92,255,0.15); border-radius: 12px; padding: 14px 18px; margin-bottom: 18px; font-size: 14px; color: #6B6575; line-height: 1.6; }
+        .exercise-content { font-size: 14px; color: #4A4460; line-height: 2; white-space: pre-line; }
         .debate-section { margin-bottom: 24px; }
         .debate-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; padding: 4px 10px; border-radius: 6px; display: inline-block; }
-        .debate-content { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 2; white-space: pre-line; }
-        .lesson-footer { max-width: 900px; margin: 48px auto 0; padding: 24px clamp(20px,5vw,64px) 48px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; position: relative; z-index: 1; }
+        .debate-content { font-size: 14px; color: #55505F; line-height: 2; white-space: pre-line; }
+        .lesson-footer { max-width: 900px; margin: 48px auto 0; padding: 24px clamp(20px,5vw,64px) 48px; border-top: 1px solid rgba(26,18,25,0.07); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; position: relative; z-index: 1; }
         .section-header { margin-bottom: 20px; }
         .section-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-        .section-sub { font-size: 13px; color: rgba(255,255,255,0.35); }
+        .section-sub { font-size: 13px; color: #9090A0; }
         @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
         .fade-up { opacity:0; animation: fadeUp 0.5s ease forwards; }
+        .impact-card, .info-card, .vocab-card, .sentence-card, .mv-card, .mv-more-info { box-shadow: 0 1px 2px rgba(26,18,25,0.04), 0 6px 20px rgba(91,60,224,0.05); }
+        .tabs { box-shadow: 0 1px 3px rgba(91,60,224,0.06); }
+        .vocab-card:hover { box-shadow: 0 6px 18px rgba(123,92,255,0.14); }
 
         /* Mobile view — hidden on desktop */
         .mobile-view { display: none; }
 
         @media print {
           .bg-orb, .bg-grid { display: none !important; }
-          .nav { position: relative !important; background: #0b172b !important; }
+          .nav { position: relative !important; background: #FAFAF8 !important; }
           .share-btn { display: none !important; }
           .tabs { display: none !important; }
-          body { background: #0b172b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          body { background: #FAFAF8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
 
         /* ==================== MOBILE ONLY ==================== */
@@ -304,25 +307,25 @@ export default function PublicLessonPage() {
           }
           .mv-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
           .mv-tag { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; }
-          .mv-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 24px; line-height: 1.15; letter-spacing: -0.02em; color: #fff; margin-bottom: 8px; }
-          .mv-title em { color: #ff4b55; font-style: italic; }
-          .mv-goal { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; margin-bottom: 14px; }
+          .mv-title { font-family: 'DM Serif Display', Georgia, serif; font-size: 24px; line-height: 1.15; letter-spacing: -0.02em; color: #1A1219; margin-bottom: 8px; }
+          .mv-title em { color: #7B5CFF; font-style: italic; }
+          .mv-goal { font-size: 13px; color: #6B6575; line-height: 1.6; margin-bottom: 14px; }
           .mv-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
-          .mv-pill { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 100px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); }
-          .mv-more-btn { background: none; border: none; color: rgba(255,255,255,0.3); font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer; padding: 4px 0; text-decoration: underline; margin-bottom: 8px; }
-          .mv-more-info { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
-          .mv-flow-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+          .mv-pill { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 100px; background: #FFFFFF; border: 1px solid rgba(91,60,224,0.10); font-size: 11px; font-weight: 600; color: #6B6575; }
+          .mv-more-btn { background: none; border: none; color: #9090A0; font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer; padding: 4px 0; text-decoration: underline; margin-bottom: 8px; }
+          .mv-more-info { background: #FFFFFF; border: 1px solid rgba(26,18,25,0.07); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+          .mv-flow-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(26,18,25,0.06); }
           .mv-flow-item:last-child { border: none; }
-          .mv-flow-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(255,75,85,0.15); color: #ff4b55; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-          .mv-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 16px 0; }
+          .mv-flow-num { width: 22px; height: 22px; border-radius: 50%; background: rgba(123,92,255,0.15); color: #7B5CFF; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+          .mv-divider { height: 1px; background: rgba(26,18,25,0.07); margin: 16px 0; }
 
           /* Section cards */
           .mv-cards { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
           .mv-card {
             display: flex; align-items: center; gap: 14px;
             padding: 16px 18px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: #FFFFFF;
+            border: 1px solid rgba(91,60,224,0.10);
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.2s;
@@ -332,9 +335,9 @@ export default function PublicLessonPage() {
           }
           .mv-card:active { transform: scale(0.98); }
           .mv-card-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-          .mv-card-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
-          .mv-card-sub { font-size: 12px; color: rgba(255,255,255,0.4); }
-          .mv-card-arrow { margin-left: auto; font-size: 16px; color: rgba(255,255,255,0.25); flex-shrink: 0; }
+          .mv-card-title { font-size: 15px; font-weight: 700; color: #1A1219; margin-bottom: 2px; }
+          .mv-card-sub { font-size: 12px; color: #9090A0; }
+          .mv-card-arrow { margin-left: auto; font-size: 16px; color: #B0A8C0; flex-shrink: 0; }
 
           /* Section view */
           .mv-section-view { min-height: 100vh; }
@@ -342,29 +345,29 @@ export default function PublicLessonPage() {
             position: sticky; top: 52px; z-index: 80;
             display: flex; align-items: center; gap: 10px;
             padding: 12px 16px;
-            background: rgba(11,23,43,0.97);
+            background: rgba(250,250,248,0.97);
             backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255,255,255,0.07);
+            border-bottom: 1px solid rgba(91,60,224,0.10);
           }
           .mv-back-btn {
             display: flex; align-items: center; gap: 5px;
             padding: 6px 12px; border-radius: 8px;
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500;
+            background: rgba(26,18,25,0.07); border: 1px solid rgba(26,18,25,0.12);
+            color: #6B6575; font-size: 13px; font-weight: 500;
             cursor: pointer; font-family: 'DM Sans', sans-serif;
           }
-          .mv-section-name { font-size: 14px; font-weight: 600; color: #fff; }
+          .mv-section-name { font-size: 14px; font-weight: 600; color: #1A1219; }
           .mv-section-content { padding: 20px 16px 60px; }
           .mv-next-card {
             display: flex; align-items: center; justify-content: space-between;
             padding: 14px 18px; margin-top: 28px;
-            background: rgba(255,75,85,0.08); border: 1px solid rgba(255,75,85,0.2);
+            background: rgba(123,92,255,0.08); border: 1px solid rgba(123,92,255,0.2);
             border-radius: 14px; cursor: pointer;
             font-family: 'DM Sans', sans-serif;
             width: 100%;
           }
-          .mv-next-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 2px; text-align: left; }
-          .mv-next-name { font-size: 15px; font-weight: 600; color: #fff; text-align: left; }
+          .mv-next-label { font-size: 13px; color: #6B6575; margin-bottom: 2px; text-align: left; }
+          .mv-next-name { font-size: 15px; font-weight: 600; color: #1A1219; text-align: left; }
 
           /* Content fixes for mobile */
           .vocab-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
@@ -379,7 +382,7 @@ export default function PublicLessonPage() {
           /* Mobile footer */
           .mv-footer {
             padding: 24px 16px 40px; text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(26,18,25,0.07);
           }
         }
       `}</style>
@@ -398,7 +401,7 @@ export default function PublicLessonPage() {
           <div className="nav-right">
             {canvasMode === 'teacher' && (
               <div className="teacher-badge">
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00bc7c', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' }} />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#5B3CE0', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' }} />
                 <span>Teacher view</span>
               </div>
             )}
@@ -412,14 +415,14 @@ export default function PublicLessonPage() {
           <div className="hero-breadcrumb">
             <span>Akadian Library</span><span>→</span>
             <span>{lesson.language}</span><span>→</span>
-            <span style={{ color: '#ff4b55' }}>{lesson.level}</span>
+            <span style={{ color: '#7B5CFF' }}>{lesson.level}</span>
           </div>
           <div className="hero-tags">
-            <span className="hero-tag" style={{ color: '#ff4b55' }}>{lesson.language}</span>
+            <span className="hero-tag" style={{ color: '#7B5CFF' }}>{lesson.language}</span>
             <span className="hero-tag" style={{ color: levelColor, borderColor: `${levelColor}40`, background: `${levelColor}15` }}>{lesson.level}</span>
-            {lesson.unit && <span className="hero-tag" style={{ color: '#ff4b55' }}>{lesson.unit}</span>}
-            <span className="hero-tag" style={{ background: 'rgba(0,188,124,0.1)', borderColor: 'rgba(0,188,124,0.2)', color: '#00bc7c' }}>
-              <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: '#00bc7c', marginRight: 5 }} />
+            {lesson.unit && <span className="hero-tag" style={{ color: '#7B5CFF' }}>{lesson.unit}</span>}
+            <span className="hero-tag" style={{ background: '#C8FF3D', borderColor: '#C8FF3D', color: '#0B0F1E' }}>
+              <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: '#0B0F1E', marginRight: 5 }} />
               Free lesson
             </span>
           </div>
@@ -437,8 +440,8 @@ export default function PublicLessonPage() {
             ].map((c, i) => (
               <div key={i} className="impact-card">
                 <div style={{ fontSize: '20px', marginBottom: '6px' }}>{c.icon}</div>
-                <div style={{ fontSize: '12px', fontWeight: 600, color: '#fff', marginBottom: '2px' }}>{c.label}</div>
-                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)' }}>{c.desc}</div>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: '#1A1219', marginBottom: '2px' }}>{c.label}</div>
+                <div style={{ fontSize: '11px', color: '#9090A0' }}>{c.desc}</div>
               </div>
             ))}
           </div>
@@ -447,13 +450,13 @@ export default function PublicLessonPage() {
         {/* Desktop: Why + Flow */}
         <div className="two-col fade-up" style={{ animationDelay: '0.15s' }}>
           <div className="info-card">
-            <p style={{ fontSize: '11px', fontWeight: 600, color: '#00bc7c', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Why this lesson matters</p>
-            <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', lineHeight: '1.7' }}>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: '#5B3CE0', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Why this lesson matters</p>
+            <p style={{ fontSize: '14px', color: '#6B6575', lineHeight: '1.7' }}>
               Language is access. This lesson gives students the exact words they need to handle real situations with confidence — not in a classroom, but in real life.
             </p>
           </div>
           <div className="info-card">
-            <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Lesson flow</p>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: '#9090A0', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Lesson flow</p>
             {[
               { num: '1', label: 'Vocabulary', desc: 'Learn the key words' },
               { num: '2', label: 'Story', desc: 'See them in context' },
@@ -463,10 +466,10 @@ export default function PublicLessonPage() {
               { num: '6', label: 'Canvas', desc: 'Teacher annotations' },
             ].map(s => (
               <div key={s.num} className="flow-item">
-                <div className="flow-num" style={{ background: 'rgba(255,75,85,0.15)', color: '#ff4b55' }}>{s.num}</div>
+                <div className="flow-num" style={{ background: 'rgba(123,92,255,0.15)', color: '#7B5CFF' }}>{s.num}</div>
                 <div>
-                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>{s.label}</div>
-                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>{s.desc}</div>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#1A1219' }}>{s.label}</div>
+                  <div style={{ fontSize: '12px', color: '#9090A0' }}>{s.desc}</div>
                 </div>
               </div>
             ))}
@@ -492,11 +495,11 @@ export default function PublicLessonPage() {
               {TABS.find(t => t.id === activeTab)?.icon}
             </div>
             <div>
-              <div style={{ fontSize: '16px', fontWeight: 700, color: '#fff' }}>
+              <div style={{ fontSize: '16px', fontWeight: 700, color: '#1A1219' }}>
                 {TABS.find(t => t.id === activeTab)?.label}
                 {activeTab === 'vocab' && ` (${lesson.vocab?.length || 0})`}
               </div>
-              <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.35)' }}>
+              <div style={{ fontSize: '12px', color: '#9090A0' }}>
                 {activeTab === 'vocab' && 'Learn these words'}
                 {activeTab === 'story' && 'Read the context'}
                 {activeTab === 'exercise' && 'Practice time'}
@@ -520,18 +523,18 @@ export default function PublicLessonPage() {
 
         {/* Referral ad — desktop + mobile */}
         <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 clamp(20px,5vw,64px) 0', position: 'relative', zIndex: 1 }}>
-          <div style={{ background: 'linear-gradient(135deg, rgba(0,188,124,0.08), rgba(255,75,85,0.05))', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '14px', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ background: 'linear-gradient(135deg, #1E1533 0%, #0D1117 100%)', border: '1px solid rgba(200,255,61,0.25)', borderRadius: '16px', padding: '18px 22px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', boxShadow: '0 8px 28px rgba(91,60,224,0.18)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontSize: '22px' }}>🎁</span>
               <div>
-                <p style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '3px' }}>¿Conoces a alguien que quiera aprender?</p>
-                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>
-                  Refiere a una persona y obtén <strong style={{ color: '#00bc7c' }}>hasta 30% de descuento</strong> en tu siguiente mensualidad.
+                <p style={{ fontSize: '14px', fontWeight: 700, color: '#FFFFFF', marginBottom: '3px' }}>¿Conoces a alguien que quiera aprender?</p>
+                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.55)', lineHeight: 1.5 }}>
+                  Refiere a una persona y obtén <strong style={{ color: '#C8FF3D' }}>hasta 30% de descuento</strong> en tu siguiente mensualidad.
                 </p>
               </div>
             </div>
             <a href="https://www.akadianacademy.com/sesiones-en-vivo" target="_blank"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', background: '#00bc7c', borderRadius: '10px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 14px rgba(0,188,124,0.3)' }}>
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '11px 22px', background: '#C8FF3D', borderRadius: '12px', color: '#0B0F1E', fontSize: '13px', fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 4px 16px rgba(200,255,61,0.35)' }}>
               Referir ahora →
             </a>
           </div>
@@ -542,12 +545,12 @@ export default function PublicLessonPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <img src={LOGO} style={{ width: 28, height: 28, borderRadius: '50%' }} onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
             <div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>Akadian Academy Studio</div>
-              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)' }}>Built by a real teacher for real students</div>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: '#6B6575' }}>Akadian Academy Studio</div>
+              <div style={{ fontSize: '11px', color: '#B0A8C0' }}>Built by a real teacher for real students</div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: 'rgba(255,255,255,0.5)', fontSize: '13px', fontWeight: 500, textDecoration: 'none' }}>
+            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', borderRadius: '10px', border: '1px solid rgba(26,18,25,0.12)', background: 'transparent', color: '#6B6575', fontSize: '13px', fontWeight: 500, textDecoration: 'none' }}>
               ← Back to Akadian
             </a>
             <button className="share-btn" onClick={copyLink}>{copied ? '✓ Copied!' : '🔗 Copy link'}</button>
@@ -565,10 +568,10 @@ export default function PublicLessonPage() {
               {/* Compact Hero */}
               <div className="mv-hero">
                 <div className="mv-tags">
-                  <span className="mv-tag" style={{ background: 'rgba(255,75,85,0.12)', color: '#ff4b55', border: '1px solid rgba(255,75,85,0.2)' }}>{lesson.language}</span>
+                  <span className="mv-tag" style={{ background: 'rgba(123,92,255,0.12)', color: '#7B5CFF', border: '1px solid rgba(123,92,255,0.2)' }}>{lesson.language}</span>
                   <span className="mv-tag" style={{ background: 'rgba(59,130,246,0.12)', color: '#3b82f6', border: '1px solid rgba(59,130,246,0.2)' }}>{lesson.level}</span>
-                  {lesson.unit && <span className="mv-tag" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.08)' }}>{lesson.unit}</span>}
-                  <span className="mv-tag" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c', border: '1px solid rgba(0,188,124,0.2)' }}>Free lesson</span>
+                  {lesson.unit && <span className="mv-tag" style={{ background: 'rgba(26,18,25,0.07)', color: '#6B6575', border: '1px solid rgba(91,60,224,0.10)' }}>{lesson.unit}</span>}
+                  <span className="mv-tag" style={{ background: '#C8FF3D', color: '#0B0F1E', border: '1px solid #C8FF3D' }}>Free lesson</span>
                 </div>
                 <h1 className="mv-title">
                   {lesson.title.split(' ').map((word: string, i: number, arr: string[]) =>
@@ -586,7 +589,7 @@ export default function PublicLessonPage() {
                 </button>
                 {showMoreInfo && (
                   <div className="mv-more-info">
-                    <p style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>Lesson flow</p>
+                    <p style={{ fontSize: '11px', fontWeight: 700, color: '#9090A0', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>Lesson flow</p>
                     {[
                       { num: '1', label: 'Vocabulary', desc: 'Learn the key words' },
                       { num: '2', label: 'Story', desc: 'See them in context' },
@@ -598,8 +601,8 @@ export default function PublicLessonPage() {
                       <div key={s.num} className="mv-flow-item">
                         <div className="mv-flow-num">{s.num}</div>
                         <div>
-                          <div style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>{s.label}</div>
-                          <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)' }}>{s.desc}</div>
+                          <div style={{ fontSize: '13px', fontWeight: 600, color: '#1A1219' }}>{s.label}</div>
+                          <div style={{ fontSize: '11px', color: '#9090A0' }}>{s.desc}</div>
                         </div>
                       </div>
                     ))}
@@ -611,12 +614,12 @@ export default function PublicLessonPage() {
               {/* Section cards */}
               <div className="mv-cards">
                 {[
-                  { id: 'vocab', icon: '📚', bg: 'rgba(255,75,85,0.12)', title: 'Vocabulary', sub: `${lesson.vocab?.length || 0} words to learn` },
+                  { id: 'vocab', icon: '📚', bg: 'rgba(123,92,255,0.12)', title: 'Vocabulary', sub: `${lesson.vocab?.length || 0} words to learn` },
                   { id: 'story', icon: '📖', bg: 'rgba(59,130,246,0.12)', title: 'Story', sub: 'Read and find the words' },
-                  { id: 'exercise', icon: '✍️', bg: 'rgba(0,188,124,0.12)', title: 'Exercise', sub: exercise?.type?.replace(/-/g,' ') || 'Practice activity' },
+                  { id: 'exercise', icon: '✍️', bg: 'rgba(123,92,255,0.12)', title: 'Exercise', sub: exercise?.type?.replace(/-/g,' ') || 'Practice activity' },
                   { id: 'questions', icon: '💬', bg: 'rgba(245,158,11,0.12)', title: 'Story Questions', sub: 'Discuss with your class' },
                   { id: 'debate', icon: '🗣', bg: 'rgba(139,92,246,0.12)', title: 'Debate', sub: lesson.debate?.topic ? lesson.debate.topic.slice(0,50) + '...' : 'Deep discussion topic' },
-                  { id: 'canvas', icon: '📌', bg: 'rgba(0,188,124,0.12)', title: canvasMode === 'teacher' ? 'Canvas (edit)' : "Teacher's Canvas", sub: canvasMode === 'teacher' ? 'Add notes for students' : 'Notes from your teacher' },
+                  { id: 'canvas', icon: '📌', bg: 'rgba(123,92,255,0.12)', title: canvasMode === 'teacher' ? 'Canvas (edit)' : "Teacher's Canvas", sub: canvasMode === 'teacher' ? 'Add notes for students' : 'Notes from your teacher' },
                 ].map((card, i) => (
                   <button key={card.id} className="mv-card"
                     onClick={() => setMobileView(card.id)}
@@ -638,7 +641,7 @@ export default function PublicLessonPage() {
                   <button className="share-btn share-btn-primary" onClick={() => window.print()} style={{ fontSize: '12px', padding: '7px 14px' }}>↓ Save PDF</button>
                 </div>
                 {canvasMode === 'student' && (
-                  <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 20px', background: '#ff4b55', borderRadius: '12px', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none', boxShadow: '0 4px 16px rgba(255,75,85,0.3)' }}>
+                  <a href="/login" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '11px 22px', background: '#7B5CFF', borderRadius: '12px', color: '#FFFFFF', fontSize: '13px', fontWeight: 600, textDecoration: 'none', boxShadow: '0 4px 16px rgba(123,92,255,0.3)' }}>
                     ✦ Are you a teacher? Build free
                   </a>
                 )}
@@ -694,7 +697,7 @@ export default function PublicLessonPage() {
                     )}
                     <button className="mv-next-card" onClick={() => setMobileView('story')}>
                       <div><div className="mv-next-label">Next up</div><div className="mv-next-name">📖 Read the story</div></div>
-                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                      <span style={{ color: '#7B5CFF', fontSize: '20px' }}>→</span>
                     </button>
                   </div>
                 )}
@@ -704,11 +707,11 @@ export default function PublicLessonPage() {
                     {story ? (
                       <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} />
                     ) : (
-                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No story yet.</p>
+                      <p style={{ color: '#9090A0', textAlign: 'center', padding: '40px 0' }}>No story yet.</p>
                     )}
                     <button className="mv-next-card" onClick={() => setMobileView('exercise')}>
                       <div><div className="mv-next-label">Next up</div><div className="mv-next-name">✍️ Do the exercise</div></div>
-                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                      <span style={{ color: '#7B5CFF', fontSize: '20px' }}>→</span>
                     </button>
                   </div>
                 )}
@@ -721,11 +724,11 @@ export default function PublicLessonPage() {
                         <div className="exercise-content">{exercise.content}</div>
                       </>
                     ) : (
-                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No exercise yet.</p>
+                      <p style={{ color: '#9090A0', textAlign: 'center', padding: '40px 0' }}>No exercise yet.</p>
                     )}
                     <button className="mv-next-card" onClick={() => setMobileView('questions')}>
                       <div><div className="mv-next-label">Next up</div><div className="mv-next-name">💬 Story questions</div></div>
-                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                      <span style={{ color: '#7B5CFF', fontSize: '20px' }}>→</span>
                     </button>
                   </div>
                 )}
@@ -734,16 +737,16 @@ export default function PublicLessonPage() {
                   <div>
                     {story ? (
                       <>
-                        {story.debateStory && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(255,75,85,0.1)', color: '#ff4b55' }}>What happened</span><p className="debate-content">{story.debateStory}</p></div>}
-                        {story.debateMoral && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(255,188,0,0.1)', color: 'rgba(255,188,0,0.9)' }}>What we learn</span><p className="debate-content">{story.debateMoral}</p></div>}
-                        {story.debatePersonal && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(0,188,124,0.1)', color: '#00bc7c' }}>Personal connection</span><p className="debate-content">{story.debatePersonal}</p></div>}
+                        {story.debateStory && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(123,92,255,0.1)', color: '#7B5CFF' }}>What happened</span><p className="debate-content">{story.debateStory}</p></div>}
+                        {story.debateMoral && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(180,83,9,0.12)', color: '#B45309' }}>What we learn</span><p className="debate-content">{story.debateMoral}</p></div>}
+                        {story.debatePersonal && <div className="debate-section"><span className="debate-label" style={{ background: 'rgba(14,159,110,0.14)', color: '#0E9F6E' }}>Personal connection</span><p className="debate-content">{story.debatePersonal}</p></div>}
                       </>
                     ) : (
-                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No questions yet.</p>
+                      <p style={{ color: '#9090A0', textAlign: 'center', padding: '40px 0' }}>No questions yet.</p>
                     )}
                     <button className="mv-next-card" onClick={() => setMobileView('debate')}>
                       <div><div className="mv-next-label">Next up</div><div className="mv-next-name">🗣 Full debate</div></div>
-                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                      <span style={{ color: '#7B5CFF', fontSize: '20px' }}>→</span>
                     </button>
                   </div>
                 )}
@@ -753,11 +756,11 @@ export default function PublicLessonPage() {
                     {lesson.debate ? (
                       <RichDebateDisplay topic={lesson.debate.topic} article={lesson.debate.article} keyTerms={lesson.debate.keyTerms || []} questions={lesson.debate.questions || ''} />
                     ) : (
-                      <p style={{ color: 'rgba(255,255,255,0.3)', textAlign: 'center', padding: '40px 0' }}>No debate content yet.</p>
+                      <p style={{ color: '#9090A0', textAlign: 'center', padding: '40px 0' }}>No debate content yet.</p>
                     )}
                     <button className="mv-next-card" onClick={() => setMobileView('canvas')}>
                       <div><div className="mv-next-label">Next up</div><div className="mv-next-name">📌 Teacher's canvas</div></div>
-                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>→</span>
+                      <span style={{ color: '#7B5CFF', fontSize: '20px' }}>→</span>
                     </button>
                   </div>
                 )}
@@ -765,14 +768,14 @@ export default function PublicLessonPage() {
                 {mobileView === 'canvas' && (
                   <div>
                     {canvasMode === 'teacher' && (
-                      <div style={{ background: 'rgba(0,188,124,0.08)', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '12px', padding: '10px 14px', marginBottom: '14px', fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
-                        ✦ You are in <strong style={{ color: '#00bc7c' }}>teacher edit mode</strong>
+                      <div style={{ background: 'rgba(123,92,255,0.08)', border: '1px solid rgba(123,92,255,0.2)', borderRadius: '12px', padding: '10px 14px', marginBottom: '14px', fontSize: '13px', color: '#6B6575' }}>
+                        ✦ You are in <strong style={{ color: '#5B3CE0' }}>teacher edit mode</strong>
                       </div>
                     )}
                     <TeachingCanvas lessonId={lesson.id} mode={canvasMode} vocab={lesson.vocab || []} />
                     <button className="mv-next-card" onClick={() => setMobileView('home')} style={{ marginTop: '24px' }}>
                       <div><div className="mv-next-label">All done!</div><div className="mv-next-name">← Back to lesson menu</div></div>
-                      <span style={{ color: '#ff4b55', fontSize: '20px' }}>🏠</span>
+                      <span style={{ color: '#7B5CFF', fontSize: '20px' }}>🏠</span>
                     </button>
                   </div>
                 )}
