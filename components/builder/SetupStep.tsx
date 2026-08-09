@@ -1,237 +1,168 @@
 'use client'
 import { useState } from 'react'
-import { useLessonStore, Level, Subject } from '@/store/lessonStore'
-import SubjectCard from './SubjectCard'
+import { useLessonStore } from '@/store/lessonStore'
 
 const SUBJECTS = [
-  { id: 'languages', icon: '🌐', label: 'Languages', description: 'Real-world lessons for migrants and expats.', active: true },
-  { id: 'math', icon: '📐', label: 'Math & Statistics', description: 'Numbers that make sense in real life.', comingSoon: true },
-  { id: 'technology', icon: '💻', label: 'Technology', description: 'Code, data, and digital skills.', comingSoon: true },
-  { id: 'sciences', icon: '🔬', label: 'Sciences', description: 'Biology, chemistry, physics and more.', comingSoon: true },
-  { id: 'business', icon: '📊', label: 'Business & Finance', description: 'Practical skills for the real economy.', comingSoon: true },
+  { id: 'languages', icon: '🌐', label: 'Languages', desc: 'Real-world lessons for migrants and expats.', active: true },
+  { id: 'math', icon: '📐', label: 'Math & Statistics', desc: 'Numbers that make sense in real life.', active: false },
+  { id: 'technology', icon: '💻', label: 'Technology', desc: 'Code, data, and digital skills.', active: false },
+  { id: 'sciences', icon: '🔬', label: 'Sciences', desc: 'Biology, chemistry, physics and more.', active: false },
+  { id: 'business', icon: '📊', label: 'Business & Finance', desc: 'Practical skills for the real economy.', active: false },
 ]
 
-const LEVELS: Level[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'Conversation']
 const LANGUAGES = ['English', 'Spanish', 'French', 'Portuguese', 'German', 'Italian', 'Mandarin', 'Arabic', 'Japanese']
+const LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'Conversation']
 
-type BtnState = 'idle' | 'loading' | 'success' | 'error'
+const LEVEL_COLORS: Record<string, string> = {
+  A1: '#00BC7C', A2: '#34D399', B1: '#60A5FA', B2: '#A78BFA', C1: '#FB923C', Conversation: '#F472B6'
+}
 
-interface Props { onNext: () => Promise<void> }
+interface Props {
+  onNext: () => void
+}
 
 export default function SetupStep({ onNext }: Props) {
   const { setup, setSetup } = useLessonStore()
-  const [btnState, setBtnState] = useState<BtnState>('idle')
-  const [shake, setShake] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
-  const canProceed = setup.title.trim().length > 0 && setup.goal.trim().length > 0
-
-  async function handleClick() {
-    if (!canProceed) {
-      setShake(true)
-      setTimeout(() => setShake(false), 600)
-      return
-    }
-    setBtnState('loading')
-    try {
-      await onNext()
-      setBtnState('success')
-    } catch (e) {
-      setBtnState('error')
-      setTimeout(() => setBtnState('idle'), 2500)
-    }
-  }
+  const canContinue = setup.subject && setup.language && setup.level && setup.title && setup.goal
 
   return (
     <>
       <style>{`
-        @keyframes shake {
-          0%,100%{transform:translateX(0)}
-          15%{transform:translateX(-6px)}
-          30%{transform:translateX(6px)}
-          45%{transform:translateX(-4px)}
-          60%{transform:translateX(4px)}
-          75%{transform:translateX(-2px)}
-          90%{transform:translateX(2px)}
-        }
-        @keyframes spin { to { transform: rotate(360deg) } }
-        @keyframes checkPop {
-          0%{transform:scale(0);opacity:0}
-          60%{transform:scale(1.3);opacity:1}
-          100%{transform:scale(1);opacity:1}
-        }
-        @keyframes successPulse {
-          0%,100%{box-shadow:0 4px 20px rgba(0,188,124,0.4)}
-          50%{box-shadow:0 4px 36px rgba(0,188,124,0.7)}
-        }
-        @keyframes errorFlash {
-          0%,100%{background:#b33039}
-          50%{background:#ff4b55}
-        }
-        @keyframes loadingBreath {
-          0%,100%{opacity:1;transform:scale(1)}
-          50%{opacity:0.85;transform:scale(0.98)}
-        }
-        .btn-shake{animation:shake 0.55s ease}
-        .btn-loading{animation:loadingBreath 1.2s ease-in-out infinite}
-        .btn-success{animation:successPulse 1.2s ease-in-out infinite}
-        .btn-error{animation:errorFlash 0.35s ease 3}
-        .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 0.65s linear infinite;flex-shrink:0}
-        .check-icon{animation:checkPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both}
-        .hint-text{font-size:12px;margin-top:8px;transition:all 0.3s}
+        @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap');
+        .ss { max-width: 640px; width: 100%; font-family: 'Hanken Grotesk', sans-serif; animation: ssIn 0.4s cubic-bezier(.16,1,.3,1); }
+        @keyframes ssIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        .ss-hero { margin-bottom: 32px; }
+        .ss-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: rgba(91,60,224,0.08); border: 1px solid rgba(91,60,224,0.15); font-size: 11px; font-weight: 700; color: #7B5CFF; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+        .ss-title { font-family: 'Newsreader', Georgia, serif; font-size: clamp(26px,4vw,36px); color: #1A1219; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 10px; }
+        .ss-title em { color: #7B5CFF; font-style: italic; }
+        .ss-desc { font-size: 15px; color: #6B6575; line-height: 1.7; max-width: 520px; }
+        .ss-section { margin-bottom: 28px; }
+        .ss-label { font-size: 11px; font-weight: 700; color: #9090A0; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .ss-label-req { color: #FF8A3D; }
+        .ss-subjects { display: flex; flex-direction: column; gap: 8px; }
+        .ss-subject { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 14px; border: 1.5px solid rgba(0,0,0,0.07); background: #fff; cursor: pointer; transition: all 0.2s cubic-bezier(.16,1,.3,1); position: relative; overflow: hidden; }
+        .ss-subject.selected { border-color: rgba(91,60,224,0.4); background: rgba(91,60,224,0.03); box-shadow: 0 0 0 3px rgba(91,60,224,0.08); }
+        .ss-subject.inactive { opacity: 0.45; cursor: not-allowed; }
+        .ss-subject-icon { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(91,60,224,0.06); flex-shrink: 0; }
+        .ss-subject.selected .ss-subject-icon { background: rgba(91,60,224,0.1); }
+        .ss-subject-name { font-size: 14px; font-weight: 700; color: #1A1219; margin-bottom: 2px; }
+        .ss-subject-desc { font-size: 12px; color: #6B6575; }
+        .ss-subject-badge { position: absolute; top: 10px; right: 12px; padding: 2px 8px; border-radius: 999px; background: rgba(0,0,0,0.05); font-size: 10px; font-weight: 700; color: #A09AB0; letter-spacing: 0.06em; }
+        .ss-subject-radio { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.15); background: #fff; flex-shrink: 0; margin-left: auto; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .ss-subject.selected .ss-subject-radio { border-color: #7B5CFF; background: #7B5CFF; }
+        .ss-subject-radio-dot { width: 7px; height: 7px; border-radius: 50%; background: #fff; opacity: 0; transition: opacity 0.2s; }
+        .ss-subject.selected .ss-subject-radio-dot { opacity: 1; }
+        .ss-langs { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ss-lang { padding: 8px 16px; border-radius: 999px; border: 1.5px solid rgba(0,0,0,0.08); background: #fff; font-size: 13px; font-weight: 500; color: #4A4460; cursor: pointer; transition: all 0.18s; min-height: 36px; }
+        .ss-lang:hover { border-color: rgba(91,60,224,0.25); color: #5B3CE0; }
+        .ss-lang.selected { background: linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%); border-color: transparent; color: #fff; box-shadow: 0 4px 12px rgba(91,60,224,0.3); font-weight: 600; }
+        .ss-levels { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ss-level { padding: 8px 16px; border-radius: 999px; border: 1.5px solid rgba(0,0,0,0.08); background: #fff; font-size: 13px; font-weight: 600; color: #4A4460; cursor: pointer; transition: all 0.18s; min-height: 36px; }
+        .ss-level:hover { transform: translateY(-1px); }
+        .ss-level.selected { border-color: transparent; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+        .ss-input { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1.5px solid rgba(0,0,0,0.08); background: #fff; font-family: 'Hanken Grotesk', sans-serif; font-size: 14px; color: #1A1219; outline: none; transition: border-color 0.2s, box-shadow 0.2s; min-height: 44px; }
+        .ss-input:focus { border-color: rgba(91,60,224,0.4); box-shadow: 0 0 0 3px rgba(91,60,224,0.08); }
+        .ss-input::placeholder { color: #B0A8C0; }
+        .ss-textarea { resize: vertical; line-height: 1.6; min-height: 88px; }
+        .ss-note { font-size: 12px; color: #A09AB0; margin-top: 8px; line-height: 1.5; }
+        .ss-error { font-size: 13px; color: #E85555; margin-top: 8px; }
+        .ss-cta { width: 100%; padding: 16px; border-radius: 999px; background: linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%); border: none; color: #fff; font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 24px rgba(91,60,224,0.35); margin-top: 8px; min-height: 52px; letter-spacing: 0.01em; }
+        .ss-cta:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 10px 32px rgba(91,60,224,0.42); }
+        .ss-cta:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+        .ss-cta-hint { text-align: center; font-size: 12px; color: #B0A8C0; margin-top: 10px; }
       `}</style>
 
-      <div style={{ maxWidth: '680px', width: '100%' }}>
-
-        {/* Header */}
-        <div style={{ marginBottom: '36px' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255,75,85,0.1)', border: '1px solid rgba(255,75,85,0.25)', borderRadius: '100px', padding: '5px 12px', fontSize: '11px', fontWeight: 600, color: '#ff4b55', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px' }}>
-            ✦ New lesson
-          </div>
-          <h1 style={{ fontSize: 'clamp(28px,4vw,40px)', fontWeight: 700, color: '#fff', letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: '12px' }}>
-            What are you <span style={{ color: '#ff4b55', fontStyle: 'italic' }}>teaching</span> today?
-          </h1>
-          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.4)', lineHeight: '1.6', maxWidth: '520px' }}>
-            This lesson will not stay in one classroom. It joins a growing global library built to help people navigate real life with confidence.
-          </p>
+      <div className="ss">
+        {/* Hero */}
+        <div className="ss-hero">
+          <div className="ss-tag">✦ New lesson</div>
+          <h1 className="ss-title">What are you <em>teaching today?</em></h1>
+          <p className="ss-desc">This lesson will not stay in one classroom. It joins a growing global library built to help people navigate real life with confidence.</p>
         </div>
 
-        {/* Subject picker */}
-        <div style={{ marginBottom: '32px' }}>
-          <p style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>Subject type</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '12px' }}>
+        {/* Subject */}
+        <div className="ss-section">
+          <div className="ss-label">Subject type</div>
+          <div className="ss-subjects">
             {SUBJECTS.map(s => (
-              <SubjectCard key={s.id} icon={s.icon} label={s.label} description={s.description}
-                active={setup.subject === s.id} comingSoon={s.comingSoon}
-                onClick={() => setSetup({ subject: s.id as Subject })} />
+              <div key={s.id}
+                className={`ss-subject ${setup.subject === s.id ? 'selected' : ''} ${!s.active ? 'inactive' : ''}`}
+                onClick={() => s.active && setSetup({ subject: s.id })}
+              >
+                <div className="ss-subject-icon">{s.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div className="ss-subject-name">{s.label}</div>
+                  <div className="ss-subject-desc">{s.desc}</div>
+                </div>
+                {!s.active && <div className="ss-subject-badge">COMING SOON</div>}
+                {s.active && (
+                  <div className="ss-subject-radio">
+                    <div className="ss-subject-radio-dot" />
+                  </div>
+                )}
+              </div>
             ))}
           </div>
-          <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.25)', marginTop: '10px' }}>We are only focusing on languages for the moment</p>
+          <p className="ss-note">We are only focusing on languages for the moment.</p>
         </div>
 
-        {/* Language + Level */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>Language</label>
-            <select value={setup.language} onChange={e => setSetup({ language: e.target.value })}
-              style={{ width: '100%', padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#fff', fontSize: '14px', outline: 'none', cursor: 'pointer', appearance: 'none' }}>
-              {LANGUAGES.map(l => <option key={l} value={l} style={{ background: '#0b172b' }}>{l}</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>Level</label>
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              {LEVELS.map(l => (
-                <button key={l} onClick={() => setSetup({ level: l })} style={{ padding: '8px 14px', borderRadius: '8px', border: `1px solid ${setup.level === l ? 'rgba(255,75,85,0.5)' : 'rgba(255,255,255,0.08)'}`, background: setup.level === l ? 'rgba(255,75,85,0.15)' : 'rgba(255,255,255,0.03)', color: setup.level === l ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: setup.level === l ? 600 : 400, cursor: 'pointer', transition: 'all 0.2s' }}>
-                  {l}
-                </button>
-              ))}
-            </div>
+        {/* Language */}
+        <div className="ss-section">
+          <div className="ss-label">Language</div>
+          <div className="ss-langs">
+            {LANGUAGES.map(l => (
+              <button key={l} className={`ss-lang ${setup.language === l ? 'selected' : ''}`}
+                onClick={() => setSetup({ language: l })}>
+                {l}
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Unit + Title */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>Lesson Unit</label>
-            <input type="text" placeholder="e.g. Daily Survival" value={setup.unit} onChange={e => setSetup({ unit: e.target.value })}
-              style={{ width: '100%', padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#fff', fontSize: '14px', outline: 'none' }} />
+        {/* Level */}
+        <div className="ss-section">
+          <div className="ss-label">Level</div>
+          <div className="ss-levels">
+            {LEVELS.map(lv => (
+              <button key={lv} className={`ss-level ${setup.level === lv ? 'selected' : ''}`}
+                onClick={() => setSetup({ level: lv })}
+                style={setup.level === lv ? { background: LEVEL_COLORS[lv] || '#7B5CFF' } : {}}>
+                {lv}
+              </button>
+            ))}
           </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>
-              Lesson Title <span style={{ color: '#ff4b55' }}>*</span>
-            </label>
-            <input type="text" placeholder="e.g. Talking to customer service" value={setup.title} onChange={e => setSetup({ title: e.target.value })}
-              style={{ width: '100%', padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${setup.title ? 'rgba(255,75,85,0.3)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '12px', color: '#fff', fontSize: '14px', outline: 'none' }} />
-          </div>
+        </div>
+
+        {/* Unit */}
+        <div className="ss-section">
+          <div className="ss-label">Lesson unit</div>
+          <input className="ss-input" type="text" placeholder="e.g. Unit 3, Chapter 2, Week 4..."
+            value={setup.unit} onChange={e => setSetup({ unit: e.target.value })} />
+        </div>
+
+        {/* Title */}
+        <div className="ss-section">
+          <div className="ss-label">Lesson title <span className="ss-label-req">*</span></div>
+          <input className="ss-input" type="text" placeholder="e.g. Ordering food at a restaurant"
+            value={setup.title} onChange={e => setSetup({ title: e.target.value })} />
         </div>
 
         {/* Goal */}
-        <div style={{ marginBottom: '32px' }}>
-          <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '8px' }}>
-            Goal Description <span style={{ color: '#ff4b55' }}>*</span>
-          </label>
-          <textarea placeholder="e.g. Help students explain a billing problem, ask for clarification, and stay polite under pressure."
-            value={setup.goal} onChange={e => setSetup({ goal: e.target.value })} rows={3}
-            style={{ width: '100%', padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: `1px solid ${setup.goal ? 'rgba(255,75,85,0.3)' : 'rgba(255,255,255,0.08)'}`, borderRadius: '12px', color: '#fff', fontSize: '14px', outline: 'none', resize: 'vertical', lineHeight: '1.6', fontFamily: 'inherit' }} />
+        <div className="ss-section">
+          <div className="ss-label">Goal description <span className="ss-label-req">*</span></div>
+          <textarea className="ss-input ss-textarea" placeholder="What will students be able to do after this lesson? Be specific about real-life outcomes."
+            value={setup.goal} onChange={e => setSetup({ goal: e.target.value })} />
         </div>
 
-        {/* THE BUTTON */}
-        <div>
-          <button
-            onClick={handleClick}
-            disabled={btnState === 'loading' || btnState === 'success'}
-            className={
-              btnState === 'loading' ? 'btn-loading' :
-              btnState === 'success' ? 'btn-success' :
-              btnState === 'error' ? 'btn-error' :
-              shake ? 'btn-shake' : ''
-            }
-            style={{
-              padding: '15px 36px',
-              background:
-                !canProceed ? 'rgba(255,255,255,0.06)' :
-                btnState === 'success' ? '#00bc7c' :
-                btnState === 'error' ? '#b33039' :
-                '#ff4b55',
-              border: 'none',
-              borderRadius: '12px',
-              color: canProceed ? '#fff' : 'rgba(255,255,255,0.25)',
-              fontSize: '15px',
-              fontWeight: 600,
-              cursor: btnState === 'loading' || btnState === 'success' ? 'not-allowed' : canProceed ? 'pointer' : 'default',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '10px',
-              minWidth: '220px',
-              justifyContent: 'center',
-              boxShadow:
-                !canProceed ? 'none' :
-                btnState === 'success' ? '0 4px 24px rgba(0,188,124,0.4)' :
-                btnState === 'error' ? '0 4px 20px rgba(255,75,85,0.2)' :
-                btnState === 'loading' ? '0 4px 20px rgba(255,75,85,0.2)' :
-                '0 4px 24px rgba(255,75,85,0.35)',
-              transition: 'background 0.3s ease, box-shadow 0.3s ease',
-            }}
-          >
-            {/* Spinner */}
-            {btnState === 'loading' && <div className="spinner" />}
+        {error && <p className="ss-error">{error}</p>}
 
-            {/* Check */}
-            {btnState === 'success' && (
-              <svg className="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            )}
-
-            {/* X */}
-            {btnState === 'error' && (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            )}
-
-            {/* Label */}
-            {btnState === 'idle' && 'Start creating →'}
-            {btnState === 'loading' && 'Saving your lesson...'}
-            {btnState === 'success' && 'Saved! Loading vocab step...'}
-            {btnState === 'error' && 'Something went wrong'}
-          </button>
-
-          {/* Hint below button */}
-          <div className="hint-text" style={{
-            color:
-              btnState === 'error' ? '#ff4b55' :
-              shake ? '#ff4b55' :
-              'rgba(255,255,255,0.22)'
-          }}>
-            {btnState === 'error' && '⚠ Connection issue — check your internet and try again'}
-            {btnState === 'loading' && '⏳ Connecting to database...'}
-            {btnState === 'success' && '✓ Lesson saved to your studio'}
-            {btnState === 'idle' && !canProceed && shake && '↑ Title and goal are required'}
-            {btnState === 'idle' && !canProceed && !shake && 'Fill in the title and goal to continue'}
-          </div>
-        </div>
-
+        <button className="ss-cta" onClick={onNext} disabled={!canContinue || saving}>
+          {saving ? 'Setting up...' : 'Start creating →'}
+        </button>
+        {!canContinue && <p className="ss-cta-hint">Fill in the title and goal to continue</p>}
       </div>
     </>
   )
