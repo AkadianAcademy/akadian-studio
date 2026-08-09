@@ -1,207 +1,122 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { useLessonStore } from '@/store/lessonStore'
 import BuilderStepper from '@/components/builder/BuilderStepper'
 import BuilderSidebar from '@/components/builder/BuilderSidebar'
+import BuilderLivePreview from '@/components/builder/BuilderLivePreview'
 import SetupStep from '@/components/builder/SetupStep'
 import VocabStep from '@/components/builder/VocabStep'
 import PracticeStep from '@/components/builder/PracticeStep'
-import PreviewStep from '@/components/builder/PreviewStep'
-import BuilderLivePreview from '@/components/builder/BuilderLivePreview'
 import Practice2Step from '@/components/builder/Practice2Step'
-
-function LivePreviewCard() {
-  const { setup, vocab, sentences, currentStep } = useLessonStore()
-  return (
-    <>
-      <style>{`
-        .preview-panel { width: 280px; min-width: 280px; border-left: 1px solid rgba(255,255,255,0.06); padding: 24px 20px; overflow-y: auto; height: 100%; display: flex; flex-direction: column; gap: 16px; }
-        .preview-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-        .preview-dot { width: 5px; height: 5px; border-radius: 50%; background: #ff4b55; animation: previewBlink 2s ease-in-out infinite; }
-        @keyframes previewBlink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        .preview-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; }
-        .preview-card-header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
-        .preview-card-body { padding: 16px; }
-        .preview-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 100px; background: rgba(91,60,224,0.1); border: 1px solid rgba(91,60,224,0.2); font-size: 10px; font-weight: 600; color: #ff4b55; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
-        .preview-title { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.3; letter-spacing: -0.02em; margin-bottom: 6px; }
-        .preview-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-        .preview-meta-pill { padding: 3px 10px; border-radius: 100px; background: rgba(255,255,255,0.06); font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500; }
-        .preview-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .preview-section-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.2); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
-        .preview-placeholder { height: 7px; border-radius: 4px; background: rgba(255,255,255,0.05); margin-bottom: 6px; }
-        .vocab-pill { display: inline-flex; gap: 6px; padding: 4px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: rgba(255,255,255,0.5); margin: 2px; }
-        .vocab-pill-word { color: #fff; font-weight: 500; }
-        .flow-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px; }
-        .flow-step { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
-        .flow-step:last-child { border-bottom: none; padding-bottom: 0; }
-        .flow-num { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3); flex-shrink: 0; }
-        .flow-num-active { background: rgba(91,60,224,0.15); color: #ff4b55; }
-        .flow-num-done { background: rgba(91,60,224,0.1); color: #00bc7c; }
-        @media (max-width: 1100px) { .preview-panel { display: none; } }
-      `}</style>
-      <div className="preview-panel">
-        <div className="preview-label"><span className="preview-dot" />Live preview</div>
-        <div className="preview-card">
-          <BuilderLivePreview />w & publish', active: currentStep === 5 },
-          ].map(s => (
-            <div key={s.num} className="flow-step">
-              <div className={`flow-num ${s.done ? 'flow-num-done' : s.active ? 'flow-num-active' : ''}`}>
-                {s.done ? '✓' : s.num}
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', color: s.done ? '#7B5CFF' : s.active ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.3)', fontWeight: s.active || s.done ? 600 : 400 }}>{s.label}</div>
-                <div style={{ fontSize: '11px', color: '#B0A8C0', marginTop: '1px' }}>{s.desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  )
-}
+import PreviewStep from '@/components/builder/PreviewStep'
 
 export default function BuilderPage() {
   const params = useParams()
   const router = useRouter()
   const lessonId = params.lessonId as string
-  const { currentStep, setCurrentStep, setup, setLessonId, setSaving, setSlug, vocab, reset, setSetup, setVocab, setSentences, lessonId: storeLessonId } = useLessonStore()
   const [authChecked, setAuthChecked] = useState(false)
   const tokenRef = useRef<string | null>(null)
   const supabase = createClient()
 
+  const {
+    currentStep, setCurrentStep, setup, setLessonId, setSaving,
+    setSlug, vocab, reset, setSetup, setVocab, setSentences,
+    lessonId: storeLessonId
+  } = useLessonStore()
+
   useEffect(() => {
-    const init = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.access_token) {
-        tokenRef.current = session.access_token
-        if (lessonId === 'new') {
-          reset()
-          localStorage.removeItem('akadian-lesson-store')
-        } else {
-          // Load existing lesson data into store
-          fetch('/api/lessons/' + lessonId, {
-            headers: { 'Authorization': 'Bearer ' + session.access_token }
-          }).then(r => r.json()).then(d => {
-            if (d.lesson) {
-              const l = d.lesson
-              setLessonId(l.id)
-              setSlug(l.slug)
-              // Load setup data
-              setSetup({
-                subject: l.subject || 'languages',
-                language: l.language || 'English',
-                level: l.level || 'A2',
-                unit: l.unit || '',
-                title: l.title || '',
-                goal: l.goal || '',
-              })
-              // Load vocab
-              if (l.vocab?.length) {
-                setVocab(l.vocab.map((v: any) => ({ id: v.id, word: v.word, translation: v.translation, examples: [] })))
-              }
-              // Load sentences
-              if (l.sentences?.length) {
-                setSentences(l.sentences.map((s: any) => ({ id: s.id, source: s.source, translation: s.translation })))
-              }
-            }
-          }).catch(() => {})
-        }
-        setAuthChecked(true)
-        return
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) { router.push('/login'); return }
+      tokenRef.current = session.access_token
+      if (lessonId === 'new') {
+        reset()
+        localStorage.removeItem('akadian-lesson-store')
+      } else {
+        fetch('/api/lessons/' + lessonId, {
+          headers: { 'Authorization': 'Bearer ' + session.access_token }
+        }).then(r => r.json()).then(d => {
+          if (d.lesson) {
+            const l = d.lesson
+            setLessonId(l.id)
+            setSlug(l.slug)
+            setSetup({ subject: l.subject, language: l.language, level: l.level, unit: l.unit, title: l.title, goal: l.goal })
+            if (l.vocab?.length) setVocab(l.vocab.map((v: any) => ({ id: v.id, word: v.word, translation: v.translation, examples: [] })))
+            if (l.sentences?.length) setSentences(l.sentences.map((s: any) => ({ id: s.id, source: s.source, translation: s.translation })))
+          }
+        }).catch(() => {})
       }
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-        if (session?.access_token) {
-          tokenRef.current = session.access_token
-          if (lessonId !== 'new') setLessonId(lessonId)
-          setAuthChecked(true)
-          subscription.unsubscribe()
-        } else if (event === 'SIGNED_OUT') {
-          router.push('/login')
-        }
-      })
-      setTimeout(() => { if (!tokenRef.current) router.push('/login') }, 3000)
-    }
-    init()
-  }, [])
+      setAuthChecked(true)
+    })
+  }, [lessonId])
 
   async function handleSetupNext() {
-    let token = tokenRef.current
-    if (!token) {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) { router.push('/login'); return }
-      token = session.access_token
-      tokenRef.current = token
-    }
     setSaving(true)
-    const res = await fetch('/api/lessons', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(setup)
-    })
-    const data = await res.json()
-    if (!data.lesson) { setSaving(false); throw new Error(data.error || 'Failed to save') }
-    setLessonId(data.lesson.id)
-    setSlug(data.lesson.slug)
-    router.replace(`/builder/${data.lesson.id}`)
-    setCurrentStep(2)
+    try {
+      const existingId = storeLessonId && storeLessonId !== 'new' ? storeLessonId : null
+      const res = await fetch('/api/lessons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokenRef.current}` },
+        body: JSON.stringify({ ...setup, lessonId: existingId })
+      })
+      const data = await res.json()
+      if (data.lesson) {
+        setLessonId(data.lesson.id)
+        setSlug(data.lesson.slug)
+        if (lessonId === 'new') router.replace(`/builder/${data.lesson.id}`)
+        setCurrentStep(2)
+      }
+    } catch (e) { console.error(e) }
     setSaving(false)
   }
 
   if (!authChecked) return (
     <div style={{ minHeight: '100vh', background: '#FAFAF8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Hanken Grotesk', sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap'); @keyframes spin { to { transform: rotate(360deg) } }`}</style>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
-        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid rgba(91,60,224,0.2)', borderTopColor: '#7B5CFF', animation: 'spin 0.8s linear infinite' }} />
-        <p style={{ color: '#9090A0', fontSize: '13px' }}>Loading builder...</p>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap'); @keyframes spin { to { transform: rotate(360deg) } }`}</style>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+        <div style={{ width: 40, height: 40, borderRadius: '50%', border: '2px solid rgba(91,60,224,0.2)', borderTopColor: '#7B5CFF', animation: 'spin 0.8s linear infinite' }} />
+        <p style={{ color: '#9090A0', fontSize: '13px' }}>Loading your studio...</p>
       </div>
     </div>
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FAFAF8', display: 'flex', flexDirection: 'column', fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif", color: '#fff' }}>
+    <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
-        * { box-sizing: border-box; }
-        input, textarea, select { color-scheme: dark; }
-        input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.2) !important; }
-        input:focus, textarea:focus, select:focus { border-color: rgba(91,60,224,0.45) !important; box-shadow: 0 0 0 3px rgba(91,60,224,0.08) !important; outline: none !important; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-        select option { background: #FAFAF8; color: #fff; }
-        @keyframes spin { to { transform: rotate(360deg) } }
+        @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { background: #FAFAF8; }
       `}</style>
-
-      <BuilderStepper />
-
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
-        <BuilderSidebar />
-        <div style={{ flex: 1, overflowY: 'auto', padding: 'clamp(24px,4vw,48px) clamp(20px,4vw,56px)', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-          {currentStep === 1 && <SetupStep onNext={handleSetupNext} />}
-          {currentStep === 2 && (
-            <VocabStep
-              onNext={() => setCurrentStep(3)}
-              onBack={() => setCurrentStep(1)}
-            />
-          )}
-          {currentStep === 3 && (
-            <PracticeStep
-              onNext={() => setCurrentStep(4)}
-              onBack={() => setCurrentStep(2)}
-            />
-          )}
-          {currentStep === 4 && (
-            <Practice2Step
-              onNext={() => setCurrentStep(5)}
-              onBack={() => setCurrentStep(3)}
-            />
-          )}
-          {currentStep === 5 && <PreviewStep />}
+      <div style={{ minHeight: '100vh', background: '#FAFAF8', fontFamily: "'Hanken Grotesk', sans-serif", display: 'flex', flexDirection: 'column' }}>
+        <BuilderStepper />
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          <BuilderSidebar />
+          <main style={{ flex: 1, overflowY: 'auto', padding: 'clamp(32px,5vw,64px) clamp(24px,4vw,48px)', display: 'flex', justifyContent: 'center', background: '#FAFAF8' }}>
+            {currentStep === 1 && <SetupStep onNext={handleSetupNext} />}
+            {currentStep === 2 && storeLessonId && (
+              <VocabStep
+                onNext={() => setCurrentStep(3)}
+                onBack={() => setCurrentStep(1)}
+              />
+            )}
+            {currentStep === 3 && storeLessonId && (
+              <PracticeStep
+                onNext={() => setCurrentStep(4)}
+                onBack={() => setCurrentStep(2)}
+              />
+            )}
+            {currentStep === 4 && storeLessonId && (
+              <Practice2Step
+                onNext={() => setCurrentStep(5)}
+                onBack={() => setCurrentStep(3)}
+              />
+            )}
+            {currentStep === 5 && <PreviewStep />}
+          </main>
+          <BuilderLivePreview />
         </div>
-        <LivePreviewCard />
       </div>
-    </div>
+    </>
   )
 }
