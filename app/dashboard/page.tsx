@@ -23,6 +23,7 @@ export default function DashboardPage() {
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const [activeSection, setActiveSection] = useState<'lessons' | 'curricula'>('lessons')
   const [showCurriculumBuilder, setShowCurriculumBuilder] = useState(false)
+  const [showReferral, setShowReferral] = useState(true)
   const router = useRouter()
   const supabase = createClient()
   const { reset } = useLessonStore()
@@ -182,28 +183,44 @@ export default function DashboardPage() {
           </div>
 
           {/* Referral Card */}
-          <div style={{ marginBottom: '28px', background: 'linear-gradient(135deg, rgba(91,60,224,0.05) 0%, rgba(200,255,61,0.06) 100%)', border: '1px solid rgba(91,60,224,0.1)', borderRadius: '20px', padding: 'clamp(20px,3vw,28px)', position: 'relative', overflow: 'hidden', opacity: 0, animation: 'fadeUp 0.6s cubic-bezier(.16,1,.3,1) 0.25s forwards', boxShadow: '0 4px 24px rgba(91,60,224,0.08)' }}>
-            <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,255,61,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-            <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
-              <div style={{ flex: 1, minWidth: '200px' }}>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(200,255,61,0.08)', border: '1px solid rgba(200,255,61,0.2)', borderRadius: '999px', padding: '4px 12px', fontSize: '11px', fontWeight: 700, color: '#C8FF3D', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C8FF3D', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' }} />
-                  Referral Program
+          {showReferral && (
+            <div style={{ marginBottom: '28px', background: 'linear-gradient(135deg, #0D1117 0%, #1A1233 100%)', border: '1px solid rgba(123,92,255,0.2)', borderRadius: '20px', padding: 'clamp(20px,3vw,28px)', position: 'relative', overflow: 'hidden', opacity: 0, animation: 'fadeUp 0.6s cubic-bezier(.16,1,.3,1) 0.25s forwards', boxShadow: '0 8px 32px rgba(91,60,224,0.15)' }}>
+              <div style={{ position: 'absolute', top: -60, right: -60, width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,255,61,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ position: 'absolute', bottom: -40, left: 60, width: 160, height: 160, borderRadius: '50%', background: 'radial-gradient(circle, rgba(123,92,255,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+              {/* X button */}
+              <button onClick={() => setShowReferral(false)}
+                style={{ position: 'absolute', top: 14, right: 14, width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', transition: 'all 0.2s', zIndex: 2 }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.14)'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)'; (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.4)' }}>
+                ×
+              </button>
+              <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+                <div style={{ flex: 1, minWidth: '200px' }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(200,255,61,0.1)', border: '1px solid rgba(200,255,61,0.25)', borderRadius: '999px', padding: '4px 12px', fontSize: '11px', fontWeight: 700, color: '#C8FF3D', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C8FF3D', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' }} />
+                    Referral Program
+                  </div>
+                  <h3 style={{ fontSize: 'clamp(16px,2.5vw,20px)', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: '6px', lineHeight: 1.3 }}>
+                    Bring someone on board.<br />
+                    <span style={{ color: '#C8FF3D' }}>Earn 10–20% monthly.</span>
+                  </h3>
+                  <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, maxWidth: '420px', marginBottom: '14px' }}>
+                    Invite a teacher or student to a live demo class. Every time they subscribe, you earn a recurring commission.
+                  </p>
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <a href="https://www.akadianacademy.com/sesiones-en-vivo" target="_blank"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', padding: '10px 20px', background: '#C8FF3D', borderRadius: '999px', color: '#0B0F1E', fontSize: '13px', fontWeight: 800, textDecoration: 'none', boxShadow: '0 4px 20px rgba(200,255,61,0.25)', transition: 'all 0.2s', whiteSpace: 'nowrap', minHeight: '40px' }}>
+                      🎓 Invite to a demo →
+                    </a>
+                    <a href="https://www.akadianacademy.com/unete-gratis#top" target="_blank"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', padding: '10px 20px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '999px', color: 'rgba(255,255,255,0.8)', fontSize: '13px', fontWeight: 600, textDecoration: 'none', transition: 'all 0.2s', whiteSpace: 'nowrap', minHeight: '40px' }}>
+                      ✦ Join free
+                    </a>
+                  </div>
                 </div>
-                <h3 style={{ fontSize: 'clamp(16px,2.5vw,20px)', fontWeight: 700, color: '#1A1219', letterSpacing: '-0.02em', marginBottom: '6px', lineHeight: 1.3 }}>
-                  Bring someone on board.<br />
-                  <span style={{ color: '#5B3CE0' }}>Earn 10–20% monthly.</span>
-                </h3>
-                <p style={{ fontSize: '13px', color: '#6B6575', lineHeight: 1.6, maxWidth: '420px' }}>
-                  Invite a teacher or student to a live demo class. Every time they subscribe, you earn a recurring commission.
-                </p>
               </div>
-              <a href="https://www.akadianacademy.com/sesiones-en-vivo" target="_blank"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '13px 24px', background: '#C8FF3D', borderRadius: '999px', color: '#0B0F1E', fontSize: '14px', fontWeight: 800, textDecoration: 'none', boxShadow: '0 4px 24px rgba(200,255,61,0.25)', transition: 'all 0.2s', whiteSpace: 'nowrap', flexShrink: 0, minHeight: '44px' }}>
-                🎓 Invite to a demo →
-              </a>
             </div>
-          </div>
+          )}
 
           {/* Section toggle */}
           <div style={{ display: 'flex', gap: '4px', marginBottom: '28px', background: '#fff', border: '1px solid rgba(91,60,224,0.1)', boxShadow: '0 2px 8px rgba(91,60,224,0.06)', borderRadius: '999px', padding: '4px', width: 'fit-content', opacity: 0, animation: 'fadeUp 0.6s cubic-bezier(.16,1,.3,1) 0.25s forwards' }}>
@@ -242,7 +259,14 @@ export default function DashboardPage() {
               ) : (
                 <div className="lessons-grid">
                   {lessons.map((lesson: any) => (
-                    <div key={lesson.id} className="lesson-card">
+                    <div key={lesson.id} className="lesson-card" style={{
+                        background: ['A1'].includes(lesson.level) ? 'linear-gradient(135deg, #F0FFFE 0%, #E8F5FF 100%)' :
+                                    ['A2'].includes(lesson.level) ? 'linear-gradient(135deg, #F0FFF8 0%, #E8FFEF 100%)' :
+                                    ['B1'].includes(lesson.level) ? 'linear-gradient(135deg, #EEF2FF 0%, #F0EEFF 100%)' :
+                                    ['B2'].includes(lesson.level) ? 'linear-gradient(135deg, #F5F0FF 0%, #EDE8FF 100%)' :
+                                    ['C1'].includes(lesson.level) ? 'linear-gradient(135deg, #FFFBEE 0%, #FFF3E0 100%)' :
+                                    'linear-gradient(135deg, #FFF0F8 0%, #FFE8F5 100%)'
+                      }}>
                       <div className="lesson-tags">
                         <span className="lesson-tag">{lesson.language}</span>
                         <span className="lesson-tag">{lesson.level}</span>
