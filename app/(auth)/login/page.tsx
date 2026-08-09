@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase'
 
-const LOGO = "https://cdn.prod.website-files.com/67ec5d3b9fe28b1225c054c2/69cbd2f11214dfc14b33eadb_logo%20akadian.png"
+const LOGO = "https://cdn.prod.website-files.com/67ec5d3b9fe28b1225c054c2/6a4ee16b45f610e39d0ba946_Frame%2032.png"
 const DISCIPLINES = ['Languages', 'Mathematics', 'Technology', 'Sciences', 'Business', 'History', 'Music', 'Art']
 
 export default function AuthPage() {

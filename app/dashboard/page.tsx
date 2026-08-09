@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useLessonStore } from '@/store/lessonStore'
 import CurriculumBuilder from '@/components/curriculum/CurriculumBuilder'
 
-const LOGO = "https://cdn.prod.website-files.com/67ec5d3b9fe28b1225c054c2/69cbd2f11214dfc14b33eadb_logo%20akadian.png"
+const LOGO = "https://cdn.prod.website-files.com/67ec5d3b9fe28b1225c054c2/6a4ee16b45f610e39d0ba946_Frame%2032.png"
 const STATS = [
   { value: '12,480+', label: 'Future learners reached' },
   { value: '3 min', label: 'Avg lesson build time' },
