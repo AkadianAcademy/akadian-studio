@@ -15,9 +15,10 @@ export default function BuilderSidebar() {
     { label: 'Goal', done: !!setup.goal },
   ]
   const completeness = Math.round((checks.filter(c => c.done).length / checks.length) * 100)
-
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+  const circumference = 2 * Math.PI * 20
+  const dashOffset = circumference - (completeness / 100) * circumference
 
   function copyLink() {
     if (!slug) return
@@ -26,132 +27,110 @@ export default function BuilderSidebar() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const circumference = 2 * Math.PI * 20
-  const dashOffset = circumference - (completeness / 100) * circumference
+  const s = {
+    wrap: { background: '#0D1117', height: '100vh', overflowY: 'auto' as const, padding: '24px 20px', fontFamily: "'Hanken Grotesk', sans-serif", display: 'flex', flexDirection: 'column' as const, gap: '16px', scrollbarWidth: 'none' as const },
+    tag: { display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '4px 10px', borderRadius: '999px', background: 'rgba(123,92,255,0.15)', border: '1px solid rgba(123,92,255,0.25)', fontSize: '10px', fontWeight: 700, color: '#A98BFF', letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: '10px' },
+    dot: { width: '5px', height: '5px', borderRadius: '50%', background: '#C8FF3D', display: 'inline-block', animation: 'blink 2s ease-in-out infinite' },
+    greeting: { fontFamily: "'Newsreader', Georgia, serif", fontSize: '16px', color: 'rgba(255,255,255,0.85)', lineHeight: 1.4, fontStyle: 'italic' as const },
+    greetingEm: { color: '#A98BFF', fontStyle: 'normal' as const, fontWeight: 600 },
+    header: { paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.07)' },
+    progressCard: { background: 'rgba(123,92,255,0.08)', border: '1px solid rgba(123,92,255,0.15)', borderRadius: '14px', padding: '16px' },
+    progressLabel: { fontSize: '10px', fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase' as const },
+    progressPct: { position: 'absolute' as const, inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 800, color: '#A98BFF' },
+    sectionLabel: { fontSize: '10px', fontWeight: 700, color: 'rgba(255,255,255,0.22)', letterSpacing: '0.1em', textTransform: 'uppercase' as const, marginBottom: '8px' },
+    pathCard: { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px 14px' },
+    pathLang: { fontSize: '13px', fontWeight: 700, color: '#fff' },
+    pathTitle: { fontSize: '12px', color: 'rgba(255,255,255,0.4)', marginTop: '2px', fontFamily: "'Newsreader', Georgia, serif", fontStyle: 'italic' as const },
+    previewCard: { background: 'rgba(91,60,224,0.08)', border: '1px solid rgba(91,60,224,0.15)', borderRadius: '12px', padding: '12px 14px' },
+    previewUrl: { fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginBottom: '8px', wordBreak: 'break-all' as const, lineHeight: 1.5, fontFamily: "'Courier New', monospace" },
+    copyBtn: { width: '100%', padding: '8px', borderRadius: '999px', border: '1.5px solid rgba(123,92,255,0.25)', background: 'rgba(123,92,255,0.1)', color: '#A98BFF', fontFamily: "'Hanken Grotesk', sans-serif", fontSize: '12px', fontWeight: 600, cursor: 'pointer', minHeight: '34px' },
+    missionCard: { background: 'rgba(255,138,61,0.06)', border: '1px solid rgba(255,138,61,0.12)', borderRadius: '12px', padding: '14px' },
+    missionText: { fontFamily: "'Newsreader', Georgia, serif", fontSize: '13px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.65, fontStyle: 'italic' as const },
+    impactCard: { background: 'rgba(200,255,61,0.05)', border: '1px solid rgba(200,255,61,0.12)', borderRadius: '12px', padding: '14px', textAlign: 'center' as const },
+    impactNum: { fontSize: '24px', fontWeight: 800, color: '#C8FF3D', letterSpacing: '-0.03em', marginBottom: '4px' },
+    impactLabel: { fontSize: '11px', color: 'rgba(255,255,255,0.3)', lineHeight: 1.5 },
+  }
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap');
-        .sb { background: #F5F4F0; height: 100vh; overflow-y: auto; padding: 24px 20px; font-family: 'Hanken Grotesk', sans-serif; display: flex; flex-direction: column; gap: 16px; scrollbar-width: none; }
-        .sb::-webkit-scrollbar { display: none; }
-        .sb-header { padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-        .sb-tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: rgba(123,92,255,0.12); border: 1px solid rgba(123,92,255,0.2); font-size: 10px; font-weight: 700; color: #A98BFF; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
-        .sb-lime-dot { width: 5px; height: 5px; border-radius: 50%; background: #C8FF3D; animation: sbBlink 2s ease-in-out infinite; }
-        @keyframes sbBlink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-        .sb-greeting { font-family: 'Newsreader', Georgia, serif; font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.4; font-style: italic; }
-        .sb-greeting em { color: #A98BFF; font-style: normal; font-weight: 600; }
-        .sb-progress-card { background: rgba(123,92,255,0.06); border: 1px solid rgba(123,92,255,0.12); border-radius: 14px; padding: 16px; }
-        .sb-progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-        .sb-progress-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; }
-        .sb-progress-ring { position: relative; width: 48px; height: 48px; flex-shrink: 0; }
-        .sb-progress-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #A98BFF; }
-        .sb-checks { display: flex; flex-direction: column; gap: 5px; }
-        .sb-check { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-        .sb-check-icon { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; flex-shrink: 0; transition: all 0.3s; }
-        .sb-check-done .sb-check-icon { background: rgba(200,255,61,0.15); color: #C8FF3D; border: 1px solid rgba(200,255,61,0.3); }
-        .sb-check-pending .sb-check-icon { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.08); }
-        .sb-check-done .sb-check-text { color: rgba(255,255,255,0.7); }
-        .sb-check-pending .sb-check-text { color: rgba(255,255,255,0.25); }
-        .sb-section { }
-        .sb-section-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
-        .sb-path-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 14px; }
-        .sb-path-lang { font-size: 13px; font-weight: 700; color: #fff; }
-        .sb-path-title { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; font-family: 'Newsreader', Georgia, serif; font-style: italic; }
-        .sb-preview-card { background: rgba(91,60,224,0.08); border: 1px solid rgba(91,60,224,0.15); border-radius: 12px; padding: 12px 14px; }
-        .sb-preview-url { font-size: 11px; color: rgba(255,255,255,0.25); margin-bottom: 8px; word-break: break-all; line-height: 1.5; font-family: 'Courier New', monospace; }
-        .sb-preview-url em { color: #A98BFF; font-style: normal; }
-        .sb-copy-btn { width: 100%; padding: 8px; border-radius: 999px; border: 1.5px solid rgba(123,92,255,0.25); background: rgba(123,92,255,0.08); color: #A98BFF; font-family: 'Hanken Grotesk', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; min-height: 34px; }
-        .sb-copy-btn:hover { background: rgba(123,92,255,0.15); border-color: rgba(123,92,255,0.4); }
-        .sb-mission { background: rgba(255,138,61,0.06); border: 1px solid rgba(255,138,61,0.12); border-radius: 12px; padding: 14px; }
-        .sb-mission-text { font-family: 'Newsreader', Georgia, serif; font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.65; font-style: italic; }
-        .sb-mission-text em { color: #FF8A3D; font-style: normal; }
-        .sb-impact-card { background: rgba(200,255,61,0.04); border: 1px solid rgba(200,255,61,0.1); border-radius: 12px; padding: 14px; text-align: center; }
-        .sb-impact-num { font-size: 24px; font-weight: 800; color: #C8FF3D; letter-spacing: -0.03em; margin-bottom: 4px; }
-        .sb-impact-label { font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.5; }
-        @keyframes slideIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
-        .sb { animation: slideIn 0.4s cubic-bezier(.16,1,.3,1); }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        @keyframes sbIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
       `}</style>
-
-      <div className="sb">
-        {/* Header */}
-        <div className="sb-header">
-          <div className="sb-tag"><span className="sb-lime-dot" />Studio</div>
-          <p className="sb-greeting">
-            {greeting}, <em>{setup.title ? setup.title.split(' ')[0] : 'Akadian'}.</em><br />
+      <div style={s.wrap}>
+        <div style={s.header}>
+          <div style={s.tag}><span style={s.dot} />Studio</div>
+          <p style={s.greeting}>
+            {greeting}, <em style={s.greetingEm}>{setup.title ? setup.title.split(' ')[0] : 'Akadian'}.</em><br />
             Let's create.
           </p>
         </div>
 
-        {/* Completeness */}
-        <div className="sb-progress-card">
-          <div className="sb-progress-header">
-            <div>
-              <div className="sb-progress-label">Completeness — {completeness}%</div>
-            </div>
-            <div className="sb-progress-ring">
+        <div style={s.progressCard}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+            <div style={s.progressLabel}>Completeness — {completeness}%</div>
+            <div style={{ position: 'relative', width: '48px', height: '48px' }}>
               <svg width="48" height="48" viewBox="0 0 48 48" style={{ transform: 'rotate(-90deg)' }}>
-                <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(123,92,255,0.1)" strokeWidth="3" />
+                <circle cx="24" cy="24" r="20" fill="none" stroke="rgba(123,92,255,0.12)" strokeWidth="3" />
                 <circle cx="24" cy="24" r="20" fill="none" stroke="#7B5CFF" strokeWidth="3"
-                  strokeDasharray={circumference} strokeDashoffset={dashOffset}
-                  strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.5s cubic-bezier(.16,1,.3,1)' }} />
+                  strokeDasharray={circumference} strokeDashoffset={dashOffset} strokeLinecap="round"
+                  style={{ transition: 'stroke-dashoffset 0.5s cubic-bezier(.16,1,.3,1)' }} />
               </svg>
-              <div className="sb-progress-pct">{completeness}%</div>
+              <div style={s.progressPct}>{completeness}%</div>
             </div>
           </div>
-          <div className="sb-checks">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
             {checks.map(c => (
-              <div key={c.label} className={`sb-check ${c.done ? 'sb-check-done' : 'sb-check-pending'}`}>
-                <div className="sb-check-icon">{c.done ? '✓' : '○'}</div>
-                <span className="sb-check-text">{c.label}</span>
+              <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
+                <div style={{ width: '16px', height: '16px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: 800, flexShrink: 0, background: c.done ? 'rgba(200,255,61,0.12)' : 'rgba(255,255,255,0.04)', border: c.done ? '1px solid rgba(200,255,61,0.3)' : '1px solid rgba(255,255,255,0.08)', color: c.done ? '#C8FF3D' : 'rgba(255,255,255,0.2)' }}>
+                  {c.done ? '✓' : '○'}
+                </div>
+                <span style={{ color: c.done ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.25)' }}>{c.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Lesson path */}
         {(setup.language || setup.title) && (
-          <div className="sb-section">
-            <div className="sb-section-label">Lesson path</div>
-            <div className="sb-path-card">
-              <div className="sb-path-lang">{[setup.language, setup.level, setup.unit].filter(Boolean).join(' · ')}</div>
-              {setup.title && <div className="sb-path-title">{setup.title}</div>}
+          <div>
+            <div style={s.sectionLabel}>Lesson path</div>
+            <div style={s.pathCard}>
+              <div style={s.pathLang}>{[setup.language, setup.level, setup.unit].filter(Boolean).join(' · ')}</div>
+              {setup.title && <div style={s.pathTitle}>{setup.title}</div>}
             </div>
           </div>
         )}
 
-        {/* Preview link */}
-        <div className="sb-section">
-          <div className="sb-section-label">Preview link</div>
-          <div className="sb-preview-card">
-            <div className="sb-preview-url">
+        <div>
+          <div style={s.sectionLabel}>Preview link</div>
+          <div style={s.previewCard}>
+            <div style={s.previewUrl}>
               {slug
-                ? <><em>akadianacademy.com</em>/library/{slug}</>
+                ? <><span style={{ color: '#A98BFF' }}>akadianacademy.com</span>/library/{slug}</>
                 : <span style={{ color: 'rgba(255,255,255,0.15)' }}>Available after setup</span>
               }
             </div>
-            <button className="sb-copy-btn" onClick={copyLink} disabled={!slug}>
+            <button style={s.copyBtn} onClick={copyLink} disabled={!slug}>
               {copied ? '✓ Copied!' : '🔗 Copy link'}
             </button>
           </div>
         </div>
 
-        {/* Mission */}
-        <div className="sb-section">
-          <div className="sb-section-label">Mission signal</div>
-          <div className="sb-mission">
-            <p className="sb-mission-text">
-              "One lesson here could help someone <em>order food, find a job,</em> or call for help in a new country."
+        <div>
+          <div style={s.sectionLabel}>Mission signal</div>
+          <div style={s.missionCard}>
+            <p style={s.missionText}>
+              "One lesson here could help someone <span style={{ color: '#FF8A3D', fontStyle: 'normal' }}>order food, find a job,</span> or call for help in a new country."
             </p>
           </div>
         </div>
 
-        {/* Impact */}
-        <div className="sb-section">
-          <div className="sb-section-label">Library impact</div>
-          <div className="sb-impact-card">
-            <div className="sb-impact-num">12,480+</div>
-            <div className="sb-impact-label">future learners benefit from strong lesson structures</div>
+        <div>
+          <div style={s.sectionLabel}>Library impact</div>
+          <div style={s.impactCard}>
+            <div style={s.impactNum}>12,480+</div>
+            <div style={s.impactLabel}>future learners benefit from strong lesson structures</div>
           </div>
         </div>
       </div>
