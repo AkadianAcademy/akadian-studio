@@ -25,15 +25,15 @@ export default function VocabRow({ word, translation, onWordChange, onTranslatio
         onChange={e => onWordChange(e.target.value)}
         style={{
           flex: 1, padding: '11px 14px',
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '10px', color: '#fff',
+          background: '#ffffff',
+          border: '1px solid rgba(91,60,224,0.1)',
+          borderRadius: '10px', color: '#1A1219',
           fontSize: '14px', outline: 'none',
           fontFamily: 'inherit',
           transition: 'border-color 0.2s',
         }}
       />
-      <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: '16px', flexShrink: 0 }}>→</div>
+      <div style={{ color: '#B0A8C0', fontSize: '16px', flexShrink: 0 }}>→</div>
       <input
         type="text"
         placeholder="Translation"
@@ -41,9 +41,9 @@ export default function VocabRow({ word, translation, onWordChange, onTranslatio
         onChange={e => onTranslationChange(e.target.value)}
         style={{
           flex: 1, padding: '11px 14px',
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '10px', color: '#fff',
+          background: '#ffffff',
+          border: '1px solid rgba(91,60,224,0.1)',
+          borderRadius: '10px', color: '#1A1219',
           fontSize: '14px', outline: 'none',
           fontFamily: 'inherit',
           transition: 'border-color 0.2s',
@@ -53,8 +53,8 @@ export default function VocabRow({ word, translation, onWordChange, onTranslatio
         onClick={onDelete}
         style={{
           width: 32, height: 32, borderRadius: '8px',
-          background: 'rgba(255,75,85,0.08)',
-          border: '1px solid rgba(255,75,85,0.15)',
+          background: 'rgba(91,60,224,0.06)',
+          border: '1px solid rgba(91,60,224,0.1)',
           color: 'rgba(255,75,85,0.6)',
           cursor: 'pointer', display: 'flex',
           alignItems: 'center', justifyContent: 'center',

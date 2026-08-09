@@ -19,9 +19,9 @@ export default function AiButton({ label, loadingLabel, loading, onClick, varian
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '7px',
         padding: '9px 16px', borderRadius: '10px',
-        background: isPrimary ? 'rgba(255,75,85,0.12)' : 'rgba(0,188,124,0.1)',
-        border: `1px solid ${isPrimary ? 'rgba(255,75,85,0.3)' : 'rgba(0,188,124,0.25)'}`,
-        color: isPrimary ? '#ff4b55' : '#00bc7c',
+        background: isPrimary ? 'rgba(255,75,85,0.12)' : 'rgba(91,60,224,0.08)',
+        border: `1px solid ${isPrimary ? 'rgba(91,60,224,0.2)' : 'rgba(0,188,124,0.25)'}`,
+        color: isPrimary ? '#7B5CFF' : '#7B5CFF',
         fontSize: '13px', fontWeight: 600,
         cursor: loading || disabled ? 'not-allowed' : 'pointer',
         opacity: loading || disabled ? 0.6 : 1,
@@ -34,8 +34,8 @@ export default function AiButton({ label, loadingLabel, loading, onClick, varian
         <>
           <div style={{
             width: 13, height: 13,
-            border: `2px solid ${isPrimary ? 'rgba(255,75,85,0.3)' : 'rgba(0,188,124,0.3)'}`,
-            borderTopColor: isPrimary ? '#ff4b55' : '#00bc7c',
+            border: `2px solid ${isPrimary ? 'rgba(91,60,224,0.2)' : 'rgba(0,188,124,0.3)'}`,
+            borderTopColor: isPrimary ? '#7B5CFF' : '#7B5CFF',
             borderRadius: '50%',
             animation: 'spin 0.65s linear infinite',
             flexShrink: 0,

@@ -23,7 +23,7 @@ function LivePreviewCard() {
         .preview-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; }
         .preview-card-header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
         .preview-card-body { padding: 16px; }
-        .preview-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 100px; background: rgba(255,75,85,0.1); border: 1px solid rgba(255,75,85,0.2); font-size: 10px; font-weight: 600; color: #ff4b55; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+        .preview-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 100px; background: rgba(91,60,224,0.1); border: 1px solid rgba(91,60,224,0.2); font-size: 10px; font-weight: 600; color: #ff4b55; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
         .preview-title { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.3; letter-spacing: -0.02em; margin-bottom: 6px; }
         .preview-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
         .preview-meta-pill { padding: 3px 10px; border-radius: 100px; background: rgba(255,255,255,0.06); font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500; }
@@ -36,8 +36,8 @@ function LivePreviewCard() {
         .flow-step { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .flow-step:last-child { border-bottom: none; padding-bottom: 0; }
         .flow-num { width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3); flex-shrink: 0; }
-        .flow-num-active { background: rgba(255,75,85,0.15); color: #ff4b55; }
-        .flow-num-done { background: rgba(0,188,124,0.15); color: #00bc7c; }
+        .flow-num-active { background: rgba(91,60,224,0.15); color: #ff4b55; }
+        .flow-num-done { background: rgba(91,60,224,0.1); color: #00bc7c; }
         @media (max-width: 1100px) { .preview-panel { display: none; } }
       `}</style>
       <div className="preview-panel">
@@ -45,8 +45,8 @@ function LivePreviewCard() {
         <div className="preview-card">
           <div className="preview-card-header">
             <div className="preview-badge">✦ Public lesson page</div>
-            <div className="preview-title">{setup.title || <span style={{ color: 'rgba(255,255,255,0.2)', fontStyle: 'italic', fontWeight: 400 }}>Lesson title...</span>}</div>
-            {setup.goal && <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', lineHeight: 1.5 }}>{setup.goal}</div>}
+            <div className="preview-title">{setup.title || <span style={{ color: '#B0A8C0', fontStyle: 'italic', fontWeight: 400 }}>Lesson title...</span>}</div>
+            {setup.goal && <div style={{ fontSize: '11px', color: '#9090A0', lineHeight: 1.5 }}>{setup.goal}</div>}
             <div className="preview-meta">
               {setup.language && <span className="preview-meta-pill">{setup.language}</span>}
               {setup.level && <span className="preview-meta-pill">{setup.level}</span>}
@@ -75,8 +75,8 @@ function LivePreviewCard() {
               {sentences.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {sentences.slice(0, 2).map(s => (
-                    <div key={s.id} style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-                      <div style={{ color: '#fff', fontWeight: 500 }}>{s.source}</div>
+                    <div key={s.id} style={{ fontSize: '11px', color: '#6B6575', lineHeight: 1.5 }}>
+                      <div style={{ color: '#1A1219', fontWeight: 500 }}>{s.source}</div>
                       <div>{s.translation}</div>
                     </div>
                   ))}
@@ -94,7 +94,7 @@ function LivePreviewCard() {
         </div>
 
         <div className="flow-card">
-          <div style={{ fontSize: '10px', fontWeight: 600, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '10px' }}>Lesson flow</div>
+          <div style={{ fontSize: '10px', fontWeight: 600, color: '#B0A8C0', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '10px' }}>Lesson flow</div>
           {[
             { num: '1', label: 'Setup', desc: 'Lesson details', done: currentStep > 1 },
             { num: '2', label: 'Vocabulary', desc: 'Words & sentences', done: currentStep > 2, active: currentStep === 2 },
@@ -107,8 +107,8 @@ function LivePreviewCard() {
                 {s.done ? '✓' : s.num}
               </div>
               <div>
-                <div style={{ fontSize: '12px', color: s.done ? '#00bc7c' : s.active ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.3)', fontWeight: s.active || s.done ? 600 : 400 }}>{s.label}</div>
-                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)', marginTop: '1px' }}>{s.desc}</div>
+                <div style={{ fontSize: '12px', color: s.done ? '#7B5CFF' : s.active ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.3)', fontWeight: s.active || s.done ? 600 : 400 }}>{s.label}</div>
+                <div style={{ fontSize: '11px', color: '#B0A8C0', marginTop: '1px' }}>{s.desc}</div>
               </div>
             </div>
           ))}
@@ -209,24 +209,24 @@ export default function BuilderPage() {
     <div style={{ minHeight: '100vh', background: '#FAFAF8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Hanken Grotesk', sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap'); @keyframes spin { to { transform: rotate(360deg) } }`}</style>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
-        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid rgba(255,75,85,0.2)', borderTopColor: '#ff4b55', animation: 'spin 0.8s linear infinite' }} />
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>Loading builder...</p>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', border: '2px solid rgba(91,60,224,0.2)', borderTopColor: '#7B5CFF', animation: 'spin 0.8s linear infinite' }} />
+        <p style={{ color: '#9090A0', fontSize: '13px' }}>Loading builder...</p>
       </div>
     </div>
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0b172b', display: 'flex', flexDirection: 'column', fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif", color: '#fff' }}>
+    <div style={{ minHeight: '100vh', background: '#FAFAF8', display: 'flex', flexDirection: 'column', fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif", color: '#1A1219' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
         * { box-sizing: border-box; }
         input, textarea, select { color-scheme: dark; }
         input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.2) !important; }
-        input:focus, textarea:focus, select:focus { border-color: rgba(255,75,85,0.45) !important; box-shadow: 0 0 0 3px rgba(255,75,85,0.08) !important; outline: none !important; }
+        input:focus, textarea:focus, select:focus { border-color: rgba(91,60,224,0.45) !important; box-shadow: 0 0 0 3px rgba(91,60,224,0.08) !important; outline: none !important; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
-        select option { background: #0b172b; color: #fff; }
+        select option { background: #FAFAF8; color: #fff; }
         @keyframes spin { to { transform: rotate(360deg) } }
       `}</style>
 

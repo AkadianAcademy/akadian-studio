@@ -33,7 +33,7 @@ export default function BuilderSidebar() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&display=swap');
-        .sb { background: #0D1117; height: 100vh; overflow-y: auto; padding: 24px 20px; font-family: 'Hanken Grotesk', sans-serif; display: flex; flex-direction: column; gap: 16px; scrollbar-width: none; }
+        .sb { background: #F5F4F0; height: 100vh; overflow-y: auto; padding: 24px 20px; font-family: 'Hanken Grotesk', sans-serif; display: flex; flex-direction: column; gap: 16px; scrollbar-width: none; }
         .sb::-webkit-scrollbar { display: none; }
         .sb-header { padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .sb-tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; background: rgba(123,92,255,0.12); border: 1px solid rgba(123,92,255,0.2); font-size: 10px; font-weight: 700; color: #A98BFF; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }

@@ -25,9 +25,9 @@ export default function ExampleSentenceRow({ source, translation, onSourceChange
           onChange={e => onSourceChange(e.target.value)}
           style={{
             width: '100%', padding: '11px 14px',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '10px', color: '#fff',
+            background: '#ffffff',
+            border: '1px solid rgba(91,60,224,0.1)',
+            borderRadius: '10px', color: '#1A1219',
             fontSize: '13px', outline: 'none',
             fontFamily: 'inherit',
           }}
@@ -39,9 +39,9 @@ export default function ExampleSentenceRow({ source, translation, onSourceChange
           onChange={e => onTranslationChange(e.target.value)}
           style={{
             width: '100%', padding: '11px 14px',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(0,188,124,0.15)',
-            borderRadius: '10px', color: 'rgba(255,255,255,0.7)',
+            background: '#ffffff',
+            border: '1px solid rgba(91,60,224,0.1)',
+            borderRadius: '10px', color: '#3A3550',
             fontSize: '13px', outline: 'none',
             fontFamily: 'inherit',
           }}
@@ -51,8 +51,8 @@ export default function ExampleSentenceRow({ source, translation, onSourceChange
         onClick={onDelete}
         style={{
           width: 32, height: 32, borderRadius: '8px', marginTop: '4px',
-          background: 'rgba(255,75,85,0.08)',
-          border: '1px solid rgba(255,75,85,0.15)',
+          background: 'rgba(91,60,224,0.06)',
+          border: '1px solid rgba(91,60,224,0.1)',
           color: 'rgba(255,75,85,0.6)',
           cursor: 'pointer', display: 'flex',
           alignItems: 'center', justifyContent: 'center',

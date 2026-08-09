@@ -165,11 +165,11 @@ export default function PracticeStep({ onNext, onBack }: Props) {
 
   const tArea = (value: string, onChange: (v: string) => void, placeholder: string, rows = 4) => (
     <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={rows}
-      style={{ width: '100%', padding: '12px 14px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#fff', fontSize: '14px', outline: 'none', resize: 'vertical', lineHeight: '1.6', fontFamily: 'inherit' }} />
+      style={{ width: '100%', padding: '12px 14px', background: '#fff', border: '1px solid rgba(91,60,224,0.1)', borderRadius: '12px', color: '#1A1219', fontSize: '14px', outline: 'none', resize: 'vertical', lineHeight: '1.6', fontFamily: 'inherit' }} />
   )
 
   const levelBadge = (
-    <span style={{ padding: '3px 10px', borderRadius: '100px', background: 'rgba(255,75,85,0.1)', border: '1px solid rgba(255,75,85,0.2)', fontSize: '11px', color: '#ff4b55', fontWeight: 600 }}>
+    <span style={{ padding: '3px 10px', borderRadius: '100px', background: 'rgba(91,60,224,0.1)', border: '1px solid rgba(91,60,224,0.2)', fontSize: '11px', color: '#7B5CFF', fontWeight: 600 }}>
       {setup.level} level
     </span>
   )
@@ -180,14 +180,14 @@ export default function PracticeStep({ onNext, onBack }: Props) {
 
       {/* Header */}
       <div style={{ marginBottom: '36px' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255,75,85,0.1)', border: '1px solid rgba(255,75,85,0.25)', borderRadius: '100px', padding: '5px 12px', fontSize: '11px', fontWeight: 600, color: '#ff4b55', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(91,60,224,0.1)', border: '1px solid rgba(91,60,224,0.25)', borderRadius: '100px', padding: '5px 12px', fontSize: '11px', fontWeight: 600, color: '#7B5CFF', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '16px' }}>
           ✦ Make them practice
         </div>
-        <h1 style={{ fontSize: 'clamp(28px,4vw,40px)', fontWeight: 700, color: '#fff', letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: '12px' }}>
-          Learning that <span style={{ color: '#ff4b55', fontStyle: 'italic' }}>actually sticks</span>
+        <h1 style={{ fontSize: 'clamp(28px,4vw,40px)', fontWeight: 700, color: '#1A1219', letterSpacing: '-0.025em', lineHeight: 1.1, marginBottom: '12px' }}>
+          Learning that <span style={{ color: '#7B5CFF', fontStyle: 'italic' }}>actually sticks</span>
         </h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.4)', lineHeight: '1.6' }}>
+          <p style={{ fontSize: '15px', color: '#6B6575', lineHeight: '1.6' }}>
             Everything below is calibrated to
           </p>
           {levelBadge}
@@ -198,11 +198,11 @@ export default function PracticeStep({ onNext, onBack }: Props) {
       <div style={{ marginBottom: '28px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
           {sLabel('Exercise type')}
-          <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)' }}>Choose one main activity</span>
+          <span style={{ fontSize: '11px', color: '#B0A8C0' }}>Choose one main activity</span>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px' }}>
           {EXERCISE_TYPES.map(t => (
-            <button key={t.id} onClick={() => setExerciseType(t.id)} style={{ padding: '11px 14px', borderRadius: '10px', border: `1px solid ${exerciseType === t.id ? 'rgba(255,75,85,0.5)' : 'rgba(255,255,255,0.08)'}`, background: exerciseType === t.id ? 'rgba(255,75,85,0.15)' : 'rgba(255,255,255,0.03)', color: exerciseType === t.id ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: exerciseType === t.id ? 600 : 400, cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'inherit', textAlign: 'center' }}>
+            <button key={t.id} onClick={() => setExerciseType(t.id)} style={{ padding: '11px 14px', borderRadius: '10px', border: `1px solid ${exerciseType === t.id ? 'rgba(91,60,224,0.5)' : 'rgba(255,255,255,0.08)'}`, background: exerciseType === t.id ? 'rgba(91,60,224,0.15)' : 'rgba(255,255,255,0.03)', color: exerciseType === t.id ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: exerciseType === t.id ? 600 : 400, cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'inherit', textAlign: 'center' }}>
               {t.label}
             </button>
           ))}
@@ -216,10 +216,10 @@ export default function PracticeStep({ onNext, onBack }: Props) {
           <div>{sLabel('Exercise instructions')}{tArea(instructions, setInstructions, 'Describe what students should do...', 3)}</div>
           <div>{sLabel('Exercise content')}{tArea(content, setContent, 'The exercise content, questions, or scenario...', 6)}</div>
         </div>
-        {generateExerciseAI.error && <p style={{ fontSize: '12px', color: '#ff4b55', marginTop: '8px' }}>⚠ {generateExerciseAI.error}</p>}
+        {generateExerciseAI.error && <p style={{ fontSize: '12px', color: '#7B5CFF', marginTop: '8px' }}>⚠ {generateExerciseAI.error}</p>}
       </div>
 
-      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '32px 0' }} />
+      <div style={{ height: 1, background: '#ffffff', margin: '32px 0' }} />
 
       {/* Story section */}
       <div style={{ marginBottom: '28px' }}>
@@ -227,16 +227,16 @@ export default function PracticeStep({ onNext, onBack }: Props) {
           {sLabel('Context story')}
           <AiButton label="AI generate story" loadingLabel="Writing story..." loading={generateStoryAI.loading} onClick={handleGenerateStory} variant="secondary" />
         </div>
-        <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '12px', lineHeight: 1.6 }}>
+        <p style={{ fontSize: '12px', color: '#9090A0', marginBottom: '12px', lineHeight: 1.6 }}>
           A short story using the vocabulary in a real-life situation at {setup.level} level.
         </p>
 
         {/* Image style picker */}
         <div style={{ marginBottom: '12px' }}>
-          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginBottom: '8px' }}>Story image style</p>
+          <p style={{ fontSize: '11px', color: '#B0A8C0', marginBottom: '8px' }}>Story image style</p>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
             {['photorealistic', 'illustration', 'comic', 'watercolor', 'cinematic'].map(style => (
-              <button key={style} onClick={() => setImageStyle(style)} style={{ padding: '5px 12px', borderRadius: '8px', border: `1px solid ${imageStyle === style ? 'rgba(0,188,124,0.4)' : 'rgba(255,255,255,0.08)'}`, background: imageStyle === style ? 'rgba(0,188,124,0.1)' : 'transparent', color: imageStyle === style ? '#00bc7c' : 'rgba(255,255,255,0.35)', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
+              <button key={style} onClick={() => setImageStyle(style)} style={{ padding: '5px 12px', borderRadius: '8px', border: `1px solid ${imageStyle === style ? 'rgba(91,60,224,0.4)' : 'rgba(255,255,255,0.08)'}`, background: imageStyle === style ? 'rgba(91,60,224,0.1)' : 'transparent', color: imageStyle === style ? '#7B5CFF' : 'rgba(255,255,255,0.35)', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
                 {style}
               </button>
             ))}
@@ -247,36 +247,36 @@ export default function PracticeStep({ onNext, onBack }: Props) {
 
         {/* Image prompt */}
         {imagePrompt && (
-          <div style={{ marginTop: '12px', background: 'rgba(0,188,124,0.07)', border: '1px solid rgba(0,188,124,0.2)', borderRadius: '12px', padding: '14px' }}>
+          <div style={{ marginTop: '12px', background: 'rgba(91,60,224,0.07)', border: '1px solid rgba(91,60,224,0.2)', borderRadius: '12px', padding: '14px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <p style={{ fontSize: '11px', fontWeight: 600, color: '#00bc7c', letterSpacing: '0.08em', textTransform: 'uppercase' }}>✦ Story image prompt</p>
-              <button onClick={copyImagePrompt} style={{ padding: '4px 12px', borderRadius: '6px', background: copied ? 'rgba(0,188,124,0.2)' : 'rgba(0,188,124,0.1)', border: '1px solid rgba(0,188,124,0.25)', color: '#00bc7c', fontSize: '11px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
+              <p style={{ fontSize: '11px', fontWeight: 600, color: '#7B5CFF', letterSpacing: '0.08em', textTransform: 'uppercase' }}>✦ Story image prompt</p>
+              <button onClick={copyImagePrompt} style={{ padding: '4px 12px', borderRadius: '6px', background: copied ? 'rgba(91,60,224,0.2)' : 'rgba(91,60,224,0.1)', border: '1px solid rgba(91,60,224,0.25)', color: '#7B5CFF', fontSize: '11px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
                 {copied ? '✓ Copied!' : 'Copy prompt'}
               </button>
             </div>
-            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, marginBottom: '8px' }}>{imagePrompt}</p>
-            <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '12px', color: '#6B6575', lineHeight: 1.6, marginBottom: '8px' }}>{imagePrompt}</p>
+            <p style={{ fontSize: '11px', color: '#B0A8C0', lineHeight: 1.5 }}>
               Use this prompt in Midjourney, DALL-E, or any image generator to create a visual for your lesson.
             </p>
           </div>
         )}
-        {generateStoryAI.error && <p style={{ fontSize: '12px', color: '#ff4b55', marginTop: '8px' }}>⚠ {generateStoryAI.error}</p>}
+        {generateStoryAI.error && <p style={{ fontSize: '12px', color: '#7B5CFF', marginTop: '8px' }}>⚠ {generateStoryAI.error}</p>}
       </div>
 
-      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '32px 0' }} />
+      <div style={{ height: 1, background: '#ffffff', margin: '32px 0' }} />
 
       {/* Debate section */}
       <div style={{ marginBottom: '36px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-          {sLabel('Story questions for students', '#00bc7c')}
+          {sLabel('Story questions for students', '#7B5CFF')}
           <AiButton label="AI generate story questions" loadingLabel="Generating..." loading={generateDebateAI.loading} onClick={handleGenerateDebate} variant="secondary" disabled={!story} />
         </div>
-        <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', marginBottom: '16px', lineHeight: 1.6 }}>
+        <p style={{ fontSize: '12px', color: '#9090A0', marginBottom: '16px', lineHeight: 1.6 }}>
           {!story ? '⚠ Generate or write a story first — questions will be based on it.' : `Questions calibrated to ${setup.level} level — 2 per category.`}
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div>
-            <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(255,75,85,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>About the story</p>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(91,60,224,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>About the story</p>
             {tArea(debateStory, setDebateStory, 'What happened in the story? (comprehension questions)', 3)}
           </div>
           <div>
@@ -284,20 +284,20 @@ export default function PracticeStep({ onNext, onBack }: Props) {
             {tArea(debateMoral, setDebateMoral, 'What can we learn from this story? (reflection questions)', 3)}
           </div>
           <div>
-            <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(0,188,124,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>Personal opinions</p>
+            <p style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(91,60,224,0.7)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '8px' }}>Personal opinions</p>
             {tArea(debatePersonal, setDebatePersonal, 'Has something like this happened to you? (personal connection)', 3)}
           </div>
         </div>
-        {generateDebateAI.error && <p style={{ fontSize: '12px', color: '#ff4b55', marginTop: '8px' }}>⚠ {generateDebateAI.error}</p>}
+        {generateDebateAI.error && <p style={{ fontSize: '12px', color: '#7B5CFF', marginTop: '8px' }}>⚠ {generateDebateAI.error}</p>}
       </div>
 
       {/* Navigation */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <button onClick={onBack} style={{ padding: '13px 24px', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'rgba(255,255,255,0.4)', fontSize: '14px', fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>
+        <button onClick={onBack} style={{ padding: '13px 24px', background: 'transparent', border: '1px solid rgba(91,60,224,0.12)', borderRadius: '12px', color: '#6B6575', fontSize: '14px', fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>
           ← Back
         </button>
         <button onClick={handleSaveAndNext} disabled={saving || saved}
-          style={{ padding: '13px 32px', background: saved ? '#00bc7c' : '#ff4b55', border: 'none', borderRadius: '12px', color: '#fff', fontSize: '15px', fontWeight: 600, cursor: saving || saved ? 'not-allowed' : 'pointer', fontFamily: 'inherit', transition: 'all 0.3s', boxShadow: saved ? '0 4px 20px rgba(0,188,124,0.4)' : '0 4px 20px rgba(255,75,85,0.3)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          style={{ padding: '13px 32px', background: saved ? '#7B5CFF' : '#7B5CFF', border: 'none', borderRadius: '12px', color: '#1A1219', fontSize: '15px', fontWeight: 600, cursor: saving || saved ? 'not-allowed' : 'pointer', fontFamily: 'inherit', transition: 'all 0.3s', boxShadow: saved ? '0 4px 20px rgba(91,60,224,0.4)' : '0 4px 20px rgba(91,60,224,0.3)', display: 'flex', alignItems: 'center', gap: '8px' }}>
           {saving && <div style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.65s linear infinite' }} />}
           {saved ? '✓ Saved!' : saving ? 'Saving...' : 'Save & continue →'}
         </button>
