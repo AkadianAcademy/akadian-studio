@@ -71,7 +71,7 @@ export default function PreviewStep() {
           <p style={{ fontSize: '11px', fontWeight: 600, color: '#9090A0', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>Vocabulary</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
             {vocab.map(v => (
-              <span key={v.id} style={{ padding: '4px 12px', borderRadius: '8px', background: '#fff', fontSize: '13px', color: '#1A1219' }}>
+              <span key={v.id} style={{ padding: '4px 12px', borderRadius: '8px', background: '#fff', fontSize: '13px', color: '#fff' }}>
                 <span style={{ fontWeight: 600 }}>{v.word}</span>
                 <span style={{ color: '#6B6575' }}> — {v.translation}</span>
               </span>
