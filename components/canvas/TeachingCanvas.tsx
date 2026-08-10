@@ -31,6 +31,7 @@ export default function TeachingCanvas({ lessonId, mode, vocab = [] }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [lastSaved, setLastSaved] = useState('')
+  const [saveError, setSaveError] = useState('')
   const [loaded, setLoaded] = useState(false)
   const [dragging, setDragging] = useState<{ id: string; ox: number; oy: number } | null>(null)
   const [penMode, setPenMode] = useState(false)
@@ -49,14 +50,17 @@ export default function TeachingCanvas({ lessonId, mode, vocab = [] }: Props) {
   const tokenRef = useRef<string | null>(null)
   const lastActivityRef = useRef<number>(Date.now())
   const lastPointRef = useRef<{ x: number; y: number } | null>(null)
+  const blocksRef = useRef<TextBlock[]>([])
+  const pendingDrawingRef = useRef<string | null>(null)
   const supabase = createClient()
 
   async function getToken() {
-    if (tokenRef.current) return tokenRef.current
     const { data: { session } } = await supabase.auth.getSession()
     tokenRef.current = session?.access_token || null
     return tokenRef.current
   }
+
+  useEffect(() => { blocksRef.current = blocks }, [blocks])
 
   useEffect(() => {
     fetch(`/api/lessons/${lessonId}/canvas`)
@@ -65,7 +69,7 @@ export default function TeachingCanvas({ lessonId, mode, vocab = [] }: Props) {
         const data = d.canvas
         if (data?.blocks) setBlocks(data.blocks)
         else if (Array.isArray(data)) setBlocks(data)
-        if (data?.drawing) restoreDrawing(data.drawing)
+        if (data?.drawing) pendingDrawingRef.current = data.drawing
       })
       .catch(console.error)
       .finally(() => setLoaded(true))
@@ -76,6 +80,7 @@ export default function TeachingCanvas({ lessonId, mode, vocab = [] }: Props) {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (ctx) { ctx.lineCap = 'round'; ctx.lineJoin = 'round' }
+    if (pendingDrawingRef.current) { restoreDrawing(pendingDrawingRef.current); pendingDrawingRef.current = null }
   }, [loaded])
 
   function restoreDrawing(dataUrl: string) {
@@ -99,16 +104,29 @@ export default function TeachingCanvas({ lessonId, mode, vocab = [] }: Props) {
 
   async function saveCanvasSilent() {
     if (mode === 'student') return
+    // Commit any note still being edited so its text is included in this save
+    const active = document.activeElement as HTMLElement | null
+    if (active && active.isContentEditable) active.blur()
+    await new Promise(r => setTimeout(r, 0))
     try {
       const token = await getToken()
+      if (!token) { setSaveError('You are signed out — refresh and sign in again.'); return }
       const drawing = drawCanvasRef.current?.toDataURL() || ''
-      await fetch(`/api/lessons/${lessonId}/canvas`, {
+      const res = await fetch(`/api/lessons/${lessonId}/canvas`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token || ''}` },
-        body: JSON.stringify({ data: { blocks, drawing } })
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ data: { blocks: blocksRef.current, drawing } })
       })
+      if (!res.ok) {
+        const detail = await res.text().catch(() => '')
+        throw new Error(`Save failed (${res.status}). ${detail}`.trim())
+      }
+      setSaveError('')
       setLastSaved(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-    } catch (e) { console.error(e) }
+    } catch (e: any) {
+      console.error('[canvas save]', e)
+      setSaveError(e?.message || 'Save failed — not saved.')
+    }
   }
 
   async function saveCanvas() {
@@ -300,7 +318,8 @@ export default function TeachingCanvas({ lessonId, mode, vocab = [] }: Props) {
               style={{ padding: '6px 14px', borderRadius: '8px', background: saving ? '#e0e0e0' : '#00bc7c', color: '#fff', border: 'none', fontSize: '12px', fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
               {saving ? 'Saving...' : '↑ Save'}
             </button>
-            {lastSaved && <span style={{ fontSize: '11px', color: '#aaa' }}>✓ {lastSaved}</span>}
+            {lastSaved && !saveError && <span style={{ fontSize: '11px', color: '#aaa' }}>✓ {lastSaved}</span>}
+            {saveError && <span style={{ fontSize: '11px', color: '#E11D48', maxWidth: 260, lineHeight: 1.3 }}>⚠ {saveError}</span>}
 
           </div>
         </>
