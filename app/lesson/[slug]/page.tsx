@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { createClient } from '@/lib/supabase'
 
 const EditPanel = dynamic(() => import('@/components/lesson/EditPanel'), { ssr: false })
+const ExerciseRunner = dynamic(() => import('@/components/lesson/ExerciseRunner'), { ssr: false })
 const RichStoryDisplay = dynamic(() => import('@/components/lesson/RichStoryDisplay'), { ssr: false, loading: () => <div style={{padding:'40px',textAlign:'center',color:'#9090A0'}}>Loading story...</div> })
 const RichDebateDisplay = dynamic(() => import('@/components/lesson/RichDebateDisplay'), { ssr: false, loading: () => <div style={{padding:'40px',textAlign:'center',color:'#9090A0'}}>Loading debate...</div> })
 const TeachingCanvas = dynamic(() => import('@/components/canvas/TeachingCanvas'), {
@@ -140,7 +141,7 @@ export default function PublicLessonPage() {
           <div className="section-sub">Complete this activity to practice the vocabulary in context</div>
         </div>
         {exercise.instructions && <div className="exercise-instructions">📋 {exercise.instructions}</div>}
-        <div className="exercise-content">{exercise.content}</div>
+        <ExerciseRunner type={exercise.type} content={exercise.content} />
       </div>
     ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: '#9090A0' }}>No exercise yet.</div>,
     debate: story ? (
@@ -721,7 +722,7 @@ export default function PublicLessonPage() {
                     {exercise ? (
                       <>
                         {exercise.instructions && <div className="exercise-instructions">📋 {exercise.instructions}</div>}
-                        <div className="exercise-content">{exercise.content}</div>
+                        <ExerciseRunner type={exercise.type} content={exercise.content} />
                       </>
                     ) : (
                       <p style={{ color: '#9090A0', textAlign: 'center', padding: '40px 0' }}>No exercise yet.</p>

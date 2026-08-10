@@ -31,7 +31,7 @@ Goal: ${goal}
 Vocabulary: ${wordList}
 Complexity: ${complexity}
 
-Create sentences with blanks. Include word choices in parentheses.
+Create at least 10 sentences with blanks. Include word choices in parentheses.
 Return JSON: { "instructions": "Choose the correct word to fill in each blank.", "content": "1. She needs to ___ her phone bill. (pay / refund / charge)\n2. ..." }`,
 
       'roleplay': `Create a roleplay exercise for a ${level} ${language} lesson titled "${title}".
@@ -39,7 +39,7 @@ Goal: ${goal}
 Vocabulary: ${wordList}
 Complexity: ${complexity}
 
-Create a realistic scenario for 2 students with clear roles and objectives.
+Create a realistic scenario for 2 students with clear roles and objectives, plus at least 8 example lines/exchanges they can practice.
 Return JSON: { "instructions": "Work in pairs. Student A plays [Role]. Student B plays [Role]. Use today's vocabulary.", "content": "Scenario: [detailed description]\n\nStudent A goal: ...\nStudent B goal: ..." }`,
 
       'translation': `Create a translation exercise for a ${level} ${language} lesson titled "${title}".
@@ -47,7 +47,7 @@ Goal: ${goal}
 Vocabulary: ${wordList}
 Complexity: ${complexity}
 
-Create sentences in English to translate into ${language}.
+Create at least 10 sentences in English to translate into ${language}.
 Return JSON: { "instructions": "Translate these sentences into ${language}. Use the vocabulary from today's lesson.", "content": "1. ...\n2. ...\n3. ...\n4. ...\n5. ...\n6. ..." }`,
 
       'multiple-choice': `Create a multiple choice exercise for a ${level} ${language} lesson titled "${title}".
@@ -55,7 +55,7 @@ Goal: ${goal}
 Vocabulary: ${wordList}
 Complexity: ${complexity}
 
-Create 6 questions with 3 options each. Mark the correct answer with ✓.
+Create exactly 10 questions with 3 options each (a, b, c). Mark exactly ONE correct option per question by adding a trailing ✓ at the end of that option's line. Separate each question with a blank line.
 Return JSON: { "instructions": "Choose the best answer for each question.", "content": "1. Question?\na) option\nb) correct option ✓\nc) option\n\n2. ..." }`,
 
       'open-conversation': `Create an open conversation exercise for a ${level} ${language} lesson titled "${title}".
@@ -63,7 +63,7 @@ Goal: ${goal}
 Vocabulary: ${wordList}
 Complexity: ${complexity}
 
-Create 6 discussion questions that encourage natural use of vocabulary.
+Create exactly 10 discussion questions that encourage natural use of vocabulary.
 Return JSON: { "instructions": "Discuss these questions with a partner. Try to use today's vocabulary naturally.", "content": "1. ...\n2. ...\n3. ...\n4. ...\n5. ...\n6. ..." }`,
 
       'listening': `Create a listening exercise for a ${level} ${language} lesson titled "${title}".
@@ -71,7 +71,7 @@ Goal: ${goal}
 Vocabulary: ${wordList}
 Complexity: ${complexity}
 
-Create a detailed audio scenario with 6 comprehension questions.
+Create a detailed audio scenario with exactly 10 comprehension questions.
 Return JSON: { "instructions": "Listen carefully to the scenario. Then answer the questions.", "content": "Audio scenario:\n[detailed scene description that teacher reads aloud]\n\nComprehension questions:\n1. ...\n2. ...\n3. ...\n4. ...\n5. ...\n6. ..." }`,
     }
 
