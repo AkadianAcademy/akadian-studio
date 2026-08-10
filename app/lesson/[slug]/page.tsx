@@ -38,7 +38,7 @@ export default function PublicLessonPage() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch(`/api/lessons/${slug}`)
+      const res = await fetch(`/api/lessons/${slug}`, { cache: 'no-store' })
       const d = await res.json()
       if (d.lesson) {
         setLesson(d.lesson)
