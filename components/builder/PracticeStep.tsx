@@ -64,7 +64,7 @@ export default function PracticeStep({ onNext, onBack }: Props) {
   async function generateExercise() {
     setLoadingEx(true)
     try {
-      const res = await fetch('/api/ai/generate-exercise', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ exerciseType, level: setup.level, language: setup.language, vocab, goal: setup.goal, complexity: LEVEL_COMPLEXITY[setup.level || 'A2'] }) })
+      const res = await fetch('/api/ai/generate-exercise', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${await getToken()}` }, body: JSON.stringify({ exerciseType, level: setup.level, language: setup.language, vocab, goal: setup.goal, complexity: LEVEL_COMPLEXITY[setup.level || 'A2'] }) })
       const data = await res.json()
       if (data.instructions) setInstructions(data.instructions)
       if (data.content) setContent(data.content)
@@ -75,7 +75,7 @@ export default function PracticeStep({ onNext, onBack }: Props) {
   async function generateStory() {
     setLoadingStory(true)
     try {
-      const res = await fetch('/api/ai/generate-story', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ level: setup.level, language: setup.language, vocab, goal: setup.goal, imageStyle }) })
+      const res = await fetch('/api/ai/generate-story', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${await getToken()}` }, body: JSON.stringify({ level: setup.level, language: setup.language, vocab, goal: setup.goal, imageStyle }) })
       const data = await res.json()
       if (data.story) setStory(data.story)
       if (data.imagePrompt) setImagePrompt(data.imagePrompt)
@@ -87,7 +87,7 @@ export default function PracticeStep({ onNext, onBack }: Props) {
     if (!story) return
     setLoadingDebate(true)
     try {
-      const res = await fetch('/api/ai/generate-debate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ story, level: setup.level, language: setup.language }) })
+      const res = await fetch('/api/ai/generate-debate', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${await getToken()}` }, body: JSON.stringify({ story, level: setup.level, language: setup.language }) })
       const data = await res.json()
       if (data.debateStory) setDebateStory(data.debateStory)
       if (data.debateMoral) setDebateMoral(data.debateMoral)
