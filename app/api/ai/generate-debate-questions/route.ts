@@ -9,14 +9,14 @@ export async function POST(req: Request) {
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
-      max_tokens: 800,
+      max_tokens: 1400,
       messages: [{
         role: 'user',
         content: `Generate debate questions for ${level} level ${language} students based on this article about: "${topic}"
 
 Article: ${article}
 
-Generate exactly 3 sections with 2-3 questions each:
+Generate exactly 3 sections with at least 5 questions each:
 
 COMPREHENSION:
 [Questions testing if students understood the article]

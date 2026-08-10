@@ -32,7 +32,7 @@ Goal: ${goal}
 Complexity: ${complexity}
 Story: "${story}"
 
-Create 3 sets of 2 debate/discussion questions each, perfectly calibrated to ${level} level:
+Create 3 sets of at least 5 discussion questions each (5 or 6 per set), perfectly calibrated to ${level} level:
 
 1. About the story — factual questions about what happened (simple recall for low levels, inference for high levels)
 2. About the moral — questions about meaning and values (simple for low levels, philosophical for high levels)
@@ -40,9 +40,9 @@ Create 3 sets of 2 debate/discussion questions each, perfectly calibrated to ${l
 
 Return JSON:
 {
-  "debateStory": "1. Question?\n2. Question?",
-  "debateMoral": "1. Question?\n2. Question?",
-  "debatePersonal": "1. Question?\n2. Question?"
+  "debateStory": "1. Question?\n2. Question?\n3. Question?\n4. Question?\n5. Question?",
+  "debateMoral": "1. Question?\n2. Question?\n3. Question?\n4. Question?\n5. Question?",
+  "debatePersonal": "1. Question?\n2. Question?\n3. Question?\n4. Question?\n5. Question?"
 }`
 
     const response = await openai.chat.completions.create({
