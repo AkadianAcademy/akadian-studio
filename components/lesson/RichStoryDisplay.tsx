@@ -14,6 +14,10 @@ interface Props {
 
 export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props) {
   const [activeWord, setActiveWord] = useState<{ word: string; translation: string; x: number; y: number } | null>(null)
+  const [define, setDefine] = useState<{ word: string; x: number; y: number } | null>(null)
+  const [defineData, setDefineData] = useState<{ definition: string; example: string } | null>(null)
+  const [defineLoading, setDefineLoading] = useState(false)
+  const defineRef = useRef<HTMLDivElement>(null)
   const [readProgress, setReadProgress] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const [visibleParas, setVisibleParas] = useState<Set<number>>(new Set([0]))
@@ -55,6 +59,34 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
     })
     return () => observers.forEach(o => o.disconnect())
   }, [content])
+
+  async function handleDoubleClick() {
+    const sel = window.getSelection()
+    const raw = (sel?.toString() || '').trim()
+    const word = raw.replace(/[^\p{L}\p{M}'-]/gu, '')
+    if (!word || word.length < 2 || word.length > 40 || /\s/.test(raw)) return
+    let x = window.innerWidth / 2, y = window.scrollY + 120
+    try {
+      const rect = sel!.getRangeAt(0).getBoundingClientRect()
+      x = rect.left + rect.width / 2; y = rect.bottom + window.scrollY + 10
+    } catch {}
+    setActiveWord(null)
+    setDefine({ word, x, y }); setDefineData(null); setDefineLoading(true)
+    try {
+      const res = await fetch('/api/ai/define-word', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ word }) })
+      const d = await res.json()
+      setDefineData({ definition: d.definition || 'No definition found.', example: d.example || '' })
+    } catch { setDefineData({ definition: 'Could not load definition.', example: '' }) }
+    setDefineLoading(false)
+  }
+
+  useEffect(() => {
+    if (!define) return
+    function onDown(e: MouseEvent) { if (defineRef.current && !defineRef.current.contains(e.target as Node)) setDefine(null) }
+    function onKey(e: KeyboardEvent) { if (e.key === 'Escape') setDefine(null) }
+    const t = setTimeout(() => { document.addEventListener('mousedown', onDown); document.addEventListener('keydown', onKey) }, 0)
+    return () => { clearTimeout(t); document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey) }
+  }, [define])
 
   // Wrap each non-vocab word so it gently zooms on hover (reading tracker)
   function wordSpans(text: string, base: number): React.ReactNode[] {
@@ -158,7 +190,12 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
         .para-visible { animation: fadeSlideUp 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
         .vocab-tooltip { animation: popIn 0.2s ease forwards; }
         .rw { display: inline-block; border-radius: 4px; transition: transform 0.13s ease, color 0.13s ease, background 0.13s ease; }
-        .rw:hover { transform: scale(1.10); color: #0A0A0A; background: rgba(123,92,255,0.12); }
+        .rw:hover { transform: scale(1.05); color: #0A0A0A; background: rgba(123,92,255,0.12); }
+        .def-bubble { animation: popIn 0.22s cubic-bezier(0.22,1,0.36,1) forwards; }
+        .def-inner { background: rgba(255,255,255,0.82); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 14px 16px; box-shadow: 0 12px 40px rgba(26,18,25,0.16), 0 2px 8px rgba(26,18,25,0.08); }
+        .def-caret { position: absolute; top: -5px; width: 12px; height: 12px; background: rgba(255,255,255,0.82); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); border-left: 1px solid rgba(0,0,0,0.06); border-top: 1px solid rgba(0,0,0,0.06); transform: rotate(45deg); border-radius: 3px 0 0 0; }
+        .def-spin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid rgba(123,92,255,0.25); border-top-color: #7B5CFF; display: inline-block; animation: defspin 0.7s linear infinite; }
+        @keyframes defspin { to { transform: rotate(360deg) } }
       `}</style>
 
       {/* Reading progress bar */}
@@ -183,7 +220,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
       </div>
 
       {/* Story */}
-      <div style={{ background: '#FFFFFF', border: '1px solid rgba(91,60,224,0.10)', borderRadius: '20px', padding: 'clamp(24px,5vw,48px)', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 8px rgba(26,18,25,0.04), 0 12px 40px rgba(91,60,224,0.06)' }}>
+      <div onDoubleClick={handleDoubleClick} style={{ background: '#FFFFFF', border: '1px solid rgba(91,60,224,0.10)', borderRadius: '20px', padding: 'clamp(24px,5vw,48px)', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 8px rgba(26,18,25,0.04), 0 12px 40px rgba(91,60,224,0.06)' }}>
 
         {/* Ambient glow */}
         <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(123,92,255,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -272,6 +309,36 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
           <p style={{ fontSize: '13px', color: '#7B5CFF', fontWeight: 500 }}>{activeWord.translation}</p>
         </div>
       )}
+
+      {/* Double-click definition bubble (Apple-style) */}
+      {define && (() => {
+        const vw = typeof window !== 'undefined' ? window.innerWidth : 360
+        const bubbleLeft = Math.max(16, Math.min(define.x - 150, vw - 316))
+        const caretLeft = Math.max(14, Math.min(define.x - bubbleLeft - 6, 280))
+        return (
+          <div ref={defineRef} className="def-bubble" style={{ position: 'absolute', top: define.y, left: bubbleLeft, width: 300, maxWidth: 'calc(100vw - 32px)', zIndex: 1000 }}>
+            <div className="def-caret" style={{ left: caretLeft }} />
+            <div className="def-inner">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: defineLoading ? '2px' : '8px' }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#7B5CFF', flexShrink: 0 }} />
+                <span style={{ fontSize: '15px', fontWeight: 700, color: '#1A1219', letterSpacing: '-0.01em' }}>{define.word}</span>
+              </div>
+              {defineLoading ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9090A0', fontSize: '12.5px' }}>
+                  <span className="def-spin" /> Defining…
+                </div>
+              ) : (
+                <>
+                  <p style={{ fontSize: '13.5px', color: '#3A3550', lineHeight: 1.55 }}>{defineData?.definition}</p>
+                  {defineData?.example && (
+                    <p style={{ fontSize: '12.5px', color: '#6B6575', fontStyle: 'italic', lineHeight: 1.5, marginTop: '8px', paddingLeft: '10px', borderLeft: '2px solid rgba(123,92,255,0.35)' }}>{defineData.example}</p>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Image prompt */}
       {imagePrompt && (
