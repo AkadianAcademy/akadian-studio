@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { createClient } from '@/lib/supabase'
 
 interface VocabItem {
   word: string
@@ -10,14 +11,18 @@ interface Props {
   content: string
   vocab: VocabItem[]
   imagePrompt?: string
+  lessonId?: string
+  canEdit?: boolean
 }
 
-export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props) {
+export default function RichStoryDisplay({ content, vocab, imagePrompt, lessonId, canEdit }: Props) {
   const [activeWord, setActiveWord] = useState<{ word: string; translation: string; x: number; y: number } | null>(null)
-  const [define, setDefine] = useState<{ word: string; x: number; y: number } | null>(null)
+  const [define, setDefine] = useState<{ word: string; cx: number; top: number; bottom: number } | null>(null)
   const [defineData, setDefineData] = useState<{ definition: string; example: string } | null>(null)
   const [defineLoading, setDefineLoading] = useState(false)
+  const [addState, setAddState] = useState<'idle' | 'adding' | 'added' | 'error'>('idle')
   const defineRef = useRef<HTMLDivElement>(null)
+  const supabase = createClient()
   const [readProgress, setReadProgress] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const [visibleParas, setVisibleParas] = useState<Set<number>>(new Set([0]))
@@ -65,13 +70,14 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
     const raw = (sel?.toString() || '').trim()
     const word = raw.replace(/[^\p{L}\p{M}'-]/gu, '')
     if (!word || word.length < 2 || word.length > 40 || /\s/.test(raw)) return
-    let x = window.innerWidth / 2, y = 120
+    let cx = window.innerWidth / 2, top = 120, bottom = 120
     try {
       const rect = sel!.getRangeAt(0).getBoundingClientRect()
-      x = rect.left + rect.width / 2; y = rect.bottom + 10
+      cx = rect.left + rect.width / 2; top = rect.top; bottom = rect.bottom
     } catch {}
     setActiveWord(null)
-    setDefine({ word, x, y }); setDefineData(null); setDefineLoading(true)
+    setAddState('idle')
+    setDefine({ word, cx, top, bottom }); setDefineData(null); setDefineLoading(true)
     try {
       const res = await fetch('/api/ai/define-word', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ word }) })
       const d = await res.json()
@@ -87,6 +93,26 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
     const t = setTimeout(() => { document.addEventListener('mousedown', onDown); document.addEventListener('keydown', onKey) }, 0)
     return () => { clearTimeout(t); document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey) }
   }, [define])
+
+  async function getToken() {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.access_token || null
+  }
+
+  async function addToVocab() {
+    if (!lessonId || !define || !defineData) return
+    setAddState('adding')
+    try {
+      const token = await getToken()
+      const res = await fetch(`/api/lessons/${lessonId}/vocab/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ word: define.word, translation: defineData.definition })
+      })
+      if (!res.ok) throw new Error()
+      setAddState('added')
+    } catch { setAddState('error') }
+  }
 
   // Wrap each non-vocab word so it gently zooms on hover (reading tracker)
   function wordSpans(text: string, base: number): React.ReactNode[] {
@@ -193,7 +219,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
         .rw:hover { transform: scale(1.05); color: #0A0A0A; background: rgba(123,92,255,0.12); }
         .def-bubble { animation: popIn 0.22s cubic-bezier(0.22,1,0.36,1) forwards; }
         .def-inner { background: rgba(255,255,255,0.82); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 14px 16px; box-shadow: 0 12px 40px rgba(26,18,25,0.16), 0 2px 8px rgba(26,18,25,0.08); }
-        .def-caret { position: absolute; top: -5px; width: 12px; height: 12px; background: rgba(255,255,255,0.82); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); border-left: 1px solid rgba(0,0,0,0.06); border-top: 1px solid rgba(0,0,0,0.06); transform: rotate(45deg); border-radius: 3px 0 0 0; }
+        .def-caret { position: absolute; width: 12px; height: 12px; background: rgba(255,255,255,0.82); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); transform: rotate(45deg); border-radius: 2px; }
         .def-spin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid rgba(123,92,255,0.25); border-top-color: #7B5CFF; display: inline-block; animation: defspin 0.7s linear infinite; }
         @keyframes defspin { to { transform: rotate(360deg) } }
       `}</style>
@@ -313,15 +339,29 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
       {/* Double-click definition bubble (Apple-style) */}
       {define && (() => {
         const vw = typeof window !== 'undefined' ? window.innerWidth : 360
-        const bubbleLeft = Math.max(16, Math.min(define.x - 150, vw - 316))
-        const caretLeft = Math.max(14, Math.min(define.x - bubbleLeft - 6, 280))
+        const vh = typeof window !== 'undefined' ? window.innerHeight : 640
+        const bubbleLeft = Math.max(12, Math.min(define.cx - 150, vw - 312))
+        const caretLeft = Math.max(14, Math.min(define.cx - bubbleLeft - 6, 274))
+        const placeBelow = (vh - define.bottom) > 190
+        const vpos: React.CSSProperties = placeBelow ? { top: define.bottom + 8 } : { bottom: vh - define.top + 8 }
+        const caretPos: React.CSSProperties = placeBelow
+          ? { top: -5, borderLeft: '1px solid rgba(0,0,0,0.06)', borderTop: '1px solid rgba(0,0,0,0.06)' }
+          : { bottom: -5, borderRight: '1px solid rgba(0,0,0,0.06)', borderBottom: '1px solid rgba(0,0,0,0.06)' }
         return (
-          <div ref={defineRef} className="def-bubble" style={{ position: 'fixed', top: define.y, left: bubbleLeft, width: 300, maxWidth: 'calc(100vw - 32px)', zIndex: 1000 }}>
-            <div className="def-caret" style={{ left: caretLeft }} />
+          <div ref={defineRef} className="def-bubble" style={{ position: 'fixed', left: bubbleLeft, ...vpos, width: 300, maxWidth: 'calc(100vw - 24px)', zIndex: 1000 }}>
+            <div className="def-caret" style={{ left: caretLeft, ...caretPos }} />
             <div className="def-inner">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: defineLoading ? '2px' : '8px' }}>
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#7B5CFF', flexShrink: 0 }} />
-                <span style={{ fontSize: '15px', fontWeight: 700, color: '#1A1219', letterSpacing: '-0.01em' }}>{define.word}</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginBottom: defineLoading ? '2px' : '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#7B5CFF', flexShrink: 0 }} />
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#1A1219', letterSpacing: '-0.01em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{define.word}</span>
+                </div>
+                {canEdit && lessonId && !defineLoading && (
+                  <button onClick={addToVocab} disabled={addState === 'adding' || addState === 'added'} title="Add to vocabulary"
+                    style={{ flexShrink: 0, width: 26, height: 26, borderRadius: '50%', border: 'none', cursor: addState === 'added' ? 'default' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', fontWeight: 700, lineHeight: 1, transition: 'all 0.15s', background: addState === 'added' ? '#0E9F6E' : 'rgba(123,92,255,0.12)', color: addState === 'added' ? '#fff' : '#5B3CE0' }}>
+                    {addState === 'added' ? '✓' : addState === 'adding' ? '·' : '+'}
+                  </button>
+                )}
               </div>
               {defineLoading ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9090A0', fontSize: '12.5px' }}>
@@ -333,6 +373,8 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
                   {defineData?.example && (
                     <p style={{ fontSize: '12.5px', color: '#6B6575', fontStyle: 'italic', lineHeight: 1.5, marginTop: '8px', paddingLeft: '10px', borderLeft: '2px solid rgba(123,92,255,0.35)' }}>{defineData.example}</p>
                   )}
+                  {addState === 'added' && <p style={{ fontSize: '11.5px', color: '#0E9F6E', fontWeight: 600, marginTop: '8px' }}>✓ Added to vocabulary</p>}
+                  {addState === 'error' && <p style={{ fontSize: '11.5px', color: '#E11D48', marginTop: '8px' }}>Couldn't add — try again.</p>}
                 </>
               )}
             </div>
