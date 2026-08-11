@@ -56,6 +56,15 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
     return () => observers.forEach(o => o.disconnect())
   }, [content])
 
+  // Wrap each non-vocab word so it gently zooms on hover (reading tracker)
+  function wordSpans(text: string, base: number): React.ReactNode[] {
+    return text.split(/(\s+)/).map((tok, i) =>
+      /\S/.test(tok)
+        ? <span key={`w${base}-${i}`} className="rw">{tok}</span>
+        : <span key={`w${base}-${i}`}>{tok}</span>
+    )
+  }
+
   // Highlight vocab words in text
   function highlightText(text: string, paraIndex: number) {
     const parts: React.ReactNode[] = []
@@ -71,7 +80,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
       safety++
       if (safety > 5000) {
         // Extra safety net — never let this hang the browser again
-        parts.push(<span key={key++}>{remaining}</span>)
+        parts.push(<span key={key++}>{wordSpans(remaining, key)}</span>)
         break
       }
 
@@ -89,12 +98,12 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
       }
 
       if (matchStart === -1 || !matchVocab || matchWord.length === 0) {
-        parts.push(<span key={key++}>{remaining}</span>)
+        parts.push(<span key={key++}>{wordSpans(remaining, key)}</span>)
         break
       }
 
       if (matchStart > 0) {
-        parts.push(<span key={key++}>{remaining.slice(0, matchStart)}</span>)
+        parts.push(<span key={key++}>{wordSpans(remaining.slice(0, matchStart), key)}</span>)
       }
 
       const v = matchVocab
@@ -148,6 +157,8 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
         .para-hidden { opacity: 0; transform: translateY(20px); }
         .para-visible { animation: fadeSlideUp 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
         .vocab-tooltip { animation: popIn 0.2s ease forwards; }
+        .rw { display: inline-block; border-radius: 4px; transition: transform 0.13s ease, color 0.13s ease, background 0.13s ease; }
+        .rw:hover { transform: scale(1.15); color: #5B3CE0; background: rgba(123,92,255,0.10); }
       `}</style>
 
       {/* Reading progress bar */}
