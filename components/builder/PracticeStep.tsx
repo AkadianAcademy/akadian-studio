@@ -38,6 +38,7 @@ export default function PracticeStep({ onNext, onBack }: Props) {
   const [debateMoral, setDebateMoral] = useState('')
   const [debatePersonal, setDebatePersonal] = useState('')
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
   const [saved, setSaved] = useState(false)
   const [loadingEx, setLoadingEx] = useState(false)
   const [loadingStory, setLoadingStory] = useState(false)
@@ -97,14 +98,17 @@ export default function PracticeStep({ onNext, onBack }: Props) {
   }
 
   async function handleSave() {
-    if (!lessonId) return
+    setSaveError('')
+    if (!lessonId) { setSaveError('No lesson id in the builder — go back to Setup and save it again.'); return }
     setSaving(true)
     try {
       const token = await getToken()
-      await fetch(`/api/lessons/${lessonId}/practice`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ exerciseType, instructions, content, story, imagePrompt, imageStyle, debateStory, debateMoral, debatePersonal }) })
+      if (!token) { setSaveError('You appear signed out — refresh the page and sign in again.'); setSaving(false); return }
+      const res = await fetch(`/api/lessons/${lessonId}/practice`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ exerciseType, instructions, content, story, imagePrompt, imageStyle, debateStory, debateMoral, debatePersonal }) })
+      if (!res.ok) { const t = await res.text().catch(() => ''); throw new Error(`Save failed (${res.status}). ${t}`.trim()) }
       setSaved(true)
       setTimeout(() => { setSaved(false); onNext() }, 600)
-    } catch (e) { console.error(e) }
+    } catch (e: any) { console.error('[practice save]', e); setSaveError(e?.message || 'Save failed — not saved.') }
     setSaving(false)
   }
 
@@ -207,6 +211,7 @@ export default function PracticeStep({ onNext, onBack }: Props) {
           )}
         </div>
 
+        {saveError && <div style={{ background: 'rgba(225,29,72,0.08)', border: '1px solid rgba(225,29,72,0.25)', color: '#E11D48', borderRadius: '10px', padding: '10px 14px', fontSize: '13px', marginBottom: '12px' }}>⚠ {saveError}</div>}
         {/* Footer */}
         <div style={{ display: 'flex', gap: '12px' }}>
           <button onClick={onBack} style={{ padding: '13px 24px', background: 'transparent', border: '1.5px solid rgba(91,60,224,0.15)', borderRadius: '999px', color: '#6B6575', fontSize: '14px', fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit', minHeight: '48px' }}>← Back</button>
