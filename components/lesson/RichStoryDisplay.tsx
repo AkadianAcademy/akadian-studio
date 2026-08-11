@@ -65,10 +65,10 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
     const raw = (sel?.toString() || '').trim()
     const word = raw.replace(/[^\p{L}\p{M}'-]/gu, '')
     if (!word || word.length < 2 || word.length > 40 || /\s/.test(raw)) return
-    let x = window.innerWidth / 2, y = window.scrollY + 120
+    let x = window.innerWidth / 2, y = 120
     try {
       const rect = sel!.getRangeAt(0).getBoundingClientRect()
-      x = rect.left + rect.width / 2; y = rect.bottom + window.scrollY + 10
+      x = rect.left + rect.width / 2; y = rect.bottom + 10
     } catch {}
     setActiveWord(null)
     setDefine({ word, x, y }); setDefineData(null); setDefineLoading(true)
@@ -145,7 +145,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
           onClick={(e) => {
             e.stopPropagation()
             const rect = (e.target as HTMLElement).getBoundingClientRect()
-            setActiveWord({ word: v.word, translation: v.translation, x: rect.left + rect.width / 2, y: rect.bottom + window.scrollY + 8 })
+            setActiveWord({ word: v.word, translation: v.translation, x: rect.left + rect.width / 2, y: rect.bottom + 8 })
           }}
           style={{
             background: 'linear-gradient(120deg, rgba(123,92,255,0.25) 0%, rgba(123,92,255,0.15) 100%)',
@@ -292,7 +292,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
         <div
           className="vocab-tooltip"
           style={{
-            position: 'absolute',
+            position: 'fixed',
             top: activeWord.y,
             left: Math.max(16, Math.min(activeWord.x - 80, window.innerWidth - 180)),
             background: '#FFFFFF',
@@ -316,7 +316,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
         const bubbleLeft = Math.max(16, Math.min(define.x - 150, vw - 316))
         const caretLeft = Math.max(14, Math.min(define.x - bubbleLeft - 6, 280))
         return (
-          <div ref={defineRef} className="def-bubble" style={{ position: 'absolute', top: define.y, left: bubbleLeft, width: 300, maxWidth: 'calc(100vw - 32px)', zIndex: 1000 }}>
+          <div ref={defineRef} className="def-bubble" style={{ position: 'fixed', top: define.y, left: bubbleLeft, width: 300, maxWidth: 'calc(100vw - 32px)', zIndex: 1000 }}>
             <div className="def-caret" style={{ left: caretLeft }} />
             <div className="def-inner">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: defineLoading ? '2px' : '8px' }}>
