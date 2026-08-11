@@ -158,7 +158,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt }: Props)
         .para-visible { animation: fadeSlideUp 0.6s cubic-bezier(0.22,1,0.36,1) forwards; }
         .vocab-tooltip { animation: popIn 0.2s ease forwards; }
         .rw { display: inline-block; border-radius: 4px; transition: transform 0.13s ease, color 0.13s ease, background 0.13s ease; }
-        .rw:hover { transform: scale(1.15); color: #5B3CE0; background: rgba(123,92,255,0.10); }
+        .rw:hover { transform: scale(1.10); color: #0A0A0A; background: rgba(123,92,255,0.12); }
       `}</style>
 
       {/* Reading progress bar */}
