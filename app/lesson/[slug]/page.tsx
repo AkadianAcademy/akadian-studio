@@ -131,7 +131,7 @@ export default function PublicLessonPage() {
           <div className="section-title">Context story</div>
           <div className="section-sub">Read carefully — the vocabulary words are woven naturally into this story</div>
         </div>
-        <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} lessonId={lesson.id} canEdit={canvasMode === 'teacher'} />
+        <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} lessonId={lesson.id} canEdit={canvasMode === 'teacher'} onVocabAdded={(item) => setLesson((prev: any) => prev ? { ...prev, vocab: [...(prev.vocab || []), item] } : prev)} />
       </div>
     ) : <div style={{ textAlign: 'center', padding: '60px 20px', color: '#9090A0' }}>No story yet.</div>,
     exercise: exercise ? (
@@ -706,7 +706,7 @@ export default function PublicLessonPage() {
                 {mobileView === 'story' && (
                   <div>
                     {story ? (
-                      <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} lessonId={lesson.id} canEdit={canvasMode === 'teacher'} />
+                      <RichStoryDisplay content={story.content} vocab={lesson.vocab || []} imagePrompt={story.imageUrl} lessonId={lesson.id} canEdit={canvasMode === 'teacher'} onVocabAdded={(item) => setLesson((prev: any) => prev ? { ...prev, vocab: [...(prev.vocab || []), item] } : prev)} />
                     ) : (
                       <p style={{ color: '#9090A0', textAlign: 'center', padding: '40px 0' }}>No story yet.</p>
                     )}

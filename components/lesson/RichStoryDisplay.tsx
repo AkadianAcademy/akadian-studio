@@ -13,15 +13,17 @@ interface Props {
   imagePrompt?: string
   lessonId?: string
   canEdit?: boolean
+  onVocabAdded?: (item: { word: string; translation: string }) => void
 }
 
-export default function RichStoryDisplay({ content, vocab, imagePrompt, lessonId, canEdit }: Props) {
+export default function RichStoryDisplay({ content, vocab, imagePrompt, lessonId, canEdit, onVocabAdded }: Props) {
   const [activeWord, setActiveWord] = useState<{ word: string; translation: string; x: number; y: number } | null>(null)
   const [define, setDefine] = useState<{ word: string; cx: number; top: number; bottom: number } | null>(null)
   const [defineData, setDefineData] = useState<{ definition: string; example: string } | null>(null)
   const [defineLoading, setDefineLoading] = useState(false)
   const [addState, setAddState] = useState<'idle' | 'adding' | 'added' | 'error'>('idle')
   const defineRef = useRef<HTMLDivElement>(null)
+  const lastTapRef = useRef<{ t: number; x: number; y: number }>({ t: 0, x: 0, y: 0 })
   const supabase = createClient()
   const [readProgress, setReadProgress] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -65,25 +67,60 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt, lessonId
     return () => observers.forEach(o => o.disconnect())
   }, [content])
 
-  async function handleDoubleClick() {
-    const sel = window.getSelection()
-    const raw = (sel?.toString() || '').trim()
-    const word = raw.replace(/[^\p{L}\p{M}'-]/gu, '')
-    if (!word || word.length < 2 || word.length > 40 || /\s/.test(raw)) return
-    let cx = window.innerWidth / 2, top = 120, bottom = 120
-    try {
-      const rect = sel!.getRangeAt(0).getBoundingClientRect()
-      cx = rect.left + rect.width / 2; top = rect.top; bottom = rect.bottom
-    } catch {}
+  function wordAtPoint(x: number, y: number): { word: string; rect: DOMRect } | null {
+    const anyDoc = document as any
+    let node: Node | null = null, offset = 0
+    if (anyDoc.caretRangeFromPoint) {
+      const r = anyDoc.caretRangeFromPoint(x, y)
+      if (r) { node = r.startContainer; offset = r.startOffset }
+    } else if (anyDoc.caretPositionFromPoint) {
+      const pos = anyDoc.caretPositionFromPoint(x, y)
+      if (pos) { node = pos.offsetNode; offset = pos.offset }
+    }
+    if (!node || node.nodeType !== 3) return null
+    const text = node.textContent || ''
+    const isW = (ch: string) => !!ch && /[\p{L}\p{M}'-]/u.test(ch)
+    let s = offset, e = offset
+    while (s > 0 && isW(text[s - 1])) s--
+    while (e < text.length && isW(text[e])) e++
+    if (e <= s) return null
+    const range = document.createRange()
+    range.setStart(node, s); range.setEnd(node, e)
+    return { word: text.slice(s, e), rect: range.getBoundingClientRect() }
+  }
+
+  async function showDefinition(rawWord: string, rect: DOMRect) {
+    const word = rawWord.replace(/[^\p{L}\p{M}'-]/gu, '')
+    if (!word || word.length < 2 || word.length > 40) return
     setActiveWord(null)
     setAddState('idle')
-    setDefine({ word, cx, top, bottom }); setDefineData(null); setDefineLoading(true)
+    setDefine({ word, cx: rect.left + rect.width / 2, top: rect.top, bottom: rect.bottom })
+    setDefineData(null); setDefineLoading(true)
     try {
       const res = await fetch('/api/ai/define-word', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ word }) })
       const d = await res.json()
       setDefineData({ definition: d.definition || 'No definition found.', example: d.example || '' })
     } catch { setDefineData({ definition: 'Could not load definition.', example: '' }) }
     setDefineLoading(false)
+  }
+
+  function handleDoubleClick(e: React.MouseEvent) {
+    const hit = wordAtPoint(e.clientX, e.clientY)
+    if (hit) showDefinition(hit.word, hit.rect)
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    const touch = e.changedTouches[0]
+    if (!touch) return
+    const now = Date.now()
+    const last = lastTapRef.current
+    if (now - last.t < 350 && Math.abs(touch.clientX - last.x) < 32 && Math.abs(touch.clientY - last.y) < 32) {
+      const hit = wordAtPoint(touch.clientX, touch.clientY)
+      if (hit) { e.preventDefault(); showDefinition(hit.word, hit.rect) }
+      lastTapRef.current = { t: 0, x: 0, y: 0 }
+    } else {
+      lastTapRef.current = { t: now, x: touch.clientX, y: touch.clientY }
+    }
   }
 
   useEffect(() => {
@@ -110,6 +147,8 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt, lessonId
         body: JSON.stringify({ word: define.word, translation: defineData.definition })
       })
       if (!res.ok) throw new Error()
+      const added = await res.json().catch(() => ({}))
+      if (!added.duplicate && define && defineData) onVocabAdded?.({ word: define.word, translation: defineData.definition })
       setAddState('added')
     } catch { setAddState('error') }
   }
@@ -246,7 +285,7 @@ export default function RichStoryDisplay({ content, vocab, imagePrompt, lessonId
       </div>
 
       {/* Story */}
-      <div onDoubleClick={handleDoubleClick} style={{ background: '#FFFFFF', border: '1px solid rgba(91,60,224,0.10)', borderRadius: '20px', padding: 'clamp(24px,5vw,48px)', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 8px rgba(26,18,25,0.04), 0 12px 40px rgba(91,60,224,0.06)' }}>
+      <div onDoubleClick={handleDoubleClick} onTouchEnd={handleTouchEnd} style={{ touchAction: 'manipulation', background: '#FFFFFF', border: '1px solid rgba(91,60,224,0.10)', borderRadius: '20px', padding: 'clamp(24px,5vw,48px)', position: 'relative', overflow: 'hidden', boxShadow: '0 2px 8px rgba(26,18,25,0.04), 0 12px 40px rgba(91,60,224,0.06)' }}>
 
         {/* Ambient glow */}
         <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(123,92,255,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
