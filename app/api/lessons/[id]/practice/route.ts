@@ -23,7 +23,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
     const { id } = await params
-    const { exerciseType, instructions, content, story, imagePrompt, imageStyle, debateStory, debateMoral, debatePersonal } = await req.json()
+    const body = await req.json()
+    const s = (v: any) => (Array.isArray(v) ? v.join('\n') : (v ?? ''))
+    const { exerciseType, imagePrompt, imageStyle } = body
+    const instructions = s(body.instructions)
+    const content = s(body.content)
+    const story = s(body.story)
+    const debateStory = s(body.debateStory)
+    const debateMoral = s(body.debateMoral)
+    const debatePersonal = s(body.debatePersonal)
 
     await prisma.exercise.upsert({
       where: { lessonId: id },

@@ -85,7 +85,8 @@ Return JSON: { "instructions": "Listen carefully to the scenario. Then answer th
     })
 
     const parsed = JSON.parse(response.choices[0].message.content || '{}')
-    return NextResponse.json({ instructions: parsed.instructions, content: parsed.content })
+    const toStr = (v: any) => (Array.isArray(v) ? v.join('\n') : (v ?? ''))
+    return NextResponse.json({ instructions: toStr(parsed.instructions), content: toStr(parsed.content) })
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
   }
