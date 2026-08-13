@@ -13,31 +13,44 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
   const [activeSection, setActiveSection] = useState<'intro' | 'favour' | 'against' | 'conclusion'>('intro')
   const [readTime] = useState(Math.max(2, Math.ceil(article.split(' ').length / 180)))
 
-  // Parse article into sections
+  // Detect a section header, tolerating **HEADER:** markdown + casing
+  function sectionType(line: string): string | null {
+    const clean = line.trim().replace(/[*_#]/g, '').replace(/:\s*$/, '').trim().toUpperCase()
+    if (clean === 'INTRODUCTION' || clean === 'INTRO') return 'intro'
+    if (clean === 'IN FAVOUR' || clean === 'IN FAVOR' || clean === 'FOR' || clean === 'PROS') return 'favour'
+    if (clean === 'AGAINST' || clean === 'CONS') return 'against'
+    if (clean === 'CONCLUSION') return 'conclusion'
+    return null
+  }
+
   function parseArticle(text: string) {
     const sections: { type: string; content: string }[] = []
     const lines = text.split('\n')
     let current = { type: 'intro', content: '' }
+    let started = false
 
     for (const line of lines) {
-      if (line.trim().startsWith('INTRODUCTION:')) {
-        if (current.content.trim()) sections.push(current)
-        current = { type: 'intro', content: '' }
-      } else if (line.trim().startsWith('IN FAVOUR:')) {
-        if (current.content.trim()) sections.push(current)
-        current = { type: 'favour', content: '' }
-      } else if (line.trim().startsWith('AGAINST:')) {
-        if (current.content.trim()) sections.push(current)
-        current = { type: 'against', content: '' }
-      } else if (line.trim().startsWith('CONCLUSION:')) {
-        if (current.content.trim()) sections.push(current)
-        current = { type: 'conclusion', content: '' }
+      const t = sectionType(line)
+      if (t) {
+        if (started && current.content.trim()) sections.push(current)
+        current = { type: t, content: '' }
+        started = true
       } else {
         current.content += (current.content ? '\n' : '') + line
       }
     }
     if (current.content.trim()) sections.push(current)
     return sections
+  }
+
+  // Render inline **bold** and strip stray markdown
+  function renderInline(text: string, keyBase: string) {
+    return text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <strong key={`${keyBase}-${i}`} style={{ fontWeight: 700, color: '#1A1219' }}>{part.slice(2, -2)}</strong>
+      }
+      return <span key={`${keyBase}-${i}`}>{part.replace(/\*\*/g, '')}</span>
+    })
   }
 
   const sections = parseArticle(article)
@@ -54,7 +67,19 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
       <style>{`
         @keyframes fadeSlideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+        @keyframes debIn { from { opacity:0; transform: translateY(26px) scale(0.985); } to { opacity:1; transform: translateY(0) scale(1); } }
+        @keyframes debAccent { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+        @keyframes debParaIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+        @keyframes debIconPop { 0%{transform:scale(0) rotate(-25deg);} 55%{transform:scale(1.25) rotate(10deg);} 100%{transform:scale(1) rotate(0);} }
         .debate-section-card { animation: fadeSlideUp 0.5s ease forwards; }
+        .deb-card { animation: debIn 0.6s cubic-bezier(0.22,1,0.36,1) backwards; transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+        .deb-card:hover { box-shadow: 0 12px 34px rgba(26,18,25,0.10); }
+        .deb-accent { animation: debAccent 0.55s cubic-bezier(0.22,1,0.36,1) both; }
+        .deb-icon { display: inline-block; animation: debIconPop 0.5s ease both; }
+        .deb-para { animation: debParaIn 0.5s ease both; }
+        .deb-badge { animation: pulse 2.4s ease-in-out infinite; }
+        .deb-pill { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+        .deb-pill:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,18,25,0.08); }
       `}</style>
 
       {/* Topic hero */}
@@ -89,7 +114,7 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
         {sections.map((s, i) => {
           const cfg = SECTION_CONFIG[s.type as keyof typeof SECTION_CONFIG] || SECTION_CONFIG.intro
           return (
-            <button key={i}
+            <button key={i} className="deb-pill"
               onClick={() => { document.getElementById(`section-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }) }}
               style={{ padding: '6px 14px', borderRadius: '100px', border: `1px solid ${cfg.border}`, background: cfg.bg, color: cfg.color, fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.2s' }}>
               {cfg.icon} {cfg.label}
@@ -99,27 +124,28 @@ export default function RichDebateDisplay({ topic, article, keyTerms, questions 
       </div>
 
       {/* Article sections */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginBottom: '32px' }}>
         {sections.map((s, i) => {
           const cfg = SECTION_CONFIG[s.type as keyof typeof SECTION_CONFIG] || SECTION_CONFIG.intro
           const paragraphs = s.content.split('\n').filter(p => p.trim())
           return (
-            <div key={i} id={`section-${i}`} className="debate-section-card"
-              style={{ animationDelay: `${i * 0.1}s`, background: cfg.bg, border: `1px solid ${cfg.border}`, borderRadius: '16px', overflow: 'hidden' }}>
+            <div key={i} id={`section-${i}`} className="deb-card"
+              style={{ animationDelay: `${i * 0.12}s`, background: '#FFFFFF', border: `1px solid ${cfg.border}`, borderRadius: '18px', overflow: 'hidden', position: 'relative', boxShadow: '0 2px 10px rgba(26,18,25,0.03)' }}>
+              <div className="deb-accent" style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 4, background: cfg.color, transformOrigin: 'top', animationDelay: `${i * 0.12 + 0.15}s` }} />
               {/* Section header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 20px', borderBottom: `1px solid ${cfg.border}` }}>
-                <span style={{ fontSize: '18px' }}>{cfg.icon}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 20px 14px 24px', background: cfg.bg, borderBottom: `1px solid ${cfg.border}` }}>
+                <span className="deb-icon" style={{ fontSize: '18px', animationDelay: `${i * 0.12 + 0.25}s` }}>{cfg.icon}</span>
                 <span style={{ fontSize: '13px', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{cfg.label}</span>
-                {s.type === 'favour' && <span style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(14,159,110,0.15)', color: '#0E9F6E', fontWeight: 600 }}>PRO</span>}
-                {s.type === 'against' && <span style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(225,29,72,0.15)', color: '#E11D48', fontWeight: 600 }}>CON</span>}
+                {s.type === 'favour' && <span className="deb-badge" style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(14,159,110,0.15)', color: '#0E9F6E', fontWeight: 700, letterSpacing: '0.05em' }}>PRO</span>}
+                {s.type === 'against' && <span className="deb-badge" style={{ marginLeft: 'auto', fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'rgba(225,29,72,0.15)', color: '#E11D48', fontWeight: 700, letterSpacing: '0.05em' }}>CON</span>}
               </div>
               {/* Section content */}
-              <div style={{ padding: '20px' }}>
+              <div style={{ padding: '20px 24px' }}>
                 {paragraphs.map((para, j) => (
-                  <p key={j} style={{ fontSize: 'clamp(14px,2vw,16px)', color: '#1A1219', lineHeight: 1.85, marginBottom: j < paragraphs.length - 1 ? '14px' : 0 }}>
+                  <p key={j} className="deb-para" style={{ animationDelay: `${i * 0.12 + 0.28 + j * 0.09}s`, fontSize: 'clamp(14px,2vw,16px)', color: '#1A1219', lineHeight: 1.85, marginBottom: j < paragraphs.length - 1 ? '14px' : 0 }}>
                     {s.type === 'favour' && j === 0 && <span style={{ color: '#0E9F6E', fontWeight: 700, marginRight: '6px' }}>↑</span>}
                     {s.type === 'against' && j === 0 && <span style={{ color: '#E11D48', fontWeight: 700, marginRight: '6px' }}>↓</span>}
-                    {para}
+                    {renderInline(para, `p${i}-${j}`)}
                   </p>
                 ))}
               </div>
