@@ -139,6 +139,28 @@ export default function DashboardPage() {
         .preview-btn:hover { background: rgba(91,60,224,0.12); border-color: rgba(91,60,224,0.28); }
         .delete-btn { padding: 8px 10px; background: rgba(0,0,0,0.02); border: 1.5px solid rgba(0,0,0,0.07); border-radius: 999px; color: #C0B8CC; font-size: 12px; cursor: pointer; font-family: 'Hanken Grotesk', sans-serif; transition: all 0.2s; min-height: 36px; }
         .delete-btn:hover { border-color: rgba(220,60,60,0.25); color: rgba(220,60,60,0.7); background: rgba(220,60,60,0.04); }
+        .pw-card { background: #fff; border: 1px solid rgba(91,60,224,0.10); border-radius: 18px; overflow: hidden; transition: transform 0.22s cubic-bezier(.16,1,.3,1), box-shadow 0.22s ease, border-color 0.22s ease; box-shadow: 0 2px 12px rgba(91,60,224,0.05); display: flex; flex-direction: column; }
+        .pw-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(91,60,224,0.14); border-color: rgba(91,60,224,0.22); }
+        .pw-cover { position: relative; padding: 16px 18px; background: linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%); overflow: hidden; }
+        .pw-cover::after { content: ''; position: absolute; top: -40px; right: -30px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%); pointer-events: none; }
+        .pw-cover-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; position: relative; z-index: 1; }
+        .pw-subject { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.92); }
+        .pw-count { flex-shrink: 0; font-size: 11px; font-weight: 800; color: #0D1117; background: #C8FF3D; padding: 3px 10px; border-radius: 999px; }
+        .pw-title { font-size: 16px; font-weight: 800; color: #fff; line-height: 1.3; margin-top: 10px; position: relative; z-index: 1; cursor: pointer; letter-spacing: -0.01em; }
+        .pw-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+        .pw-desc { font-size: 13px; color: #6B6575; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 14px; }
+        .pw-lessons { display: flex; flex-direction: column; gap: 7px; margin-bottom: 16px; }
+        .pw-lesson { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .pw-num { flex-shrink: 0; width: 22px; height: 22px; border-radius: 7px; background: rgba(123,92,255,0.10); color: #5B3CE0; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+        .pw-lname { font-size: 12.5px; color: #4A4460; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .pw-more { font-size: 11.5px; color: #9090A0; padding-left: 32px; font-weight: 600; }
+        .pw-actions { display: flex; gap: 8px; margin-top: auto; }
+        .pw-view { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px; background: linear-gradient(135deg, #7B5CFF, #5B3CE0); border: none; border-radius: 10px; color: #fff; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.18s; box-shadow: 0 4px 14px rgba(91,60,224,0.22); }
+        .pw-view:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(91,60,224,0.32); }
+        .pw-pdf { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 14px; background: rgba(200,255,61,0.16); border: 1px solid rgba(150,190,30,0.4); border-radius: 10px; color: #4d7c0f; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.18s; }
+        .pw-pdf:hover { background: rgba(200,255,61,0.28); }
+        .pw-del { flex-shrink: 0; width: 40px; padding: 9px 0; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.07); border-radius: 10px; color: #C0B8CC; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.18s; }
+        .pw-del:hover { border-color: rgba(225,29,72,0.3); color: #E11D48; background: rgba(225,29,72,0.05); }
         @media (max-width: 640px) { .stats { grid-template-columns: 1fr; } .nav { padding: 12px 20px; } .nav-badge { display: none; } }
       `}</style>
 
@@ -224,11 +246,11 @@ export default function DashboardPage() {
 
           {/* Section toggle */}
           <div style={{ display: 'flex', gap: '4px', marginBottom: '28px', background: '#fff', border: '1px solid rgba(91,60,224,0.1)', boxShadow: '0 2px 8px rgba(91,60,224,0.06)', borderRadius: '999px', padding: '4px', width: 'fit-content', opacity: 0, animation: 'fadeUp 0.6s cubic-bezier(.16,1,.3,1) 0.25s forwards' }}>
-            <button onClick={() => setActiveSection('lessons')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'lessons' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'lessons' ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'lessons' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
+            <button onClick={() => setActiveSection('lessons')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'lessons' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'lessons' ? '#fff' : '#6B6575', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'lessons' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
               📚 My Lessons {lessons.length > 0 && `(${lessons.length})`}
             </button>
-            <button onClick={() => setActiveSection('curricula')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'curricula' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'curricula' ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'curricula' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
-              🗺 My Curricula {curricula.length > 0 && `(${curricula.length})`}
+            <button onClick={() => setActiveSection('curricula')} style={{ padding: '8px 20px', borderRadius: '999px', border: 'none', background: activeSection === 'curricula' ? 'linear-gradient(135deg, #7B5CFF 0%, #5B3CE0 100%)' : 'transparent', color: activeSection === 'curricula' ? '#fff' : '#6B6575', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s', boxShadow: activeSection === 'curricula' ? '0 4px 16px rgba(91,60,224,0.3)' : 'none', minHeight: '36px' }}>
+              🗺 My Pathways {curricula.length > 0 && `(${curricula.length})`}
             </button>
           </div>
 
@@ -303,18 +325,18 @@ export default function DashboardPage() {
             <>
               <div className="section-header">
                 <div>
-                  <div className="section-title">Your curricula</div>
-                  <div className="section-sub">{curricula.length === 0 ? 'No curricula yet — build your first teaching roadmap' : `${curricula.length} curriculum${curricula.length > 1 ? 's' : ''} created`}</div>
+                  <div className="section-title">Your pathways</div>
+                  <div className="section-sub">{curricula.length === 0 ? 'No pathways yet — build your first teaching roadmap' : `${curricula.length} pathway${curricula.length > 1 ? 's' : ''} created`}</div>
                 </div>
-                <button className="new-btn" onClick={() => setShowCurriculumBuilder(true)}>+ Build curriculum</button>
+                <button className="new-btn" onClick={() => setShowCurriculumBuilder(true)}>+ Build pathway</button>
               </div>
               {curricula.length === 0 ? (
                 <div className="empty-state">
                   <div className="empty-card">
                     <div className="empty-icon-wrap">🗺</div>
-                    <h2 className="empty-title">Build your first curriculum</h2>
+                    <h2 className="empty-title">Build your first pathway</h2>
                     <p className="empty-desc">Group your lessons into a structured learning path. Share it, export it as PDF, or show the world what you teach.</p>
-                    <button className="empty-cta" onClick={() => setShowCurriculumBuilder(true)}>✦ Create first curriculum</button>
+                    <button className="empty-cta" onClick={() => setShowCurriculumBuilder(true)}>✦ Create first pathway</button>
                     <div className="empty-features">
                       {['Languages', 'Math (soon)', 'Technology (soon)', 'Sciences (soon)', 'Business (soon)'].map(f => (
                         <div key={f} className="empty-feature"><span className="empty-feature-dot" />{f}</div>
@@ -324,33 +346,39 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 <div className="lessons-grid">
-                  {curricula.map((c: any) => (
-                    <div key={c.id} className="lesson-card">
-                      <div className="lesson-tags">
-                        <span className="lesson-tag">{c.subject}</span>
-                        <span className="lesson-tag">{c.lessons?.length || 0} lessons</span>
+                  {curricula.map((c: any) => {
+                    const count = c.lessons?.length || 0
+                    return (
+                    <div key={c.id} className="pw-card">
+                      <div className="pw-cover">
+                        <div className="pw-cover-top">
+                          <span className="pw-subject">{c.subject || 'Pathway'}</span>
+                          <span className="pw-count">{count} {count === 1 ? 'lesson' : 'lessons'}</span>
+                        </div>
+                        <div className="pw-title" onClick={() => router.push(`/curriculum/${c.id}`)}>{c.title}</div>
                       </div>
-                      <div className="lesson-title">{c.title}</div>
-                      {c.description && <div className="lesson-goal">{c.description}</div>}
-                      <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                        {c.lessons?.slice(0, 3).map((cl: any, i: number) => (
-                          <div key={cl.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'rgba(255,255,255,0.35)' }}>
-                            <span style={{ color: '#A98BFF', fontWeight: 700, minWidth: '14px' }}>{i + 1}</span>
-                            <span>{cl.lesson?.title}</span>
+                      <div className="pw-body">
+                        {c.description && <div className="pw-desc">{c.description}</div>}
+                        {count > 0 && (
+                          <div className="pw-lessons">
+                            {c.lessons.slice(0, 3).map((cl: any, i: number) => (
+                              <div key={cl.id} className="pw-lesson">
+                                <span className="pw-num">{i + 1}</span>
+                                <span className="pw-lname">{cl.lesson?.title || 'Untitled lesson'}</span>
+                              </div>
+                            ))}
+                            {count > 3 && <div className="pw-more">+{count - 3} more lesson{count - 3 > 1 ? 's' : ''}</div>}
                           </div>
-                        ))}
-                        {(c.lessons?.length || 0) > 3 && <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', paddingLeft: '22px' }}>+{c.lessons.length - 3} more lessons</div>}
-                      </div>
-                      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                        <button className="preview-btn" onClick={() => router.push(`/curriculum/${c.id}`)}>👁 View</button>
-                        <button onClick={() => { router.push(`/curriculum/${c.id}`); setTimeout(() => window.print(), 1000) }}
-                          style={{ flex: 1, padding: '8px 7px', background: 'rgba(200,255,61,0.07)', border: '1px solid rgba(200,255,61,0.15)', borderRadius: '999px', color: '#C8FF3D', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, minHeight: '36px' }}>
-                          ↓ PDF
-                        </button>
-                        <button className="delete-btn" onClick={() => handleDeleteCurriculum(c.id)}>🗑</button>
+                        )}
+                        <div className="pw-actions">
+                          <button className="pw-view" onClick={() => router.push(`/curriculum/${c.id}`)}>👁 View</button>
+                          <button className="pw-pdf" onClick={() => { router.push(`/curriculum/${c.id}`); setTimeout(() => window.print(), 1000) }}>↓ PDF</button>
+                          <button className="pw-del" onClick={() => handleDeleteCurriculum(c.id)}>🗑</button>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </>
